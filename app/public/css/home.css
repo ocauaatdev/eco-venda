@@ -1,0 +1,346 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins'
+}
+/* ======== Conteudo do Site ========= */
+.imagemHome{
+    background-color: transparent;
+    position: relative
+}
+.conteinerImg{
+    width: 100%;
+}
+.conteinerImg img{
+    width: 100%;
+}
+.info-home{
+    position: absolute;
+    top: 50%; 
+    left: 5%;
+    transform: translateY(-50%);
+    color: #08313B;
+    z-index: 1;
+}
+.info-home strong{
+    color: #fc7f2d;
+}
+.info-home h2{
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 55px;
+}
+.home-button{
+    font-family: 'Poppins';
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #1C4C4E;
+    margin-top: 2%;
+    color: white;
+    padding: 30px 40px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+.home-button:hover{
+    transform: scale(1.1);
+}
+
+/* Imagens de anuncio categorias */
+.procurandoTxt{
+    font-size: 30px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #092930;
+    margin-top: 2%;
+}
+.anuncioCategorias{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.imgSuperior{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.imgSuperior img{
+    padding: 15px;
+}
+.imgInferior{
+    width: 95%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.imgInferior img{
+    padding: 15px;
+}
+.anuncioCategorias img{
+    transition: .5s;
+    cursor: pointer;
+}
+.anuncioCategorias img:hover{
+    transform: scale(1.1);
+}
+
+#imgModa{
+    width: 30%;
+}
+#imgHigiene{
+    width: 32.5%;
+}
+#imgBag{
+    width: 25%;
+}
+#imgCosmetico{
+    width: 41.5%;
+}
+
+/* Fim Imagens de anuncio categorias */
+
+/* Quem Somos */
+.quemSomosConteiner{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: auto;
+    padding: 30px;
+}
+.quemSomostxt{
+    width: 700px;
+    font-size: 20px;
+    text-align: justify;
+}
+.quemSomostxt p{
+    color: #092930;
+}
+.quemSomostxt h1{
+    color: #FF802B;
+    font-weight: 800;
+}
+.quemSomosImg img{
+    border-radius: 20px;
+}
+.produtosDestaques{
+    font-size: 30px;
+    text-align: center;
+    text-transform: uppercase;
+    color: #092930;
+    margin-top: 2%;
+}
+/*=========Produtos============*/
+
+/* ========Carrossel========= */
+.conteiner{
+    margin-top: 5%;
+    margin-left: 50%;
+    transform: translate(-50%);
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    width: 1600px;
+    height: 100%;
+    gap: 1rem;
+}
+.conteiner:hover > #prev-btn, .conteiner:hover>#next-btn{
+    opacity: 1;
+}
+.img-conteiner{
+    margin: auto; 
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 460px; 
+
+}
+.slider{
+    opacity: 0;
+    transition:  0.2s;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+    width:100%;
+    height: 100%;
+    
+}
+.on{
+    opacity: 1;
+}
+#prev-btn, #next-btn{
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    padding: 0;
+    background: #fff;
+    opacity: 0;
+    margin-top: 12px;
+    border: none;
+    cursor: pointer;
+    z-index: 1;
+    transition: .5s;
+}
+#prev-btn i, #next-btn i{
+    font-size: 25px;
+    z-index: 1;
+}
+#prev-btn{
+    position: absolute;
+    left: 20px;
+    margin: auto;
+    z-index: 1;
+}
+#next-btn{
+    position: absolute;
+    right: 20px;
+    margin: auto;
+    z-index: 1;
+}
+/* Fim Carrossel */
+
+/* EcoPremium */
+.ecopremium{
+    width: 100%;
+    margin-top: 2%;
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    justify-content: center;
+}
+.premiumTxt{
+    width: 50%;
+}
+.premiumTxt h2{
+    font-size: 35px;
+    text-transform: uppercase;
+    color: #05414B;
+    font-weight: 900;
+}
+.premiumTxt p{
+    font-weight: 500;
+    color: #05414B;
+    margin-bottom: 10px;
+    text-align: justify;
+}
+.premiumTxt ul{
+    list-style: none;
+    font-size: 25px;
+}
+.premiumTxt ul li{
+    color: #041418;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+.premiumTxt i{
+    color: #c45a14;
+    font-size: 35px;
+}
+.premiumTxt button{
+    text-transform: uppercase;
+    font-weight: bold;
+    background-color: #1C4C4E;
+    margin-top: 10%;
+    color: white;
+    padding: 20px 40px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.5s ease-in-out;
+}
+.premiumTxt button:hover{
+    transform: scale(1.1);
+}
+
+/* ============= Tamanho 1440px =============== */
+@media(max-width:1440px){
+    .conteiner{ /*conteiner do carrossel*/
+        width: 100%;
+        margin-left: 0;
+        transform: translate(0);
+    }
+}
+
+/* ============= Tamanho 1200px =============== */
+
+@media(max-width:1200px){
+    .ecopremium img{
+        width: 80%;
+    }
+}
+
+/* ============= Tamanho 992px =============== */
+@media(max-width:992px){
+    .info-home h2{
+        font-size: 45px;
+    }
+    #prev-btn, #next-btn{
+        width: 50px;
+        height: 50px;
+    }
+    .img-conteiner{
+        height: 290px; /*Imagens do carrossel*/
+    }
+}
+
+/* ============= Tamanho 768px =============== */
+@media(max-width:768px){
+    .info-home h2{
+        font-size: 30px;
+    }
+    .quemSomostxt p{
+        font-size: 16px;
+    }
+    .quemSomostxt{
+        padding: 20px;
+    }
+    .premiumImg{
+        display: none;
+    }
+    .premiumTxt{
+        width: 100%;
+        padding: 50px;
+    }
+}
+
+/* ============= Tamanho 576px =============== */
+@media(max-width:576px){
+    .quemSomosConteiner{
+        flex-wrap: wrap;
+    }
+    .quemSomosImg{
+        margin-top: 20px;
+    }
+    .home-button{
+        padding: 15px 20px;
+        font-size: 16px;
+    }
+    .img-conteiner{
+        height: 200px;
+    }
+    #imgModa{
+        width: 40%;
+    }
+    #imgHigiene{
+        width: 42.5%;
+    }
+    #imgBag{
+        width: 35%;
+    }
+    #imgCosmetico{
+        width: 51.5%;
+    }
+}

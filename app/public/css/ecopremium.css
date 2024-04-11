@@ -1,0 +1,221 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins'
+}
+.premium-info{
+    padding: 90px;
+    margin-top: 2%;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+}
+
+.txtPremium{
+    color: #444444;
+    font-size: 19px;
+    text-align: justify;
+    margin-bottom: 5%;
+}
+.premium-info button{
+    border: none;
+    border-radius: 10px;
+    background-color: #083b46;
+    color: #ffffff;
+    font-size: 1.5rem;
+    width: 250px;
+    height: 80px;
+    margin-top: 20px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+#txtProd, #subTxt{
+    color: #083b46;
+}
+#subTxt{
+    margin-bottom: 2%;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+#txtProd{
+    font-weight: 900;
+    font-size: 35px;
+    text-transform: uppercase;    
+}
+
+/* ===========Caixa de Dialogo============= */
+.assinatura{
+    display: none;
+    background-color: #06313B;
+    border-radius: 10px;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+    width: 600px;
+    height: 500px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -80%);
+    text-align: justify;
+}
+#xmark{
+    color: #ac0505;
+    font-size: 20px;
+}
+#textAss{
+    color: #fff;
+}
+.assinatura h2{
+    font-weight: 300;
+}
+.assinatura #xmark{
+    position: absolute;
+    font-size: 2.5rem;
+    left: 93%;
+    top: 10px;
+    cursor: pointer;
+}
+.content{
+    margin-left: 50px;
+    margin-top: 50px;
+}
+.txtBaixo{
+    margin-top: 120px;
+}
+.assinatura button{
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28B67E;
+    color: #083b46;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 300px;
+    height: 80px;
+    cursor: pointer;
+}
+.assinatura select{
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    color: #083b46;
+    font-size: 1.5rem;
+    font-weight: 600;
+    width: 300px;
+    height: 40px;
+    cursor: pointer;
+}
+/* ===========Fim Caixa de Dialogo============= */
+.txtPlano{
+    text-align: center;
+    color: #083b46;
+}
+.subTxtPlano{
+    text-align: center;
+    color: #083b46;
+}
+/* ===========Planos Beneficios========== */
+.planosPremium{
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    justify-content: center;
+    gap: 1.5rem;
+}
+#plano {
+    width: 370px;
+    height: 460px;
+    padding: 15px;
+    text-align: center;
+    position: relative; 
+    transition: .5s;
+}
+
+#plano ul {
+    list-style: none;
+}
+
+#plano h3 {
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+#plano h1 {
+    font-size: 45px;
+    font-weight: 600;
+    color: #041418;
+}
+
+#plano h2 {
+    position: absolute;
+    bottom: 15px;
+    left: 0;
+    right: 0;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #0A242A;
+}
+#plano i{
+    color: #095810;
+}
+.planoBasico{
+    background-color: rgb(255, 188, 64);
+}
+.planoMedio{
+    background-color: rgb(255, 147, 74);
+}
+.planoPro{
+    background-color: rgb(255, 128, 43);
+}
+#plano:hover{
+    transform: scale(1.1);
+}
+/* =========== Fim Planos Beneficios========== */
+.botaoAssinar{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.assinarBtn{
+    border: none;
+    border-radius: 10px;
+    background-color: #083b46;
+    color: #ffffff;
+    font-size: 1.5rem;
+    width: 350px;
+    height: 80px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bolder;
+}
+
+/* ========= Responsividade ============ */
+
+/* ============= Tamanho 992px =============== */
+@media(max-width:992px){
+    .txtPremium{
+        font-size: 16px;
+    }
+    .imgPremium img{
+        width: 400px;
+    }
+    #plano{
+        height: 490px;
+    }
+}
+
+/* ============= Tamanho 768px =============== */
+@media(max-width:768px){
+    .imgPremium img{
+        display: none;
+    }
+    .planosPremium{
+        flex-direction: column;
+    }
+    #plano{
+        height: 460px;
+    }
+}

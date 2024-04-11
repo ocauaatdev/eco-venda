@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
+    <%- include('../partial/essenciais'); %> 
+
+    <!-- CSS (da pagina) -->
+    <link rel="stylesheet" href="/css/ecopremium.css">
+    <title>Assinatura</title>
+</head>
+<body>
+    <!-- Menu e menu lateral -->
+    <%- include('../partial/header'); %>
+    <!-- Fim menu e menu lateral -->
+
+    <main>
+        <!-- Sessão de informações do Premium -->
+        <section class="premium-info">
+            <article class="txtPremium">
+                <h1 id="txtProd">EcoPremium</h1>
+                <h4 id="subTxt">Receba benefícios em sua compra!</h4>
+                <p>Você merece mais do que simples compras online - você merece uma experiência verdadeiramente excepcional.
+                    É por isso que estamos empolgados em apresentar a nossa Assinatura Premium, uma maneira emocionante de elevar
+                    a sua jornada de compras a um novo patamar!
+                    Não espere mais - torne suas compras online mais emocionantes, econômicas e convenientes com a nossa Assinatura Premium.
+                    Clique no botão abaixo e comece a aproveitar os benefícios agora mesmo!</p>
+                <button id="mostrarOpcoes" onclick="assinatura()">Assinar Eco+</button>
+            </article>
+            <section class="imgPremium">
+                <img src="/imagem/img-ecopremium-page.png" alt="">
+            </section>
+        </section>
+        <!-- Fim Sessão de informações do Premium -->
+
+        <!-- Caixa para escolher a assinatura -->
+        <section id="opcoes" class="assinatura">
+            <i id="xmark" class="fa-solid fa-xmark" onclick="fechar()"></i>
+            <section class="content">
+            <h1 id="textAss">Qual plano gostaria de assinar?</h1>
+            <h2 id="textAss">Temos 3 opções especiais pra você</h2>
+            <select name="" id="">
+                <option value="opção1">Basico</option>
+                <option value="opção2">Médio</option>
+                <option value="opção3">Pro</option>
+            </select>
+            <h1 class="txtBaixo" id="textAss">Agora é só concluir!</h1>
+            <button class="assinarBtn">ASSINAR ECO+</button>
+            </section>
+        </section>
+        <!-- Fim Caixa para escolher a assinatura -->
+
+        <h1 class="txtPlano">Ainda não está convencido(a)?</h1>
+        <h4 class="subTxtPlano">Aqui estão alguns benefícios da assinatura</h4>
+
+        <!-- Sessão tabelas com beneficios -->
+        <section class="planosPremium">
+
+            <section id="plano" class="planoBasico">
+                <h3>Plano Basico</h3>
+                <h1>R$10,00</h1>
+                <ul>
+                    <li><i id="check" class="fa-solid fa-check"></i> Receba cupons de desconto em produtos de moda e cosméticos</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Participe de sorteios exclusivos de produtos sustentáveis</li>
+                </ul>
+                <h2>Mais Barato</h2>
+            </section>
+
+            <section id="plano" class="planoMedio">
+                <h3>Plano Medio</h3>
+                <h1>R$18,00</h1>
+                <ul>
+                    <li><i id="check" class="fa-solid fa-check"></i> Participe de sorteios exclusivos de produtos sustentáveis</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Receba cupons de desconto para frete de entrega</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Receba cupons de desconto em TODAS as categorias do catálogo SEMANALMENTE</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Participe de sorteios exclusivos de produtos sustentáveis</li>
+                </ul>
+                <h2>Custo Beneficio</h2>
+            </section>
+
+            <section id="plano" class="planoPro">
+                <h3>Plano Pro</h3>
+                <h1>R$26,00</h1>
+                <ul>
+                    <li><i id="check" class="fa-solid fa-check"></i> Participe de sorteios exclusivos de produtos sustentáveis</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Frete grátis nas entregas</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Receba cupons de desconto em TODAS as categorias do catálogo SEMANALMENTE</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> Participe de sorteios exclusivos de produtos sustentáveis</li>
+                    <li><i id="check" class="fa-solid fa-check"></i> A cada 4 meses, receba uma
+                        caixa surpresa com produtos Eco Future EXCLUSIVOS</li>
+                </ul>
+                <h2>Completo</h2>
+            </section>
+
+        </section>
+        <!-- Fim Sessão tabela com Beneficios -->
+
+        <section class="botaoAssinar">
+            <button class="assinarBtn" id="btn2" onclick="assinatura()">ASSINAR ECO-PREMIUM</button>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <%- include('../partial/footer'); %>
+
+    <script src="/js/menus.js"></script>
+    <script src="/js/suporte.js"></script>
+    <script src="/js/assinatura.js"></script>
+    
+</body>
+</html>

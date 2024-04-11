@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
+    <%- include('../partial/essenciais'); %> 
+
+    <!-- CSS (da pagina) -->
+    <link rel="stylesheet" href="/css/home.css">
+
+    <link rel="stylesheet" href="/css/swiper-bundle.min.css">
+    <link rel="stylesheet" href="/css/produtos-slider.css">
+
+    <title>Home</title>
+</head>
+<body>
+    <!-- Menu e menu lateral -->
+    <%- include('../partial/header'); %>
+    <!-- Fim menu e menu lateral -->
+
+    <!-- =============== CONTEUDO ===============-->
+    <main>
+        <!-- Imagem Home --> 
+        <section class="imagemHome">
+            <section class="conteinerImg">
+                <img src="/imagem/home-img.png" alt="homem olhando texto">
+            </section>
+
+            <article class="info-home">
+                <h2>Transforme sua<br> compra em um ato de <br><strong>amor</strong> pelo planeta</h2>
+                <a href="../pages/catalogo.html"><input class="home-button" type="button" value="Comece sua compra"></a>   
+            </article>
+        </section>
+        <!--Fim Imagem Home-->
+
+        <!-- Quem somos -->
+        <section class="quemSomosConteiner">
+            <article class="quemSomostxt">
+                <h1>Quem nós somos?</h1>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. At pariatur ut neque labore cumque, sapiente sint. Laudantium consectetur iusto doloribus necessitatibus eveniet recusandae tenetur odit, explicabo ea rerum quisquam temporibus. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quasi dolore officia exercitationem magni excepturi fuga libero rem reprehenderit aliquam eveniet impedit eaque, facere voluptatem quod, praesentium nihil! Quae, minus est.</p>
+            </article>
+            <section class="quemSomosImg">
+                <img src="/imagem/quemsomosimg.png" alt="ilustração">
+            </section>
+        </section>
+        <!-- Fim Quem somos -->
+
+        <h2 class="procurandoTxt">O que você está procurando?</h2>
+
+        <!-- Anuncios Categorias -->
+        <section class="anuncioCategorias">
+            <section class="imgSuperior">
+                <img id="imgModa" src="/imagem/Moda.png" alt="">
+                <img id="imgHigiene" src="/imagem/Higiene.png" alt="">
+            </section>
+            <section class="imgInferior">
+                <img id="imgBag" src="/imagem/Bags.png" alt="">
+                <img id="imgCosmetico" src="/imagem/Cosméticos.png" alt="">
+            </section>
+        </section>
+        <!-- Fim Anuncios Categorias -->
+        
+        <h2 class="produtosDestaques">Produtos Destaques</h2>
+
+        <!-- Produtos -->
+        <%- include('../partial/produtos'); %>
+        <!--Fim Produtos-->
+
+        <!-- Carrossel -->
+        <section>
+            <section class="conteiner">
+                <button id="prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            <section class= "img-conteiner">
+                <img class="slider on" src= "/imagem/carrossel.png" alt="">
+                <img class="slider" src= "/imagem/carrossel(1).png" alt="">
+                <img class="slider" src= "/imagem/carrossel(2).png" alt="">
+                <img class="slider" src= "/imagem/carrossel(3).png" alt="">
+            </section>
+                <button id="next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+            </section>
+        </section>
+        
+        <!--Fim Carrossel-->
+
+        <!-- Assinatura -->
+        <section class="ecopremium">
+            <article class="premiumTxt">
+                <h2>Conheça a Assinatura Eco+</h2>
+                <p>
+                    Não deixe essa oportunidade passar! Junte-se a nós e faça parte de uma comunidade comprometida com o meio ambiente e com um consumo consciente. Diversos Benefícios para você! Entre eles:
+                </p>
+                <ul>
+                    <li><i class="fa-solid fa-box"></i> Box Surpresa</li>
+                    <li><i class="fa-solid fa-tag"></i> Descontos Exclusivos</li>
+                    <li><i class="fa-solid fa-truck-fast"></i> Frete grátis em entregas</li>
+                </ul>
+                <a href="/ecopremium">
+                    <button>Saiba mais</button>
+                </a>      
+            </article>
+            <section class="premiumImg">
+                <img src="/imagem/abrindo-caixa.png" alt="homem abrindo caixa">
+            </section>
+        </section>
+
+    </main>
+    <!-- ========= FIM CONTEUDO ============ -->
+
+    <!-- Rodapé -->
+    <%- include('../partial/footer'); %>
+
+    <script src="/js/menus.js"></script>
+    <script src="/js/suporte.js"></script>
+    <script src="/js/carrossel.js"></script>
+    <script src="/js/swiper-bundle.min.js"></script>
+    <script src="/js/slider-produtos.js"></script>
+</body>
+</html>

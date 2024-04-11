@@ -1,0 +1,469 @@
+.logoGrande{
+    width: 200px;
+    margin-left: 10px;
+}
+.logoPequena{
+    display: none;
+    width: 70px;
+}
+.cabecalho{
+    background-color: #05414B;
+    padding: 20px;
+    margin: auto;
+    line-height: 40px;
+    border-bottom: 1px solid rgba(20, 20, 20, 0.247);
+}
+.cabecalho nav{
+    color: #fff;
+}
+.cabecalho nav a{
+    color: #fff;
+    text-decoration: none;
+}
+.menuElementos{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+}
+.opcoesMenu{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 20px;
+    gap: 1.5rem;
+    font-size: 17px;
+    font-weight: 300;
+}
+.dropdown{
+    padding: 15px;
+    list-style: none;
+    display: none;
+    gap: 1rem;
+    flex-direction: column;
+    position: absolute;
+    z-index: 2;
+    background-color: #083b46;
+}
+.btnCategorias{
+    cursor: pointer;
+}
+.iconesMenu{
+    display: flex;
+    justify-content: space-between;
+    list-style: none;
+    padding: 20px;
+    gap: 1rem;
+}
+.iconesMenu i{
+    font-size: 24px;
+}
+.dropdownPerfil{
+    list-style: none;
+    display: none;
+    width: 200px;
+    padding: 15px;
+    gap: 0.5rem;
+    background-color: #083b46;
+    z-index: 1;
+    position: absolute;
+}
+.dropdownPerfil a{
+    color: #fff;
+    font-weight: 600;
+}
+.iconPerfil:hover .dropdownPerfil {
+    display: block;
+  }
+.dropdownPerfil li:hover{
+    transform: scale(1.1);
+}
+.menuhamburguer{
+    cursor: pointer;
+    display: none;
+}
+
+/* Contador de itens no carrinho */
+.item-count{
+    position: absolute;
+    z-index: 1;
+    background-color: red;
+    color: #fff;
+    text-align: center;
+    width: 1.5em; /* Ajuste o tamanho do círculo conforme necessário */
+    height: 1.5em; /* Ajuste o tamanho do círculo conforme necessário */
+    border-radius: 50%;
+    margin-top: -1.5%;
+    left: 91%;
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+}
+/* Fim Contador de itens no carrinho */
+
+/* BARRA DE BUSCA */
+.buscar-box{
+    width: 50px;
+    height: 50px;
+    margin-top: 10px;
+    background-color: transparent;
+    overflow: hidden;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 25px;
+    color: black;
+    transition: .5s;
+}
+.buscar-box.ativar{
+    width: 330px;
+    background-color: #fff;
+}
+.buscar-box.ativar> .lupa-buscar i{
+    color: #0A242A;
+}
+.buscar-box.ativar> .btn-fechar i{
+    color: #0A242A;
+}
+.lupa-buscar, .btn-fechar{
+    min-width: 60px;
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+.lupa-buscar i{
+    font-size: 25px;
+    color: #fff;
+}
+.btn-fechar i{
+    font-size: 20px;
+    margin-left: 10px;
+    color: #fff;
+}
+.input-buscar{
+    width: 100%;
+    height: 100%;
+    line-height: 60px;
+    margin-bottom: 10px;
+}
+.input-buscar input{
+    border: 0;
+    outline: 0;
+    font-size: 16px;
+    width: 100%;
+}
+/* FIM BARRA DE BUSCA */
+
+/* ========= Menu Lateral Mobile ========= */
+.menuMobile{
+    display: block;
+}
+.menuLateral{
+    z-index: 1000;
+    background-color: #093841;
+    width: 250px;
+    height: 1580px;
+    position: absolute;
+    border-radius: 0px 0px 80px 0px;
+    left: -250px;
+    transition: left 0.5s;
+    box-shadow: 2px 4px 5px rgba(0, 0, 0, 0.521); 
+}
+.menuLateral h3{
+    color: white;
+    text-transform: uppercase;
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+.menuLateral ul li{
+    line-height: 40px;
+    border-bottom: 1px solid white;
+}
+.menuLateral ul li a{
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding-left: 30px;
+    display: block;
+    transition: 0.5s;
+    font-size: 20px;
+    font-weight: 600;
+}
+.menuLateral ul li a:hover{
+    background-color: #0A242A;
+    color: #28B67E;
+}
+.menuLateral ul ul li a{
+    font-size: 16px;
+    font-weight: 300;
+    padding-left: 60px;
+    background-color: #0b2930;
+}
+.menuLateral ul ul{
+    display: none;
+}
+.menuLateral ul .firstOption.mostra{
+    display: block;
+}
+.menuLateral ul .secondOption.mostra{
+    display: block;
+}
+.menuLateral.mostra{
+    left: 0;
+}
+.fecharMenu{
+   color: #fff;
+   border: 1px solid #fff;
+   cursor: pointer;
+   border-radius: 5px;
+   padding: 5px;
+   margin-left: 30px;
+}
+.menuLateral ul li a i{
+    font-size: 30px;
+    position: absolute;
+    right: 5px;
+}
+/* ========= Fim Menu Lateral Mobile ========= */
+
+/* ===============Rodapé========== */
+footer{
+    background-color: #0A242A;
+    margin-top: 100px;
+    height: 100%;
+    padding: 30px;
+}
+.quemsomos{
+    width: 345px; 
+    font-size: 19px;
+    text-align: justify;
+    display: inline-block;
+    
+}
+.quemsomos h3{
+    color: #28B67E;
+}
+.quemsomos p{
+    color: white;
+}
+.suporte{
+    font-size: 19px;
+    text-align: left;
+    width: 345px;
+    display: inline-block;
+    
+}
+.suporte h3{
+    color: #28B67E;
+}
+.suporte button{
+    background-color: #041418;
+    border: none;
+    color: white;
+    font-size: 17px;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    padding: 3px;
+    margin-bottom: 3px;
+}
+.suporte span{
+    float: right;
+}
+#resposta1,#resposta2,#resposta3,#resposta4{
+    background-color: #071e24;
+    display: none;
+    font-size: 15px;
+    color: white;
+    padding: 2px;
+}
+.contato{
+    font-size: 19px;
+    width: 345px;
+    color: white;
+    display: inline-block;
+}
+.contato h3{
+    color: #28B67E;
+}
+.contato a{
+    color: #fff;
+    text-decoration: none;
+    transition: 0.5s;
+}
+.contato a:hover{
+    color: #28B67E;
+}
+.info-rodape{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+}
+
+/*EMPRESAS CARDS*/
+.empresas{
+    margin-top: 5%;
+}
+.empresas h1{
+    text-align: center;
+    color: #28B67E;
+}
+.emprecard{
+    position: relative;
+    width: 228px;
+    height: 210px;
+    border-radius: 20px;
+    overflow: hidden;
+    display: inline-block;
+    background-color: #29535C;
+    box-shadow: 0px 10px 40px #00000056;
+    align-items: center;
+    
+} 
+.logos{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+/* ===========Fim Rodape================== */
+
+/* ===============RESPONSIVIDADE============ */
+/* ============= Tamanho 1440px =============== */
+@media(max-width:1440px){
+    .item-count{
+        margin-top: -2%;
+        left: 88.5%;
+    }
+}
+
+/* ============= Tamanho 1200px =============== */
+
+@media(max-width:1200px){
+    .quemsomos{
+        width: 275px; 
+        font-size: 17px;
+    }
+    .suporte{
+        width: 275px;
+        font-size: 17px;
+    }
+    .contato{
+        width: 275px;
+        font-size: 17px;
+    }
+    .text{ /*Span que fica do lado dos icones*/
+        display: none;
+    }
+    .menuicon{
+        font-size: 20px;
+    }
+    .dropdownPerfil{
+        width: auto;
+    }
+    .item-count{
+        left: 92%;
+    }
+}
+
+/* ============= Tamanho 992px =============== */
+@media(max-width:992px){
+    .logoGrande{
+        display: none;
+    }
+    .logoPequena{
+        display: block;
+    }
+    .opcoesMenu{
+        font-size: 16px;
+    }
+    .emprecard{
+        width: 200px;
+        height: 195px;
+    }
+    .quemsomos{
+        width: 230px;
+        font-size: 15px;
+    }
+    .suporte{
+        width: 230px;
+        font-size: 15px;
+    }
+    .contato{
+        width: 230px;
+        font-size: 15px;
+    }
+    .item-count{
+        left: 90.5%;
+        margin-top: -2.5%;
+    }
+}
+
+/* ============= Tamanho 768px =============== */
+@media(max-width:768px){
+    .opcoesMenu{
+        display: none;
+    }
+    .logoPequena{
+        display: none;
+    }
+    .logoGrande{
+        display: block;
+    }
+    .menuhamburguer{
+        display: block;
+    }
+    .logos{
+        flex-wrap: wrap;
+    }
+    .emprecard{
+        width: 195px;
+        height: 175px;
+        margin-bottom: 5%;
+    }
+    .item-count{
+        left: 85%;
+        margin-top: -3%;
+    }
+}
+
+/* ============= Tamanho 576px =============== */
+@media(max-width:576px){
+    .logoGrande{
+        display: none;
+    }
+    .logoPequena{
+        display: block;
+        width: 65px;
+    }
+    .iconesMenu{
+        gap: 0.5rem;
+    }
+    .info-rodape{
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+    }
+    .quemsomos{
+        font-size: 19px;
+        width: 345px;
+        margin-bottom: 5%;
+    }
+    .suporte{
+        font-size: 19px;
+        width: 345px;
+        margin-bottom: 5%;
+    }
+    .contato{
+        font-size: 19px;
+        width: 345px;
+        margin-bottom: 5%;
+    }
+    .menuicon{
+        font-size: 20px;
+    }
+    .item-count{
+        left: 81%;
+        margin-top: -4%;
+    }
+}

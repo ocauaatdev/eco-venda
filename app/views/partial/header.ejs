@@ -1,0 +1,115 @@
+<header class="cabecalho">
+    <nav>
+        <ul class="menuElementos">
+            <li>
+                <a href="/home-page">
+                    <img class="logoGrande" src="/imagem/Logo/LogoLado Branco.png" alt="logo"> <!--Logo dispositivos grandes-->
+                    <img class="logoPequena" src="/imagem/Logo/Logo-fundo-verde-branco.png" alt="">
+                </a>
+            </li>
+            <li>
+                <!-- Opções Menu -->
+                <ul class="opcoesMenu">
+                    <li><a href="../pages/camisas.html">Moda Eco</a></li>
+                    <li><a href="../pages/bags.html">Eco Bags</a></li>
+                    <li><a href="../pages/cosmeticos.html">Cosmeticos</a></li>
+                    <li class="btnCategorias">Mais <i onclick="abrirsubmenu()" class="fa-solid fa-chevron-down"></i>
+                        <!--Dropdown-->
+                        <ul class="dropdown">
+                            <li><a href="/ecopremium">Assinatura Eco+</a></li>
+                            <li><a href="../pages/catalogo.html">Todos Produtos</a></li>
+                            <li><a href="../pages/higiene.html">Higiene</a></li>
+                            <li><a href="../pages/camisas.html">Moda Eco</a></li>
+                            <li><a href="../pages/bags.html">Eco Bags</a></li>
+                            <li><a href="../pages/cosmeticos.html">Cosméticos</a></li>
+                        </ul>
+                        <!-- Fim do Dropdown -->
+                    </li>
+                </ul>
+                <!-- Fim Opções Menu -->
+            </li>
+            <li>
+                <!-- Barra de Pesquisa -->
+                <section class="buscar-box">
+                    <section class="lupa-buscar">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </section> <!--lupa buscar-->
+
+                    <section class="input-buscar">
+                        <input type="text" name="" id="" placeholder="Faça uma busca">
+                    </section>
+
+                    <section class="btn-fechar">
+                        <i class="fa-regular fa-circle-xmark"></i> <!--Botao de fechar-->
+                    </section>
+                </section>
+                <!-- Fim Barra de Pesquisa -->
+            </li>
+            <li>
+                <!-- Icones Menu -->
+                <ul class="iconesMenu">
+
+                    <!--Icone de Perfil-->
+                    <li class="iconPerfil">
+                        <a class="menuicon" href="../pages/perfil-user.html">
+                        <span class="icon"><i class="fa-solid fa-user"></i></span>     
+                        <span class="text">Perfil</span></a>
+    
+                        <!-- Dropdown -->
+                        <ul class="dropdownPerfil">
+                            <li id="login-button"><a class="perfilOptions" href="../pages/login-page.html">Login e Cadastro</a></li>
+                            <li class="perfilOptions" id="sairOption" onclick="deslogar()"><a href="">Sair</a></li>   
+                            <li id="empresa-acesso" class="perfilOptions"><a href="../pages/login-empresa.html">Acesso parceiros</a></li>
+                        </ul> <!-- Fim Dropdown -->
+                    </li>
+                    <!--FIM Icone de Perfil-->
+    
+                    <!-- Icone Carrinho -->
+                    <li><a class="menuicon" href="../pages/carrinho.html">
+                        <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
+                        <span class="text">Carrinho</span>
+                        <span id="cart-item-count" class="item-count">0</span>
+                    </a></li> <!-- Fim Icone Carrinho -->    
+    
+                <!--Icone Menu Hamburguer-->
+                <li><span class="icon menuicon menuhamburguer btnMenu"><i class="fa-solid fa-bars"></i></span></li>  
+                <!-- Fim Icone Menu Hamburguer--> 
+            </ul>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<!-- ============= Menu Lateral Dispositivos Mobile ================== -->
+<section class="menuMobile">
+    <section class="menuLateral">
+        <h3>Fechar Opções <i class="fa-solid fa-xmark fecharMenu"></i></h3> 
+        <ul>
+            <li><a href="../pages/home-page.html">Página inicial</a></li>
+            <li><a href="../pages/catalogo.html">Todos Produtos</a></li>
+            <li><a href="#" class="categorias">Categorias
+                <i class="fa-solid fa-caret-down"></i></a></li>
+            <ul class="firstOption">
+                <li><a href="../pages/camisas.html">Camisas</a></li>
+                <li><a href="../pages/bags.html">Eco Bags</a></li>
+                <li><a href="../pages/cosmeticos.html">Cosméticos</a></li>
+                <li><a href="../pages/higiene.html">Higiene</a></li>
+            </ul>
+
+            <li><a href="../pages/ecoplus.html">Assine Eco+</a></li>
+
+            
+            <li><a href="#" class="ajudaUsuario">Ajuda ao usuário 
+                <i class="fa-solid fa-caret-down"></i></a></li>
+                <ul class="secondOption">
+                    <li><a class="btnSuporte" href="#suporte">Suporte</a></li>
+                    <li><a href="../pages/perfil-user.html">Meu Perfil</a></li>
+                    <li class="loginBtn"><a href="../pages/login-page.html">Login</a></li>
+                    <li class="cadastrarBtn"><a href="../pages/cadastro-page.html">Cadastrar</a></li>
+                    <li class="acesso-parceiros"><a href="../pages/login-empresa.html">Acesso para parceiros</a></li>
+                    <li class="sairbtn"><a id="sairbtn" href="" onclick="deslogar()">Sair</a></li>
+                </ul>
+        </ul>
+    </section>
+</section>
+<!-- ============= Fim Menu Lateral Dispositivos Mobile ================== -->
