@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
+    <%- include('../partial/essenciais'); %> 
+
+    <!-- CSS (da pagina) -->
+    <link rel="stylesheet" href="/css/catalogo.css">
+    <link rel="stylesheet" href="/css/produtos-static.css">
+
+    <title>Catalogo</title>
+</head>
+<body>
+    <!-- Menu e menu lateral -->
+    <%- include('../partial/header'); %>
+    <!-- Fim menu e menu lateral -->
+
+    <!-- =============== CONTEUDO ===============-->
+    <main>
+        <section class="catalogo">
+            <h3 id="txtProd">Catálogo Eco</h3>
+            <p>Na Eco Future você encontra uma grande variedade de produtos e cosméticos com a melhor qualidade e melhor preço do mercado. Confira!</p>
+            <section class="img-conteiner">
+                <a href="#camiseta">
+                    <img class="catalogo-img" src="/imagem/Prancheta 1.png" alt="">
+                </a>
+                <a href="#cosmetico">
+                    <img class="catalogo-img" src="/imagem/Prancheta 2.png" alt="">
+                </a>
+                <a href="#higiene">
+                    <img class="catalogo-img" src="/imagem/Prancheta 3.png" alt="">
+                </a>
+                <a href="#bag">
+                    <img class="catalogo-img" src="/imagem/Prancheta 4.png" alt="">
+                </a>
+            </section>
+        </section>
+
+        <!-- PRODUTOS -->
+
+        
+        
+        <!-- FIM PRODUTOS -->
+        
+    </main>
+
+    <!-- ========= FIM CONTEUDO ============ -->
+    <!-- Rodapé -->
+    <%- include('../partial/footer'); %>
+    
+    <script src="/js/swiper-bundle.min.js"></script>
+    <script src="/js/slider-produtos.js"></script>
+</body>
+</html>

@@ -65,7 +65,29 @@
         <h2 class="produtosDestaques">Produtos Destaques</h2>
 
         <!-- Produtos -->
-        <%- include('../partial/produtos'); %>
+        <%
+        const produtos = [
+            { id: 'card1', imagem: '/imagem/camisetas/camisa.webp', nomeProduto: 'Camiseta Eco', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card2', imagem: '/imagem/Higiene/higiene-1.png', nomeProduto: 'Kit Higiene', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card3', imagem: '/imagem/cosmeticos/cosmetico-1.png', nomeProduto: 'Kit Cosmetico', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card4', imagem: '/imagem/ecobags/bag-1.png', nomeProduto: 'Eco Bag', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card5', imagem: '/imagem/camisetas/camisa-2.png', nomeProduto: 'Camiseta Eco', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card6', imagem: '/imagem/Higiene/higiene-2.jpg', nomeProduto: 'Sabonete', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card7', imagem: '/imagem/cosmeticos/cosmetico-2.jpg', nomeProduto: 'Cosmetico - Oleo corporal', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card8', imagem: '/imagem/ecobags/bag-2.png', nomeProduto: 'Eco Bag', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+
+            { id: 'card9', imagem: '/imagem/camisetas/camisa-3.png', nomeProduto: 'Camiseta Eco', precoParcelado: 'R$00,00', precoVista: 'R$00,00' }
+        ];
+        %>
+
+        <%- include('../partial/produtos', { produtos: produtos }); %>
         <!--Fim Produtos-->
 
         <!-- Carrossel -->

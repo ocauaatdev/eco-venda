@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/4494a50fc2.js" crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/login.css">
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
+
+    <!-- Jquery Mascaras -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+    <title>Login de Usuario</title>
+</head>
+<body>
+    <section>
+        <form action="">
+            <div class="formHead">
+                <a href="/home-page">
+                    <i class="fa-solid fa-house home"></i> <span>Inicio</span>
+                </a>
+                <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+                <h1>Login de Usuário</h1>
+            </div>
+
+            <!-- ============ Nome de Usuario =========== -->
+            <h3>Nome de Usuário:</h3>
+            <input type="text" name="usuario" id="usuario" placeholder="Digite o seu nome de usuário" required> 
+
+            <!-- ============ Senha =========== -->
+            <h3>Senha:</h3> 
+            <div class="senha-container">
+                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+                <span class="eye-icon">
+                    <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
+                </span>
+            </div>
+            
+            <button onclick="logar()">Entrar</button>
+
+            <a href="/cadastro">Não tem uma conta? Crie uma!</a>
+            <p>Esqueci minha senha</p>
+        </form>
+    </section>
+
+    <script src="/js/login.js"></script>
+</body>
+</html>

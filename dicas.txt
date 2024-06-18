@@ -1,0 +1,35 @@
+
+Entendi. Você pode fazer isso usando variáveis no arquivo de inclusão e, em seguida, definir essas variáveis na página onde você inclui o arquivo. Aqui está como você pode fazer isso usando EJS:
+
+No seu arquivo de inclusão produtos.ejs, você pode definir variáveis para o nome do produto:
+
+<!-- partial/produtos.ejs -->
+<li class="card swiper-slide">
+    <article id="<%= id %>" class="produto">
+        <a href="#"><img class="imgproduto" src="<%= imagem %>" alt="camisa"></a>
+        <h3><%= nomeProduto %></h3>
+        <section class="preco-parcelado">
+            <label for="span">3x </label><span><%= precoParcelado %></span>
+        </section>
+        <section class="precoVista">
+            <label for="span">À vista </label><span class="preco"><%= precoVista %></span>
+            <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('<%= id %>')"></i>
+        </section> 
+    </article>
+</li>
+
+Em seguida, na sua página onde você inclui esse arquivo, você pode definir essas variáveis antes de incluir o arquivo:
+
+<!-- Sua página -->
+<%
+const produtos = [
+    { id: 'card6', imagem: '/imagem/Higiene/higiene-2.jpg', nomeProduto: 'Sabão em barra', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+    { id: 'card7', imagem: '/imagem/cosmeticos/cosmetico-2.jpg', nomeProduto: 'Cosmético Óleo Corporal', precoParcelado: 'R$00,00', precoVista: 'R$00,00' }
+];
+%>
+
+<% produtos.forEach(produto => { %>
+    <%- include('../partial/produtos', produto); %>
+<% }); %>
+
+Dessa forma, você pode definir diferentes nomes de produtos na sua página sem modificar o arquivo de inclusão original. Basta ajustar o array produtos conforme necessário para incluir os produtos que você deseja exibir na página.

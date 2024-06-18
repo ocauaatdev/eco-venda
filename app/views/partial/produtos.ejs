@@ -1,3 +1,5 @@
+<!-- ================================================ -->
+
 <section class="produtos"> <!--section PRODUTOS-->
     <section class="slide-container swiper"> <!--SLIDE CONTAINER SWIPER-->
 
@@ -5,149 +7,25 @@
 
             <ul class="card-wrapper swiper-wrapper">
 
-                <!-- CARD 1 -->
-                <li class="card swiper-slide">
-                    <article id="card1" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/camisetas/camisa.webp" alt="camisa"></a>
-                        <h3>Camiseta Eco</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card1')"></i>
-                        </section> 
-                    </article>
-                </li>
+                <!-- Incluir todos os produtos dentro de um único slider -->
+                <% produtos.forEach(produto => { %>
 
-                <!-- CARD 2 -->
+                    <!-- CARD -->
                     <li class="card swiper-slide">
-
-                        <article id="card2" class="produto">
-                            <a href="#"><img class="imgproduto" src="/imagem/Higiene/higiene-1.png" alt="camisa"></a>
-                            <h3>Kit Higiene</h3>
+                        <article id="<%= produto.id %>" class="produto">
+                            <a href="#"><img class="imgproduto" src="<%= produto.imagem %>" alt="camisa"></a>
+                            <h3><%= produto.nomeProduto %></h3>
                             <section class="preco-parcelado">
-                                <label for="span">3x </label><span>R$00,00</span>
+                                <label for="span">3x </label><span><%= produto.precoParcelado %></span>
                             </section>
                             <section class="precoVista">
-                                <label for="span">À vista </label><span class="preco">R$00,00</span>
-                            <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card2')"></i>
+                                <label for="span">À vista </label><span class="preco"><%= produto.precoVista %></span>
+                                <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('<%= produto.id %>')"></i>
                             </section> 
                         </article>
                     </li>
 
-                    <!-- CARD 3 -->
-                    
-                    <li class="card swiper-slide">
-
-                        <article id="card3" class="produto">
-                            <a href="#"><img class="imgproduto" src="/imagem/cosmeticos/cosmetico-1.png" alt="camisa"></a>
-                            <h3>Kit Cosmetico</h3>
-                            <section class="preco-parcelado">
-                                <label for="span">3x </label><span>R$00,00</span>
-                            </section>
-                            <section class="precoVista">
-                                <label for="span">À vista </label><span class="preco">R$00,00</span>
-                            <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card3')"></i>
-                            </section> 
-                        </article>
-                    </li>
-
-                <!-- CARD 4 -->
-
-                <li class="card swiper-slide">
-                    <article id="card4" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/ecobags/bag-1.png" alt="camisa"></a>
-                        <h3>Eco Bag</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card4')"></i>
-                        </section> 
-                    </article>
-                </li>
-
-                <!-- CARD 5 -->
-
-                <li class="card swiper-slide">
-                    <article id="card5" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/camisetas/camisa-2.png" alt="camisa"></a>
-                        <h3>Camiseta Eco</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card5')"></i>
-                        </section> 
-                    </article>
-                </li>
-
-                <!-- CARD 6 -->
-
-                <li class="card swiper-slide">
-                    <article id="card6" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/Higiene/higiene-2.jpg" alt="camisa"></a>
-                        <h3>Sabonete</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card6')"></i>
-                        </section> 
-                    </article>
-                </li>
-
-                <!-- CARD 7 -->
-
-                <li class="card swiper-slide">
-                    <article id="card7" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/cosmeticos/cosmetico-2.jpg" alt="camisa"></a>
-                        <h3>Cosmetico - Oleo corporal</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card7')"></i>
-                        </section> 
-                    </article>
-                </li>
-
-                <!-- CARD 8 -->
-
-                <li class="card swiper-slide">
-                    <article id="card8" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/ecobags/bag-2.png" alt="camisa"></a>
-                        <h3>Eco Bag</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card8')"></i>
-                        </section> 
-                    </article>
-                </li>
-
-                <!-- CARD 9 -->
-
-                <li class="card swiper-slide">
-                    <article id="card9" class="produto">
-                        <a href="#"><img class="imgproduto" src="/imagem/camisetas/camisa-3.png" alt="camisa"></a>
-                        <h3>Camiseta Eco</h3>
-                        <section class="preco-parcelado">
-                            <label for="span">3x </label><span>R$00,00</span>
-                        </section>
-                        <section class="precoVista">
-                            <label for="span">À vista </label><span class="preco">R$00,00</span>
-                        <i class="fa-sharp fa-solid fa-bag-shopping" onclick="addToCart('card9')"></i>
-                        </section> 
-                    </article>
-                </li>
+                <% }); %>
 
             </ul>
         </section> <!--AQUI SIMPLESMENTE O SLIDE CONTENT -->

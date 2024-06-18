@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/4494a50fc2.js" crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/cadastro.css">
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
+
+    <!-- Jquery Mascaras -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+    <title>Cadastro Usuário</title>
+</head>
+<body>
+    <section>
+        <form action="/cadastro" method="post" >
+            <div class="formHead">
+                <a href="/home-page">
+                    <i class="fa-solid fa-house home"></i> <span>Inicio</span>
+                </a>
+                <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+                <h1>Cadastro de Usuário</h1>
+            </div>
+
+            <!-- ============ Nome de Usuario =========== -->
+            <h3 id="usuarioTxt">Nome de Usuário:</h3>
+            <input type="text" name="usuario" id="usuario" placeholder="Digite o seu nome de usuário" required> 
+
+            <!-- ============ Email =========== -->
+            <h3 id="emailTxt">E-mail:</h3>
+            <input type="email" name="e_mail" id="e-mail" placeholder="Digite seu e-mail" required>
+
+            <!-- ============ Telefone =========== -->
+            <h3 id="telTxt">Telefone:</h3>
+            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" required>
+
+            <!-- ============ CPF =========== -->
+            <h3 id="cpfTxt">CPF:</h3>
+            <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF" required>
+
+            <!-- ============ Data de Nascimento =========== -->
+            <h3 id="nascTxt">Data de Nascimento:</h3>
+            <input type="text" name="nascimento" id="nascimento" placeholder="Digite sua data de nascimento" required>
+
+            <!-- ============ CEP =========== -->
+            <h3 id="cepTxt">CEP:</h3>
+            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" required>
+
+            <!-- ============ Senha =========== -->
+            <h3 id="senhaTxt">Senha:</h3> 
+            <div class="senha-container">
+                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+                <span class="eye-icon">
+                    <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
+                </span>
+            </div>
+
+            <!-- ============ Confirmar senha =========== -->
+            <h3 id="confirmTxt">Confirmar Senha:</h3>
+            <div class="confirm-container">
+                <input type="password" name="confirm_senha" id="confirm-senha" placeholder="Digite sua senha novamente" required>
+                <span class="eye-icon">
+                    <i class="fa-solid fa-eye fa-eye-slash" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
+                </span>
+            </div>
+            
+            <button onclick="cadastrar()">Cadastrar</button>
+        </form>
+    </section>
+
+    <script src="/js/cadastro.js"></script>
+    
+</body>
+</html>

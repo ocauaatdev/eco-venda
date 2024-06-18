@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins";
+}
+body{
+    background-image: url('/imagem/background-login-cadastro.png');
+    background-size: cover; 
+    background-repeat: no-repeat; 
+}
+section{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+form{
+    background-color: #0A242A;
+    box-shadow: 1px 2px 10px rgba(0, 0, 0, 0.404);
+    border-radius: 20px;
+    margin: 2%;
+    width: 700px;
+    height: 100%;
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+    color: #fff;
+}
+.formHead{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: relative;
+}
+.formHead a{
+    text-decoration: none;
+    display: inline-block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    color: #fff;
+}
+.formHead span{
+    color: #fff;
+}
+.formHead i{
+    font-size: 20px;
+}
+.formHead img{
+    width: 250px;
+}
+.formHead h1{
+    text-transform: uppercase;
+    font-weight: 900;
+    font-size: 25px;
+}
+form h3{
+    font-weight: 600;
+}
+form input{
+    width: 100%;
+    padding: 10px 10px;
+    display: inline-block;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.404);
+    outline: none;
+    min-width: 180px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+form span{
+    color: black;
+}
+button{
+    margin-top: 20px;
+    margin-bottom: 5%;
+    background-color: #16CF8C;
+    color: #0A242A;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+    padding: 10px 10px;
+    font-size: 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.senha-container {
+    position: relative;
+}
+
+.senha-container input {
+    padding-right: 40px; /* ajuste o espaçamento para o ícone do olho */
+}
+
+.senha-container .eye-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px; /* ajuste o posicionamento do ícone conforme necessário */
+    cursor: pointer;
+    z-index: 2;
+}
+
+.senha-container .eye-icon i {
+    color: #6d6d6d; 
+    font-size: 20px;
+}
+form a{
+    text-decoration: none;
+    color: #16CF8C;
+}
