@@ -1,9 +1,8 @@
 // INPUTS E BOTÕES
-var inputUsuario = document.querySelector('#usuario')
+var inputNomeEmpresa = document.querySelector('#empresa')
+var inputCnpj = document.querySelector('#cnpj')
 var inputEmail = document.querySelector('#e_mail')
 var inputTelefone = document.querySelector('#telefone')
-var inputCPF = document.querySelector('#cpf')
-var inputNascimento = document.querySelector('#nascimento')
 var inputCEP = document.querySelector('#cep')
 var btnConfirmSenha = document.querySelector('#btn-confirm-senha')
 var inputConfirm = document.querySelector('#confirm-senha')
@@ -11,40 +10,25 @@ var btnMostrarSenha = document.querySelector('#btn-senha')
 var inputSenha = document.querySelector('#senha')
 
 // H3 COM TEXTOS DAS AREAS PARA SEREM PREENCHIDAS
-var usuario = document.querySelector('#usuarioTxt')
+var empresa = document.querySelector('#empresaTxt')
+var cnpj = document.querySelector('#cnpjTxt')
 var email = document.querySelector('#emailTxt')
 var telefone = document.querySelector('#telTxt')
-var cpf = document.querySelector('#cpfTxt')
-var nascimento = document.querySelector('#nascTxt')
 var cep = document.querySelector('#cepTxt')
 var senha = document.querySelector('#senhaTxt')
 var confirmSenha = document.querySelector('#confirmTxt')
 
-// ==========EMPRESA=============
-// INPUTS
-var inputNomeEmpresa = document.querySelector('#empresa')
-var inputCnpj = document.querySelector('#cnpj')
-// H3 EMPRESAS
-var empresa = document.querySelector('#empresaTxt')
-var cnpj = document.querySelector('#cnpjTxt')
 // VALIDAÇÕES
 var validEmpresa = false
 var validCnpj = false
-// ==========EMPRESA=============
-
-// VARIAVEIS COM VALIDAÇÕES
-var validUsuario = false
 var validEmail = false
 var validTelefone = false
-var validCPF = false
-var validNascimento = false
 var validCEP = false
 var validSenha = false
-var validConfirm = false
+var validConfirmSenha = false
 
 
 // ============Mascaras================
-$('#nascimento').mask('00/00/0000');
 $('#cep').mask('00000-000');
 $('#telefone').mask('(00)00000-0000');
 $('#cpf').mask('000.000.000-00', {reverse: true});
@@ -77,15 +61,15 @@ function mostrarConfirmSenha() {
 // ============ Validações ===================
 
 // ------------Nome de Usuario------------
-inputUsuario.addEventListener('keyup', ()=>{
-if (inputUsuario.value.length <= 2) {
-    usuario.setAttribute('style', 'background-color:red')
-    usuario.innerHTML = 'Nome de Usuário: <span>*Insira no mínimo 3 caracteres</span>'
-    validUsuario = false;
+inputNomeEmpresa.addEventListener('keyup', ()=>{
+if (inputNomeEmpresa.value.length <= 2) {
+    empresa.setAttribute('style', 'background-color:red')
+    empresa.innerHTML = 'Nome de Usuário: <span>*Insira no mínimo 3 caracteres</span>'
+    validEmpresa = false;
 } else {
-    usuario.setAttribute('style', 'color:#16CF8C')
-    usuario.innerHTML = 'Nome de Usuário:'
-    validUsuario = true;
+    empresa.setAttribute('style', 'color:#16CF8C')
+    empresa.innerHTML = 'Nome de Usuário:'
+    validEmpresa = true;
 }
 }) // ======> O usuario deve preencher com um nome de no minimo 2 caracteres
 
@@ -122,31 +106,6 @@ inputTelefone.addEventListener('keyup', ()=>{
     }
     })
 
-// ---------CPF-------------
-inputCPF.addEventListener('keyup', ()=>{
-    if (inputCPF.value.length <= 11) {
-        cpf.setAttribute('style', 'background-color:red')
-        cpf.innerHTML = 'CPF <span>*Insira no mínimo 11 caracteres</span>'
-        validCPF = false;
-    } else {
-        cpf.setAttribute('style', 'color:#16CF8C')
-        cpf.innerHTML = 'CPF:'
-        validCPF = true;
-    }
-    })
-
-// ---------Nascimento-------------
-inputNascimento.addEventListener('keyup', ()=>{
-    if (inputNascimento.value.length <= 9) {
-        nascimento.setAttribute('style', 'background-color:red')
-        nascimento.innerHTML = 'Data de Nascimento <span>*Insira no mínimo 8 caracteres</span>'
-        validNascimento = false;
-    } else {
-        nascimento.setAttribute('style', 'color:#16CF8C')
-        nascimento.innerHTML = 'Data de Nascimento:'
-        validNascimento = true;
-    }
-    })
 
 // ---------CEP-------------
 inputCEP.addEventListener('keyup', ()=>{
@@ -206,20 +165,6 @@ inputConfirm.addEventListener('keyup', ()=>{
     }
     })
 
-// ========EMPRESA VALIDAÇÃO=========
-// ------------Nome da Empresa------------
-inputNomeEmpresa.addEventListener('keyup', ()=>{
-    if (inputNomeEmpresa.value.length <= 2) {
-        empresa.setAttribute('style', 'background-color:red')
-        empresa.innerHTML = 'Nome da Empresa: <span>*Insira no mínimo 3 caracteres</span>'
-        validUsuario = false;
-    } else {
-        empresa.setAttribute('style', 'color:#16CF8C')
-        empresa.innerHTML = 'Nome da Empresa:'
-        validEmpresa = true;
-    }
-    }) 
-
 // CNPJ
 inputCnpj.addEventListener('keyup', ()=>{
     if (inputCnpj.value.length <= 14) {
@@ -229,7 +174,7 @@ inputCnpj.addEventListener('keyup', ()=>{
     } else {
         cnpj.setAttribute('style', 'color:#16CF8C')
         cnpj.innerHTML = 'CNPJ:'
-        validCEP = true;
+        validCnpj = true;
     }
     })
     

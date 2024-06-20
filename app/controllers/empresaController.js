@@ -24,8 +24,6 @@ const usuarioController = {
             .isLength({min: 11,max: 14}).withMessage("Minimo 11 caracteres"),
         body("cnpj")
             .isLength({min:14, max:18}).withMessage("Minimo 14 caracteres"),
-        // body("nascimento")
-        //     .isISO8601().withMessage("Insira uma data válida, minimo 8 caracteres"),
         body("cep")
             .isLength({min:8, max:9}).withMessage("Minimo 8 caracteres"),
         body("senha")
@@ -55,26 +53,25 @@ const usuarioController = {
         const erros = validationResult(req);
         console.log(erros);
         var dadosForm = {
-            nomeCliente: req.body.usuario,
-            senhaCliente: bcrypt.hashSync(req.body.senha, salt),
-            nomeCliente: req.body.usuario,
-            emailCliente: req.body.e_mail,
-            celularCliente: req.body.telefone,
-            cpfCliente: req.body.cpf,
-            cepCliente: req.body.cep,
-            data_nascCliente: moment(req.body.nascimento,"YYYY-MM-DD").format("YYYY-MM-DD"),
+            razaoSocial: req.body.empresa,
+            senhaCliente: bcrypt.hashSync(req.body.senha, salt), //COLOCAR SENHA DA EMPRESA
+            razaoSocial: req.body.empresa, 
+            emailCliente: req.body.e_mail, //COLOCAR EMAIL DA EMPRESA
+            celularEmpresa: req.body.telefone,
+            cpnjempresa: req.body.cnpj,
+            cepEmpresa: req.body.cep,
         };
         if (!erros.isEmpty()) {
             console.log(erros);
-            return res.render("pages/cadastro", { listaErros: erros, valores: req.body })
+            return res.render("pages/cadastro-empresa", { listaErros: erros, valores: req.body })
         }
         try {
-            let create = await usuario.create(dadosForm);
+            let create = await empresa.create(dadosForm);
             console.log(create)
             res.redirect("/")
         } catch (e) {
             console.log(e);
-            res.render("pages/cadastro", { listaErros: erros, valores: req.body })
+            res.render("pages/cadastro-empresa", { listaErros: erros, valores: req.body })
         }
     }
 

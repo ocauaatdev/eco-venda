@@ -14,8 +14,8 @@ const empresaModel = {
     findUser: async (camposForm) => {
         try {
             const [resultados] = await pool.query(
-                "SELECT * FROM empresas WHERE nomeCliente = ?",
-                [camposForm.nomeCliente, camposForm.nomeCliente]
+                "SELECT * FROM empresas WHERE razaoSocial = ?",
+                [camposForm.razaoSocial, camposForm.razaoSocial]
             )
             return resultados;
         } catch (error) {
@@ -26,7 +26,7 @@ const empresaModel = {
 
     findId: async (id) => {
         try {
-            const [linhas] = await pool.query('SELECT * FROM empresas WHERE idempresas = ?', [id]);
+            const [linhas] = await pool.query('SELECT * FROM empresas WHERE idEmpresas = ?', [id]);
             return linhas;
         } catch (error) {
             return error;

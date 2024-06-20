@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.31, for Win64 (x86_64)
 --
--- Host: localhost    Database: ecovenda
+-- Host: localhost    Database: by5ji2tdajwrwyx4z1fd
 -- ------------------------------------------------------
 -- Server version 8.0.31
  
@@ -19,8 +19,8 @@
 -- Table structure for table `assinatura`
 --
  
-CREATE DATABASE if not exists ecovenda;
-USE ecovenda;
+CREATE DATABASE if not exists by5ji2tdajwrwyx4z1fd;
+USE by5ji2tdajwrwyx4z1fd;
  
 DROP TABLE IF EXISTS `assinatura`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
@@ -57,7 +57,7 @@ DROP TABLE IF EXISTS `categorias`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `categorias` (
   `idCategorias` int NOT NULL,
-  `NomeCategoria` varchar(45) DEFAULT NULL,
+  `nomeCategoria` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idCategorias`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -89,7 +89,7 @@ CREATE TABLE `clientes` (
   `logradouroCliente` varchar(45) DEFAULT NULL,
   `bairroCliente` varchar(30) DEFAULT NULL,
   `cidadeCliente` varchar(30) DEFAULT NULL,
-  `UfCliente` char(2) DEFAULT NULL,
+  `ufCliente` char(2) DEFAULT NULL,
   `cepCliente` char(9) NOT NULL,
   PRIMARY KEY (`idClientes`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
@@ -114,7 +114,7 @@ DROP TABLE IF EXISTS `cupons`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `cupons` (
   `idCupons` int NOT NULL,
-  `DescontoCupons` varchar(45) DEFAULT NULL,
+  `descontoCupons` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`idCupons`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -131,28 +131,27 @@ UNLOCK TABLES;
 --
 -- Table structure for table `empresas`
 --
- 
 DROP TABLE IF EXISTS `empresas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `empresas` (
   `idEmpresas` int NOT NULL,
-  `RazaoSocial` varchar(45) NOT NULL,
-  `CelularEmpresa` char(11) NOT NULL,
-  `CPNJempresa` char(14) NOT NULL,
-  `LogradouroEmpresa` varchar(45) NOT NULL,
-  `BairroEmpresa` varchar(30) NOT NULL,
-  `CidadeEmpresa` varchar(30) NOT NULL,
-  `UfEmpresa` char(2) NOT NULL,
-  `CepEmpresa` char(8) NOT NULL,
+  `razaoSocial` varchar(45) NOT NULL,
+  `celularEmpresa` char(11) NOT NULL,
+  `emailEmpresa` varchar(45) NOT NULL,
+  `senhaEmpresa` char(60) NOT NULL,
+  `cpnjempresa` char(14) NOT NULL,
+  `logradouroEmpresa` varchar(45) NOT NULL,
+  `bairroEmpresa` varchar(30) NOT NULL,
+  `cidadeEmpresa` varchar(30) NOT NULL,
+  `ufEmpresa` char(2) NOT NULL,
+  `cepEmpresa` char(8) NOT NULL,
   PRIMARY KEY (`idEmpresas`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
- 
 --
 -- Dumping data for table `empresas`
 --
- 
 LOCK TABLES `empresas` WRITE;
 /*!40000 ALTER TABLE `empresas` DISABLE KEYS */;
 /*!40000 ALTER TABLE `empresas` ENABLE KEYS */;
@@ -201,7 +200,7 @@ DROP TABLE IF EXISTS `pedidos`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pedidos` (
   `idPedidos` int NOT NULL,
-  `PrazoPedido` date DEFAULT NULL,
+  `prazoPedido` date DEFAULT NULL,
   `Clientes_idClientes` int NOT NULL,
   `Clientes_Plano Assinatura_idAssinatura` int NOT NULL,
   `data_pedido` date DEFAULT NULL,
@@ -230,8 +229,8 @@ DROP TABLE IF EXISTS `plano`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `plano` (
   `idPlano` int NOT NULL,
-  `Nome` varchar(45) DEFAULT NULL,
-  `Descricao` varchar(45) DEFAULT NULL,
+  `nome` varchar(45) DEFAULT NULL,
+  `descricao` varchar(45) DEFAULT NULL,
   `valor` decimal(10,2) DEFAULT NULL,
   PRIMARY KEY (`idPlano`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
@@ -256,7 +255,7 @@ DROP TABLE IF EXISTS `plano_cupons`;
 CREATE TABLE `plano_cupons` (
   `Plano_idPlano` int NOT NULL,
   `Cupons_idCupons` int NOT NULL,
-  `QtdeCupons` int DEFAULT NULL,
+  `tdeCupons` int DEFAULT NULL,
   PRIMARY KEY (`Plano_idPlano`,`Cupons_idCupons`),
   KEY `fk_Plano_has_Cupons_Cupons1_idx` (`Cupons_idCupons`),
   KEY `fk_Plano_has_Cupons_Plano1_idx` (`Plano_idPlano`),
@@ -273,7 +272,36 @@ LOCK TABLES `plano_cupons` WRITE;
 /*!40000 ALTER TABLE `plano_cupons` DISABLE KEYS */;
 /*!40000 ALTER TABLE `plano_cupons` ENABLE KEYS */;
 UNLOCK TABLES;
- 
+
+--
+-- Table structure for table `admin`
+--
+
+ DROP TABLE IF EXISTS `admin`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+
+CREATE TABLE `admin` (
+ `idAdmin` int NOT NULL,
+ `emailAdmin` varchar (45) NOT NULL,
+ `senhaAdmin` char (80) NOT NULL,
+ `nomeAdmin` varchar (45) NOT NULL,
+ PRIMARY KEY (`idAdmin`)
+   
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `admin`
+--
+
+LOCK TABLES `admin`WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
 --
 -- Table structure for table `produtos das empresas`
 --
@@ -318,5 +346,6 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
  
 -- Dump completed on 2024-06-05 12:29:58

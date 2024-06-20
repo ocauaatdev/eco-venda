@@ -32,5 +32,8 @@ router.post("/cadastro",
 router.get('/login',function(req,res){
     res.render('pages/login')
 })
+router.get('/cadastro-empresa',function(req,res){
+  res.render('pages/cadastro-empresa')
+})
 
 module.exports = router;
