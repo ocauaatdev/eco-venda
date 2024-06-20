@@ -1,179 +1,158 @@
-// INPUTS E BOTÕES
-var inputNomeEmpresa = document.querySelector('#empresa')
-var inputCnpj = document.querySelector('#cnpj')
-var inputEmail = document.querySelector('#e_mail')
-var inputTelefone = document.querySelector('#telefone')
-var inputCEP = document.querySelector('#cep')
-var btnConfirmSenha = document.querySelector('#btn-confirm-senha')
-var inputConfirm = document.querySelector('#confirm-senha')
-var btnMostrarSenha = document.querySelector('#btn-senha')
-var inputSenha = document.querySelector('#senha')
+document.addEventListener('DOMContentLoaded', function() {
 
-// H3 COM TEXTOS DAS AREAS PARA SEREM PREENCHIDAS
-var empresa = document.querySelector('#empresaTxt')
-var cnpj = document.querySelector('#cnpjTxt')
-var email = document.querySelector('#emailTxt')
-var telefone = document.querySelector('#telTxt')
-var cep = document.querySelector('#cepTxt')
-var senha = document.querySelector('#senhaTxt')
-var confirmSenha = document.querySelector('#confirmTxt')
+    console.log("Arquivo JavaScript carregado!");
 
-// VALIDAÇÕES
-var validEmpresa = false
-var validCnpj = false
-var validEmail = false
-var validTelefone = false
-var validCEP = false
-var validSenha = false
-var validConfirmSenha = false
+    // ======INPUTS=======
+    var empresa = document.querySelector('#empresa');
+    var email = document.querySelector('#e_mail');
+    var telefone = document.querySelector('#telefone');
+    var cnpj = document.querySelector('#cnpj');
+    var cep = document.querySelector('#cep');
+    var senha = document.querySelector('#senha');
+    var confirmSenha = document.querySelector('#confirmSenha');
+
+    // =====Texts======
+    var empresaTxt = document.querySelector('#empresaTxt');
+    var emailTxt = document.querySelector('#emailTxt');
+    var telTxt = document.querySelector('#telTxt');
+    var cnpjTxt = document.querySelector('#cnpjTxt');
+    var cepTxt = document.querySelector('#cepTxt');
+    var senhaTxt = document.querySelector('#senhaTxt');
+    var confirmTxt = document.querySelector('#confirmTxt')
 
 
-// ============Mascaras================
-$('#cep').mask('00000-000');
-$('#telefone').mask('(00)00000-0000');
-$('#cnpj').mask('00.000.000/0000-00', {reverse: true});
-// ===========Fim Mascaras================
+    // ====Variaveis de Validação=====
+    var validEmpresa = false
+    var validCnpj = false
+    var validEmail = false
+    var validTelefone = false
+    var validCEP = false
+    var validSenha = false
+    var validConfirmSenha = false
 
-// ============ Mostrar Senha =============
+    // ============Mascaras================
+    $('#cep').mask('00000-000');
+    $('#telefone').mask('(00)00000-0000');
+    $('#cnpj').mask('00.000.000/0000-00', {reverse: true});
+    // ===========Fim Mascaras================
 
-function mostrarSenha() {
-    if (inputSenha.type === 'password') {
-        inputSenha.setAttribute('type','text');
-        btnMostrarSenha.classList.replace('fa-eye','fa-eye-slash')
-    }else{
-        inputSenha.setAttribute('type','password');
-        btnMostrarSenha.classList.replace('fa-eye-slash','fa-eye')
-    }
-}
+    // ========VALIDAÇÕES=========
 
-function mostrarConfirmSenha() {
-    if (inputConfirm.type === 'password') {
-        inputConfirm.setAttribute('type','text');
-        btnConfirmSenha.classList.replace('fa-eye','fa-eye-slash')
-    }else{
-        inputConfirm.setAttribute('type','password');
-        btnConfirmSenha.classList.replace('fa-eye-slash','fa-eye')
-    }
-}
-// ============ Fim Mostrar Senha =============
-
-// ============ Validações ===================
-
-// ------------Nome de Usuario------------
-inputNomeEmpresa.addEventListener('keyup', ()=>{
-if (inputNomeEmpresa.value.length <= 2) {
-    empresa.setAttribute('style', 'background-color:red')
-    empresa.innerHTML = 'Nome de Usuário: <span>*Insira no mínimo 3 caracteres</span>'
-    validEmpresa = false;
-} else {
-    empresa.setAttribute('style', 'color:#16CF8C')
-    empresa.innerHTML = 'Nome de Usuário:'
-    validEmpresa = true;
-}
-}) // ======> O usuario deve preencher com um nome de no minimo 2 caracteres
-
-// ---------Email-------------
-inputEmail.addEventListener('keyup', () => {
-    var emailValue = inputEmail.value;
-    var emailPattern = /.+@.+\..+/; 
-
-    if (emailValue.length <= 3) {
-        email.setAttribute('style', 'background-color:red');
-        email.innerHTML = 'E-mail <span>*Insira no mínimo 3 caracteres</span>';
-        validEmail = false;
-    } else if (emailPattern.test(emailValue)) {
-        email.setAttribute('style', 'color:#16CF8C');
-        email.innerHTML = 'E-mail:';
-        validEmail = true;
+// Empresa
+empresa.addEventListener('keyup', ()=>{
+    if (empresa.value.length <= 2) {
+        empresaTxt.setAttribute('style', 'background-color:red')
+        empresaTxt.innerHTML = 'Nome da Empresa: <span>*Insira no mínimo 3 caracteres</span>'
+        validEmpresa = false;
     } else {
-        email.setAttribute('style', 'background-color:red');
-        email.innerHTML = 'E-mail <span>*E-mail inválido</span>';
+        empresaTxt.setAttribute('style', 'color:#16CF8C')
+        empresaTxt.innerHTML = 'Nome da Empresa:'
+        validEmpresa = true;
+    }
+    });
+
+// Email
+email.addEventListener('keyup',() =>{
+    var emailValue = email.value;
+    var emailPattern = /.+@.+\..+/;
+
+    if(emailValue.length <=3){
+        emailTxt.setAttribute('style', 'background-color:red');
+        emailTxt.innerHTML = 'E-mail: <span>*Insira no mínimo 3 caracteres</span>';
+        validEmail = false;
+    }else if (emailPattern.test(emailValue)){
+        emailTxt.setAttribute('style', 'color:#16CF8C');
+        emailTxt.innerHTML = 'E-mail:';
+        validEmail = true;
+    }else{
+        emailTxt.setAttribute('style', 'background-color:red');
+        emailTxt.innerHTML = 'E-mail <span>*E-mail inválido</span>';
         validEmail = false;
     }
 });
 
-// ---------Telefone-------------
-inputTelefone.addEventListener('keyup', ()=>{
-    if (inputTelefone.value.length <= 11) {
-        telefone.setAttribute('style', 'background-color:red')
-        telefone.innerHTML = 'Telefone <span>*Insira no mínimo 11 (com o DDD) caracteres</span>'
+// Telefone
+telefone.addEventListener('keyup', ()=>{
+    if (telefone.value.length <= 11) {
+        telTxt.setAttribute('style', 'background-color:red')
+        telTxt.innerHTML = 'Telefone <span>*Insira no mínimo 11 (com o DDD) caracteres</span>'
         validTelefone = false;
     } else {
-        telefone.setAttribute('style', 'color:#16CF8C')
-        telefone.innerHTML = 'Telefone:'
+        telTxt.setAttribute('style', 'color:#16CF8C')
+        telTxt.innerHTML = 'Telefone:'
         validTelefone = true;
     }
-    })
+    });
 
-
-// ---------CEP-------------
-inputCEP.addEventListener('keyup', ()=>{
-if (inputCEP.value.length <= 8) {
-    cep.setAttribute('style', 'background-color:red')
-    cep.innerHTML = 'CEP <span>*Insira no mínimo 8 caracteres</span>'
-    validCEP = false;
-} else {
-    cep.setAttribute('style', 'color:#16CF8C')
-    cep.innerHTML = 'CEP'
-    validCEP = true;
-}
-})
+// CEP
+cep.addEventListener('keyup', ()=>{
+    if (cep.value.length <= 8) {
+        cepTxt.setAttribute('style', 'background-color:red')
+        cepTxt.innerHTML = 'CEP <span>*Insira no mínimo 8 caracteres</span>'
+        validCEP = false;
+    } else {
+        cepTxt.setAttribute('style', 'color:#16CF8C')
+        cepTxt.innerHTML = 'CEP'
+        validCEP = true;
+    }
+    });
 
 // ----------CNPJ---------
-inputCnpj.addEventListener('keyup', ()=>{
-    if (inputCnpj.value.length <= 14) {
-        cnpj.setAttribute('style', 'background-color:red')
-        cnpj.innerHTML = 'CNPJ <span>*Insira no mínimo 14 caracteres</span>'
+cnpj.addEventListener('keyup', ()=>{
+    if (cnpj.value.length <= 17) {
+        cnpjTxt.setAttribute('style', 'background-color:red')
+        cnpjTxt.innerHTML = 'CNPJ <span>*Insira no mínimo 14 caracteres</span>'
         validCnpj = false;
     } else {
-        cnpj.setAttribute('style', 'color:#16CF8C')
-        cnpj.innerHTML = 'CNPJ:'
+        cnpjTxt.setAttribute('style', 'color:#16CF8C')
+        cnpjTxt.innerHTML = 'CNPJ:'
         validCnpj = true;
     }
-    })
-
-// ---------Senha-------------
+// Senha
 const regexUppercase = /[A-Z]/; // Verifica se há pelo menos uma letra maiúscula
 const regexNumber = /\d/; // Verifica se há pelo menos um número
 const regexSpecialChar = /[#_]/; // Adicione outros caracteres especiais conforme necessário
 
-inputSenha.addEventListener('keyup', () => {
-    const senhaValue = inputSenha.value; // Obter o valor da senha
+senha.addEventListener('keyup', () => {
+    const senhaValue = senha.value; // Obter o valor da senha
     let validSenha = true;
 
     // Verificar se a senha tem pelo menos 8 caracteres
     if (senhaValue.length < 8) {
-        senha.setAttribute('style', 'background-color:red');
-        senha.innerHTML = 'Senha <span>*Insira no mínimo 8 caracteres</span>';
+        senhaTxt.setAttribute('style', 'background-color:red');
+        senhaTxt.innerHTML = 'Senha <span>*Insira no mínimo 8 caracteres</span>';
         validSenha = false;
     } else if (!regexUppercase.test(senhaValue)) { // Verificar se há pelo menos um caractere maiúsculo
-        senha.setAttribute('style', 'background-color:red');
-        senha.innerHTML = 'Senha <span>*Insira pelo menos uma letra maiúscula</span>';
+        senhaTxt.setAttribute('style', 'background-color:red');
+        senhaTxt.innerHTML = 'Senha <span>*Insira pelo menos uma letra maiúscula</span>';
         validSenha = false;
     } else if (!regexNumber.test(senhaValue)) { // Verificar se há pelo menos um número
-        senha.setAttribute('style', 'background-color:red');
-        senha.innerHTML = 'Senha <span>*Insira pelo menos um número</span>';
+        senhaTxt.setAttribute('style', 'background-color:red');
+        senhaTxt.innerHTML = 'Senha <span>*Insira pelo menos um número</span>';
         validSenha = false;
     } else if (!regexSpecialChar.test(senhaValue)) { // Verificar se há pelo menos um caractere especial
-        senha.setAttribute('style', 'background-color:red');
-        senha.innerHTML = 'Senha <span>*Insira pelo menos um caractere especial</span>';
+        senhaTxt.setAttribute('style', 'background-color:red');
+        senhaTxt.innerHTML = 'Senha <span>*Insira pelo menos um caractere especial</span>';
         validSenha = false;
     } else {
-        senha.setAttribute('style', 'color:#16CF8C'); // Definir estilo de texto para verde se a senha for válida
-        senha.innerHTML = 'Senha de usuário';
+        senhaTxt.setAttribute('style', 'color:#16CF8C'); // Definir estilo de texto para verde se a senha for válida
+        senhaTxt.innerHTML = 'Senha de usuário';
+        validSenha = true;
     }
 });
 
-// ---------Confirm Senha-------------
-inputConfirm.addEventListener('keyup', ()=>{
-    if (inputSenha.value != inputConfirm.value) {
-        confirmSenha.setAttribute('style', 'background-color:red');
-        confirmSenha.innerHTML = 'Confirmar senha <span>*As senhas não coincidem</span>';
-        validConfirmSenha = false;
-    } else {
-        confirmSenha.setAttribute('style', 'color:#16CF8C');
-        confirmSenha.innerHTML = 'Confirme sua senha:';
-        validConfirmSenha = true;
-    }
-    })
+// Confirm senha
+confirmSenha.addEventListener('keyup', ()=>{
+if (senha.value != confirmSenha.value) {
+    confirmTxt.setAttribute('style', 'background-color:red');
+    confirmTxt.innerHTML = 'Confirmar senha <span>*As senhas não coincidem</span>';
+    validConfirm = false;
+} else {
+    confirmTxt.setAttribute('style', 'color:#16CF8C');
+    confirmTxt.innerHTML = 'Confirme sua senha:';
+    validConfirm = true;
+}
+});
     
+});
+});
