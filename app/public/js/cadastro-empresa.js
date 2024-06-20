@@ -31,7 +31,6 @@ var validConfirmSenha = false
 // ============Mascaras================
 $('#cep').mask('00000-000');
 $('#telefone').mask('(00)00000-0000');
-$('#cpf').mask('000.000.000-00', {reverse: true});
 $('#cnpj').mask('00.000.000/0000-00', {reverse: true});
 // ===========Fim Mascaras================
 
@@ -120,6 +119,19 @@ if (inputCEP.value.length <= 8) {
 }
 })
 
+// ----------CNPJ---------
+inputCnpj.addEventListener('keyup', ()=>{
+    if (inputCnpj.value.length <= 14) {
+        cnpj.setAttribute('style', 'background-color:red')
+        cnpj.innerHTML = 'CNPJ <span>*Insira no mínimo 14 caracteres</span>'
+        validCnpj = false;
+    } else {
+        cnpj.setAttribute('style', 'color:#16CF8C')
+        cnpj.innerHTML = 'CNPJ:'
+        validCnpj = true;
+    }
+    })
+
 // ---------Senha-------------
 const regexUppercase = /[A-Z]/; // Verifica se há pelo menos uma letra maiúscula
 const regexNumber = /\d/; // Verifica se há pelo menos um número
@@ -162,19 +174,6 @@ inputConfirm.addEventListener('keyup', ()=>{
         confirmSenha.setAttribute('style', 'color:#16CF8C');
         confirmSenha.innerHTML = 'Confirme sua senha:';
         validConfirmSenha = true;
-    }
-    })
-
-// CNPJ
-inputCnpj.addEventListener('keyup', ()=>{
-    if (inputCnpj.value.length <= 14) {
-        cnpj.setAttribute('style', 'background-color:red')
-        cnpj.innerHTML = 'CNPJ <span>*Insira no mínimo 14 caracteres</span>'
-        validCnpj = false;
-    } else {
-        cnpj.setAttribute('style', 'color:#16CF8C')
-        cnpj.innerHTML = 'CNPJ:'
-        validCnpj = true;
     }
     })
     

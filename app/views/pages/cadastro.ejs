@@ -35,7 +35,7 @@
 
             <!-- ============ Email =========== -->
             <h3 id="emailTxt">E-mail:</h3>
-            <input type="email" name="e_mail" id="e-mail" placeholder="Digite seu e-mail" required>
+            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" required>
 
             <!-- ============ Telefone =========== -->
             <h3 id="telTxt">Telefone:</h3>
@@ -58,16 +58,16 @@
             <div class="senha-container">
                 <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
                 <span class="eye-icon">
-                    <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
+                    <i class="fa-solid fa-eye-slash fa-eye eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
                 </span>
             </div>
 
             <!-- ============ Confirmar senha =========== -->
             <h3 id="confirmTxt">Confirmar Senha:</h3>
             <div class="confirm-container">
-                <input type="password" name="confirm_senha" id="confirm-senha" placeholder="Digite sua senha novamente" required>
+                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" required>
                 <span class="eye-icon">
-                    <i class="fa-solid fa-eye fa-eye-slash" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
+                    <i class="fa-solid fa-eye-slash fa-eye" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
                 </span>
             </div>
             
@@ -76,6 +76,6 @@
     </section>
 
     <script src="/js/cadastro.js"></script>
-    
+    <script src="/js/mostrarsenha.js"></script>
 </body>
 </html>
