@@ -137,15 +137,15 @@ DROP TABLE IF EXISTS `empresas`;
 CREATE TABLE `empresas` (
   `idEmpresas` int NOT NULL,
   `razaoSocial` varchar(45) NOT NULL,
-  `celularEmpresa` char(11) NOT NULL,
+  `celularEmpresa` varchar(14) NOT NULL,
   `emailEmpresa` varchar(45) NOT NULL,
   `senhaEmpresa` char(60) NOT NULL,
-  `cpnjempresa` char(14) NOT NULL,
+  `cpnjempresa` varchar(18) NOT NULL,
   `logradouroEmpresa` varchar(45) NOT NULL,
   `bairroEmpresa` varchar(30) NOT NULL,
   `cidadeEmpresa` varchar(30) NOT NULL,
   `ufEmpresa` char(2) NOT NULL,
-  `cepEmpresa` char(8) NOT NULL,
+  `cepEmpresa` char(9) NOT NULL,
   PRIMARY KEY (`idEmpresas`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;

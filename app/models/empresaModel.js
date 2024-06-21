@@ -1,4 +1,4 @@
-var pool = require("../../config/pool_conexoes");
+var pool = require("../../config/pool-conexoes");
 
 const empresaModel = {
     findAll: async () => {
