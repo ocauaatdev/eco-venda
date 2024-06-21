@@ -1,10 +1,10 @@
-const usuario = require("../models/empresaModel");
+const empresa = require("../models/empresaModel");
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 var salt = bcrypt.genSaltSync(12);
 const moment = require('moment');
 
-const usuarioController = {
+const empresaController = {
     regrasValidacaoFormLogin: [
         body("empresa")
             .isLength({ min: 3, max: 45 })
@@ -54,9 +54,9 @@ const usuarioController = {
         console.log(erros);
         var dadosForm = {
             razaoSocial: req.body.empresa,
-            senhaCliente: bcrypt.hashSync(req.body.senha, salt), //COLOCAR SENHA DA EMPRESA
+            senhaEmpresa: bcrypt.hashSync(req.body.senha, salt), 
             razaoSocial: req.body.empresa, 
-            emailCliente: req.body.e_mail, //COLOCAR EMAIL DA EMPRESA
+            emailEmpresa: req.body.e_mail, 
             celularEmpresa: req.body.telefone,
             cpnjempresa: req.body.cnpj,
             cepEmpresa: req.body.cep,
@@ -77,4 +77,4 @@ const usuarioController = {
 
 }
 
-module.exports = usuarioController
+module.exports = empresaController;

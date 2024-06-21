@@ -73,7 +73,7 @@ email.addEventListener('keyup',() =>{
 
 // Telefone
 telefone.addEventListener('keyup', ()=>{
-    if (telefone.value.length <= 11) {
+    if (telefone.value.length <= 13) {
         telTxt.setAttribute('style', 'background-color:red')
         telTxt.innerHTML = 'Telefone <span>*Insira no mínimo 11 (com o DDD) caracteres</span>'
         validTelefone = false;
