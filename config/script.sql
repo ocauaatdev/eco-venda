@@ -135,16 +135,16 @@ DROP TABLE IF EXISTS `empresas`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `empresas` (
-  `idEmpresas` int NOT NULL,
+  `idEmpresas` int NOT NULL AUTO_INCREMENT,
   `razaoSocial` varchar(45) NOT NULL,
   `celularEmpresa` varchar(14) NOT NULL,
   `emailEmpresa` varchar(45) NOT NULL,
   `senhaEmpresa` char(60) NOT NULL,
-  `cpnjempresa` varchar(18) NOT NULL,
-  `logradouroEmpresa` varchar(45) NOT NULL,
-  `bairroEmpresa` varchar(30) NOT NULL,
-  `cidadeEmpresa` varchar(30) NOT NULL,
-  `ufEmpresa` char(2) NOT NULL,
+  `cpnjempresa` varchar(20) NOT NULL,
+  `logradouroEmpresa` varchar(45) DEFAULT NULL,
+  `bairroEmpresa` varchar(30) DEFAULT NULL,
+  `cidadeEmpresa` varchar(30) DEFAULT NULL,
+  `ufEmpresa` char(2) DEFAULT NULL,
   `cepEmpresa` char(9) NOT NULL,
   PRIMARY KEY (`idEmpresas`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
