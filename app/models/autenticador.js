@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const usuario = require("./usuarioModel");
+const empresa = require("./empresaModel")
 const bcrypt = require("bcryptjs");
 
 verificarUsuAutenticado = (req, res, next) => {
