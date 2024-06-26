@@ -1,8 +1,8 @@
 var express = require("express");
 var router = express.Router();
-const usuarioController = require('../controllers/usuarioController')
-// var pool = require("../../config/pool-conexoes");
+const usuarioController = require('../controllers/usuarioController');
 const empresaController = require("../controllers/empresaController");
+const { verificarUsuAutenticado, limparSessao, gravarUsuAutenticado, verificarUsuAutorizado } = require("../models/autenticador");
 
 
 router.get("/", function (req, res) {
@@ -34,6 +34,14 @@ router.post("/cadastro",
 router.get('/login',function(req,res){
     res.render('pages/login')
 })
+
+router.post(
+  "/login",
+  usuarioController.regrasValidacaoFormLogin,
+  gravarUsuAutenticado,
+  function (req, res) {
+    usuarioController.logar(req, res);
+  });
 // =======Cadastro e Login Usuario =========
 
 // =======Cadastro e Login Empresa =========

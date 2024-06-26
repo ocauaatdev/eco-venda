@@ -1,6 +1,6 @@
 const { validationResult } = require("express-validator");
 const usuario = require("./usuarioModel");
-const empresa = require("./empresaModel")
+const empresa = require("./empresaModel");
 const bcrypt = require("bcryptjs");
 
 verificarUsuAutenticado = (req, res, next) => {
@@ -11,39 +11,46 @@ verificarUsuAutenticado = (req, res, next) => {
     }
     req.session.autenticado = autenticado;
     next();
-}
+};
 
 limparSessao = (req, res, next) => {
     req.session.destroy();
-    next()
-}
+    next();
+};
 
-gravarUsuAutenticado = async(req,res,next) =>{
-    erros = validationResult(req)
-    if(erros.isEmpty()){
+gravarUsuAutenticado = async (req, res, next) => {
+    let erros = validationResult(req);
+    let autenticado = { autenticado: null, id: null }; // Inicializa a variável autenticado
+    if (erros.isEmpty()) {
         var dadosForm = {
             nomeCliente: req.body.usuario,
-            senhaCliente: bcrypt.hashSync(req.body.senha, salt),
-        }
+            senhaCliente: req.body.senha,
+        };
         var results = await usuario.findUser(dadosForm);
         var total = Object.keys(results).length;
-        if(total == 1){
-            if (bcrypt.compareSync(dadosForm.senha_usuario, results[0].senha_usuario)) {
-                var autenticado = {
-                    autenticado: results[0].nome_usuario,
-                    id: results[0].id_usuario,
-                    tipo: results[0].tipo_usuario
+        if (total == 1) {
+            if (bcrypt.compareSync(dadosForm.senhaCliente, results[0].senhaCliente)) {
+                autenticado = {
+                    autenticado: results[0].nomeCliente,
+                    id: results[0].idClientes,
                 };
+                console.log("Login feito com Sucesso");
             }
-        }else{
-            var autenticado = null;
+        } else {
+            // VERIFICAR EMPRESA
+            console.log("Breve");
+
+            autenticado = {
+                autenticado: "empresa",
+                id: 111,
+            };
         }
-    }else{
-        var autenticado = null;
+    } else {
+        console.log("Error");
     }
     req.session.autenticado = autenticado;
     next();
-}
+};
 
 verificarUsuAutorizado = (tipoPermitido, destinoFalha) => {
     return (req, res, next) => {
@@ -54,11 +61,11 @@ verificarUsuAutorizado = (tipoPermitido, destinoFalha) => {
             res.render(destinoFalha, req.session.autenticado);
         }
     };
-}
+};
 
 module.exports = {
     verificarUsuAutenticado,
     limparSessao,
     gravarUsuAutenticado,
     verificarUsuAutorizado
-}
+};
