@@ -79,7 +79,7 @@ const usuarioController = {
         try {
             let create = await usuario.create(dadosForm);
             console.log(create);
-            res.redirect("/");
+            res.redirect("/login");
         } catch (e) {
             console.log(e);
             res.render("pages/cadastro", { listaErros: erros.array(), valores: req.body });
