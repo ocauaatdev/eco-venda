@@ -9,7 +9,7 @@
 
     <!-- CSS (da pagina) -->
     <link rel="stylesheet" href="/css/home.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
     <link rel="stylesheet" href="/css/swiper-bundle.min.css">
     <link rel="stylesheet" href="/css/produtos-slider.css">
 
@@ -132,7 +132,31 @@
 
     <!-- Rodapé -->
     <%- include('../partial/footer'); %>
-
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('login') === 'sucesso'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Notificação',
+              text: 'Usuário logado com sucesso',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+        
+          </script>
     <script src="/js/menus.js"></script>
     <script src="/js/suporte.js"></script>
     <script src="/js/carrossel.js"></script>

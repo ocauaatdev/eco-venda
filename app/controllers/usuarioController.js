@@ -52,17 +52,16 @@ const usuarioController = {
     logar: (req, res) => {
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
-            return res.render("pages/login", { listaErros: erros });
+            return res.render("pages/login", { listaErros: erros.array(), query: req.query });
         }
         if (req.session.autenticado != null) {
-            res.redirect("/");
+            res.redirect('/?login=sucesso');
         } else {
-            res.render("/", { listaErros: erros });
+            res.render("pages/login", { listaErros: erros.array(), query: req.query });
         }
     },
     cadastrar: async (req, res) => {
         const erros = validationResult(req);
-        console.log(erros);
         var dadosForm = {
             nomeCliente: req.body.usuario,
             senhaCliente: bcrypt.hashSync(req.body.senha, salt),
@@ -73,16 +72,13 @@ const usuarioController = {
             data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
         };
         if (!erros.isEmpty()) {
-            console.log(erros);
-            return res.render("pages/cadastro", { listaErros: erros, valores: req.body });
+            return res.render("pages/cadastro", { listaErros: erros.array(), valores: req.body, query: req.query });
         }
         try {
             let create = await usuario.create(dadosForm);
-            console.log(create);
-            res.redirect("/login");
+            res.redirect('/login?cadastro=sucesso');
         } catch (e) {
-            console.log(e);
-            res.render("pages/cadastro", { listaErros: erros.array(), valores: req.body });
+            res.render("pages/cadastro", { listaErros: erros.array(), valores: req.body, query: req.query });
         }
     }
 };

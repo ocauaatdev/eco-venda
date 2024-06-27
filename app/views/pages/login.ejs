@@ -9,7 +9,8 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/login.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
+    
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
 
@@ -47,7 +48,29 @@
             <p>Esqueci minha senha</p>
         </form>
     </section>
-
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('cadastro') === 'sucesso'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Notificação',
+              text: 'Usuário cadastrado com sucesso',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }</script>
     <script src="/js/login.js"></script>
 </body>
 </html>

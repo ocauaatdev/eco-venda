@@ -5,6 +5,15 @@ const empresaController = require("../controllers/empresaController");
 const { verificarUsuAutenticado, limparSessao, gravarUsuAutenticado, verificarUsuAutorizado } = require("../models/autenticador");
 
 
+router.get('/login', (req, res) => {
+  res.render('pages/login', { query: req.query });
+});
+
+// Rota para a página principal
+router.get('/', (req, res) => {
+  res.render('pages/home-page', { query: req.query });
+});
+
 router.get("/", function (req, res) {
 res.render('pages/home-page')
 });
