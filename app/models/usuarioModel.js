@@ -1,4 +1,5 @@
-var pool = require("../../config/pool-conexoes");
+const pool = require("../../config/pool-conexoes");
+const bcrypt = require('bcryptjs');
 
 const clientesModel = {
     findAll: async () => {
@@ -10,13 +11,25 @@ const clientesModel = {
         }
     },
 
-    // SE DER ERRO, TIRAR ISSO
-    findUser: async (camposForm) => {
+    findUser: async (nomeCliente) => {
         try {
             const [resultados] = await pool.query(
                 "SELECT * FROM clientes WHERE nomeCliente = ?",
-                [camposForm.nomeCliente, camposForm.nomeCliente]
-            )
+                [nomeCliente]
+            );
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+
+    findByEmail: async (emailCliente) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM clientes WHERE emailCliente = ?",
+                [emailCliente]
+            );
             return resultados;
         } catch (error) {
             console.log(error);

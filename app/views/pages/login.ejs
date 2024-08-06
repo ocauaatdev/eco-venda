@@ -44,6 +44,15 @@
             
             <button onclick="logar()">Entrar</button>
 
+            <!-- Exibe mensagem de erro se houver -->
+            <% if (listaErros && listaErros.length > 0) { %>
+                <div class="errors">
+                    <% listaErros.forEach(function(erro) { %>
+                        <p style="color: red;"><%= erro.msg %></p>
+                    <% }); %>
+                </div>
+            <% } %>
+
             <a href="/cadastro">Não tem uma conta? Crie uma!</a>
             <p>Esqueci minha senha</p>
         </form>
@@ -71,6 +80,7 @@
               position: 'right top'
             })
           }</script>
+    <script src="/js/senha.js"></script>
     <script src="/js/login.js"></script>
 </body>
 </html>
