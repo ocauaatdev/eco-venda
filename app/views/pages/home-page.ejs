@@ -22,6 +22,9 @@
 
     <!-- =============== CONTEUDO ===============-->
     <main>
+
+        <%- include('../partial/alert'); %>
+
         <!-- Imagem Home --> 
         <section class="imagemHome">
             <section class="conteinerImg">
@@ -65,29 +68,30 @@
         <h2 class="produtosDestaques">Produtos Destaques</h2>
 
         <!-- Produtos -->
-        <%
-        const produtos = [
-            { id: 'card1', imagem: '/imagem/camisetas/camisa.webp', nomeProduto: 'Camiseta Eco', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+        <section class="products-container">
+            <section id="root">
+               <%- include('../partial/product-template', {
+                  nome: 'Camisa Eco Preta', imagem: '/imagem/camisetas/Preta.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+               }) %>
+         
+               <%- include('../partial/product-template', {
+                  nome: 'Kit Cosmetico',imagem: '/imagem/cosmeticos/cosmetico-1.png',precoParcelado: '45,00',precoVista: '130,00',link: 'https://example.com',categoria: 'Cosmetico',parcelas: 2
+               }) %>
 
-            { id: 'card2', imagem: '/imagem/Higiene/higiene-1.png', nomeProduto: 'Kit Higiene', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+               <%- include('../partial/product-template', {
+                nome: 'Eco Bag tamanho grande',imagem: '/imagem/ecobags/bag-5.png',precoParcelado: '45,00',precoVista: '130,00',link: 'https://example.com',categoria: 'Bags',parcelas: 2
+             }) %>
 
-            { id: 'card3', imagem: '/imagem/cosmeticos/cosmetico-1.png', nomeProduto: 'Kit Cosmetico', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
+             <%- include('../partial/product-template', {
+                nome: 'Sabonete Eco',imagem: '/imagem/Higiene/higiene-2.jpg',precoParcelado: '45,00',precoVista: '130,00',link: 'https://example.com',categoria: 'Higiene',parcelas: 2
+             }) %>
 
-            { id: 'card4', imagem: '/imagem/ecobags/bag-1.png', nomeProduto: 'Eco Bag', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
-
-            { id: 'card5', imagem: '/imagem/camisetas/camisa-2.png', nomeProduto: 'Camiseta Eco', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
-
-            { id: 'card6', imagem: '/imagem/Higiene/higiene-2.jpg', nomeProduto: 'Sabonete', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
-
-            { id: 'card7', imagem: '/imagem/cosmeticos/cosmetico-2.jpg', nomeProduto: 'Cosmetico - Oleo corporal', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
-
-            { id: 'card8', imagem: '/imagem/ecobags/bag-2.png', nomeProduto: 'Eco Bag', precoParcelado: 'R$00,00', precoVista: 'R$00,00' },
-
-            { id: 'card9', imagem: '/imagem/camisetas/camisa-3.png', nomeProduto: 'Camiseta Eco', precoParcelado: 'R$00,00', precoVista: 'R$00,00' }
-        ];
-        %>
-
-        <%- include('../partial/produtos', { produtos: produtos }); %>
+             <%- include('../partial/product-template', {
+                nome: 'Camisa Eco Vermelha', imagem: '/imagem/camisetas/Vermelha.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+             }) %>
+         
+            </section>
+         </section>
         <!--Fim Produtos-->
 
         <!-- Carrossel -->
@@ -132,7 +136,6 @@
 
     <!-- Rodapé -->
     <%- include('../partial/footer'); %>
-    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         if(urlParams.get('login') === 'sucesso'){
@@ -157,10 +160,11 @@
           }
         
           </script>
-    <script src="/js/menus.js"></script>
-    <script src="/js/suporte.js"></script>
+
+    <%- include('../partial/scripts-essenciais'); %>
     <script src="/js/carrossel.js"></script>
-    <script src="/js/swiper-bundle.min.js"></script>
-    <script src="/js/slider-produtos.js"></script>
+
+    <!-- <script src="/js/swiper-bundle.min.js"></script>
+    <script src="/js/slider-produtos.js"></script> -->
 </body>
 </html>

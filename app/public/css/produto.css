@@ -1,0 +1,113 @@
+#root{
+    margin-top: 5%;
+    width: 90%;
+    display: grid;
+    grid-template-columns: repeat(6,1fr);
+    grid-gap: 20px;
+  }
+  .products-container{
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  .product{
+    width: 200px;
+    height: 100%;
+    background-color: #fff;
+    border: 1px solid #3333331a;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: 0.5s;
+  }
+  .product:hover{
+    transform: scale(1.1);
+  }
+  .imgProduct{
+    width: 100%;
+    height: 190px;
+  }
+  .imgProduct .images{
+    width: 100%;
+    height: 100%;
+  }
+  .product a{
+    text-decoration: none;
+    width: 100%;
+  }
+  .infoProduct{
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+  }
+  .infoProduct h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: #1c4c4e;
+    white-space: nowrap;         /* Impede que o texto quebre em várias linhas */
+    overflow: hidden;            /* Esconde o texto que ultrapassar o tamanho do contêiner */
+    text-overflow: ellipsis;     /* Adiciona reticências (...) no final do texto truncado */
+    max-width: 180px;            /* Define a largura máxima do elemento */
+  }
+  .infoProduct h1{
+    color: #ec9a36;
+    font-size: 25px;
+  }
+  .precoAvista{
+    display: flex;
+  }
+  .infoProduct h2{
+    font-size: 15px;
+    font-weight: 500;
+    color: #333;
+  }
+  .infoProduct button{
+    color: #fff;
+    background-color: #1c4c4e;
+    padding: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+  
+  }
+
+/* =========ESTILIZAÇÃO DO ALERT PERSONALIZADO============ */
+/* Estilos para o alerta */
+/* .notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1c4c4e;
+  color: #fff;
+  padding: 15px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.notification-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#notification-close {
+  margin-right: 5px;
+  background: #f44;
+  border: none;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+} */
+
+  @media(max-width:1440px){
+    #root{
+      grid-template-columns: repeat(5,1fr);
+    }
+  }

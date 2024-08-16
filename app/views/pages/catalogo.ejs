@@ -9,7 +9,6 @@
 
     <!-- CSS (da pagina) -->
     <link rel="stylesheet" href="/css/catalogo.css">
-    <link rel="stylesheet" href="/css/produtos-static.css">
 
     <title>Catalogo</title>
 </head>
@@ -20,6 +19,9 @@
 
     <!-- =============== CONTEUDO ===============-->
     <main>
+        
+        <%- include('../partial/alert'); %>
+
         <section class="catalogo">
             <h3 id="txtProd">Catálogo Eco</h3>
             <p>Na Eco Future você encontra uma grande variedade de produtos e cosméticos com a melhor qualidade e melhor preço do mercado. Confira!</p>
@@ -40,18 +42,43 @@
         </section>
 
         <!-- PRODUTOS -->
+        <section class="products-container">
+            <section id="root">
+               <%- include('../partial/product-template', {
+                  nome: 'Camisa Eco Preta', imagem: '/imagem/camisetas/Preta.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+               }) %>
+         
+               <%- include('../partial/product-template', {
+                  nome: 'Kit Cosmetico',imagem: '/imagem/cosmeticos/cosmetico-1.png',precoParcelado: '45,00',precoVista: '130,00',link: 'https://example.com',categoria: 'Cosmetico',parcelas: 2
+               }) %>
 
-        
-        
+               <%- include('../partial/product-template', {
+                nome: 'Eco Bag tamanho grande',imagem: '/imagem/ecobags/bag-5.png',precoParcelado: '45,00',precoVista: '130,00',link: 'https://example.com',categoria: 'Bags',parcelas: 2
+             }) %>
+
+             <%- include('../partial/product-template', {
+                nome: 'Sabonete Eco',imagem: '/imagem/Higiene/higiene-2.jpg',precoParcelado: '45,00',precoVista: '130,00',link: 'https://example.com',categoria: 'Higiene',parcelas: 2
+             }) %>
+
+             <%- include('../partial/product-template', {
+                nome: 'Camisa Eco Vermelha', imagem: '/imagem/camisetas/Vermelha.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+             }) %>
+
+             <%- include('../partial/product-template', {
+                nome: 'Camisa Eco Roxa', imagem: '/imagem/camisetas/Roxa.png', precoParcelado: '20,00',precoVista: '180,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+             }) %>
+         
+            </section>
+         </section>
         <!-- FIM PRODUTOS -->
-        
+
     </main>
 
     <!-- ========= FIM CONTEUDO ============ -->
     <!-- Rodapé -->
     <%- include('../partial/footer'); %>
+
+    <%- include('../partial/scripts-essenciais'); %>
     
-    <script src="/js/swiper-bundle.min.js"></script>
-    <script src="/js/slider-produtos.js"></script>
 </body>
 </html>

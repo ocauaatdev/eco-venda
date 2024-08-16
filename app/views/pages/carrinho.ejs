@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
+    <%- include('../partial/essenciais'); %> 
+
+    <!-- CSS (da pagina) -->
+    <link rel="stylesheet" href="/css/carrinho.css">
+    <title>Carrinho de Compras</title>
+</head>
+<body>
+    <!-- Menu e menu lateral -->
+    <%- include('../partial/header'); %>
+    <!-- Fim menu e menu lateral -->
+
+    <main>
+            <h3 class="tituloCarrinho">Seu Carrinho de Compras</h3>
+
+            <section class="carrinho">
+
+            <section class="produtoCarrinho">
+                <!-- Aqui fica os itens adicionados -->
+            </section>
+
+            <section class="infoCarrinho">
+                <section class="head">
+                    <h3>Meu Carrinho</h3>
+                    <p id="contador">0
+                    <span>Itens</span></p>
+                </section>
+
+                <section class="txtCarrinho">
+                <h1>Local de Envio:</h1>
+                <input type="text" name="" id="inputLocal" placeholder="Digite o CEP que deseja receber os produtos.">
+                <h1>Cupons:</h1>
+                <input type="text" name="" id="cupons" placeholder="Digite o código do cupom para receber benefícios.">
+                <h2 class="totalTxt">Total:</h2>
+                <h2 class="precoTotal">R$0,00</h2>
+                <button class="comprar">Comprar</button>
+                </section>
+            </section>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <%- include('../partial/footer'); %>
+
+    <%- include('../partial/scripts-essenciais'); %>
+    <script src="/js/carrinho.js"></script>
+    
+</body>
+</html>

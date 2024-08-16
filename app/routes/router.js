@@ -53,4 +53,9 @@ router.post('/cadastro-empresa',
   async (req, res) => {
       empresaController.cadastrar(req, res);
   });
+
+  router.get('/carrinho', (req, res) => {
+    res.render('pages/carrinho');
+  });
+
 module.exports = router;
