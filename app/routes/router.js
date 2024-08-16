@@ -58,4 +58,7 @@ router.post('/cadastro-empresa',
     res.render('pages/carrinho');
   });
 
+  router.get('/redirecionamento', (req, res) => {
+    res.render('pages/redirecionamento');
+  });
 module.exports = router;

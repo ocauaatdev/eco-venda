@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/redirecionar.css">
+    <%- include('../partial/essenciais'); %>
+    <title>Redirecionamento</title>
+</head>
+<body>
+    <main>
+            <h3 class="txtPrincipal">Primeiro precisamos saber uma coisa, você é:</h3>
+            <section class="opcoes">
+
+                <a href="/login">
+                <section class="cliente">
+                    <i class="fa-solid fa-user"></i>
+                    <p>Cliente</p>
+                </section></a>
+
+                <h3>OU</h3>
+
+                <a href="/cadastro-empresa">
+                <section class="empresa">
+                    <i class="fa-solid fa-users"></i>
+                    <p>Empresa</p>
+                </section></a>
+
+            </section> <!--fim opcoes-->
+    </main>
+</body>
+</html>

@@ -8,7 +8,7 @@
 .carrinho{
     padding: 30px;
     display: flex;
-    align-items: center;
+    /* align-items: center; */
 }
 .tituloCarrinho{
     text-align: center;
@@ -20,12 +20,16 @@
 .produtoCarrinho{
     width: 70%;
     height: 100%;
-    padding: 30px;
+    padding-right: 20px;
 }
 .infoCarrinho{
     background-color: #cfcfcf;
     width: 30%;
-    height: 100%;
+    height: 450px; /* Ajuste a altura para auto para que não sobreponha outros elementos */
+    position: -webkit-sticky; /* Para navegadores baseados em WebKit */
+    position: sticky;
+    top: 0; /* Fica fixo no topo da viewport */
+    z-index: 1; /* Garante que a barra lateral fique sobre outros elementos, se necessário */
 }
 .head{
     display: flex;
