@@ -64,7 +64,8 @@
 .comprar{
     border: none;
     border-radius: 5px;
-    background-color: #05414B;
+    background-color: #df8621;
+    cursor: pointer;
     color: #fff;
     padding: 15px 25px 15px 25px;
     font-size: 19px;
@@ -93,12 +94,14 @@
     width: 85%;
     height: 100%;
     padding: 15px;
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-gap: 70px;
     align-items: center;
-    justify-content: space-between;
 }
 .infoProdutoCarrinho h3{
     font-size: 25px;
+    width: 180px;
     color: #0A242A;
     font-weight: 600;
     white-space: nowrap;         /* Impede que o texto quebre em várias linhas */

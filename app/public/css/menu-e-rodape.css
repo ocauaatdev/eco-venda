@@ -31,7 +31,7 @@
     list-style: none;
     padding: 20px;
     gap: 1.5rem;
-    font-size: 17px;
+    font-size: 20px;
     font-weight: 300;
 }
 .dropdown{
@@ -237,7 +237,7 @@ footer{
 .quemsomos{
     width: 345px; 
     font-size: 19px;
-    text-align: justify;
+    text-align: left;
     display: inline-block;
     
 }
@@ -335,6 +335,7 @@ footer{
         margin-top: -2%;
         left: 88.5%;
     }
+
 }
 
 /* ============= Tamanho 1200px =============== */

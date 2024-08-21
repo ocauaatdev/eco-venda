@@ -3,7 +3,7 @@
     width: 90%;
     display: grid;
     grid-template-columns: repeat(6,1fr);
-    grid-gap: 20px;
+    grid-gap: 50px;
   }
   .products-container{
     padding: 30px;
@@ -55,10 +55,11 @@
   }
   .infoProduct h1{
     color: #ec9a36;
-    font-size: 25px;
+    font-size: 20px;
   }
   .precoAvista{
     display: flex;
+    margin-bottom: 8px;
   }
   .infoProduct h2{
     font-size: 15px;
@@ -76,38 +77,12 @@
   
   }
 
-/* =========ESTILIZAÇÃO DO ALERT PERSONALIZADO============ */
-/* Estilos para o alerta */
-/* .notification {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: #1c4c4e;
-  color: #fff;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  z-index: 1000;
-}
-
-.notification-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#notification-close {
-  margin-right: 5px;
-  background: #f44;
-  border: none;
-  color: #fff;
-  padding: 5px 10px;
-  border-radius: 3px;
-  cursor: pointer;
-} */
-
-  @media(max-width:1440px){
-    #root{
-      grid-template-columns: repeat(5,1fr);
+  @media(max-width: 1440px) {
+    #root {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  
+    #root .product:nth-child(n+6) {
+      display: none;
     }
   }

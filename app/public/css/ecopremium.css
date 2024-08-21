@@ -23,7 +23,7 @@
 .premium-info button{
     border: none;
     border-radius: 10px;
-    background-color: #083b46;
+    background-color: #fc7f2d;
     color: #ffffff;
     font-size: 1.5rem;
     width: 250px;
@@ -88,8 +88,8 @@
     margin-top: 20px;
     border: none;
     border-radius: 5px;
-    background-color: #28B67E;
-    color: #083b46;
+    background-color: #fc7f2d;
+    color: #fff;
     font-size: 1.5rem;
     font-weight: 600;
     width: 300px;
@@ -124,9 +124,18 @@
     justify-content: center;
     gap: 1.5rem;
 }
-#plano {
+.planoPro, .planoBasico {
     width: 370px;
     height: 460px;
+    padding: 15px;
+    text-align: center;
+    position: relative; 
+    transition: .5s;
+}
+.planoMedio{
+    background-color: rgb(255, 147, 74);
+    width: 400px;
+    height: 540px;
     padding: 15px;
     text-align: center;
     position: relative; 
@@ -162,9 +171,6 @@
 }
 .planoBasico{
     background-color: rgb(255, 188, 64);
-}
-.planoMedio{
-    background-color: rgb(255, 147, 74);
 }
 .planoPro{
     background-color: rgb(255, 128, 43);

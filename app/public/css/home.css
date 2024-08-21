@@ -36,7 +36,7 @@
     font-family: 'Poppins';
     text-transform: uppercase;
     font-weight: bold;
-    background-color: #1C4C4E;
+    background-color: #fc7f2d;
     margin-top: 2%;
     color: white;
     padding: 30px 40px;
@@ -112,14 +112,14 @@
     height: 100%;
     display: flex;
     align-items: center;
-    justify-content: space-around;
-    margin: auto;
+    justify-content: center;
+    margin-top: 5%;
     padding: 30px;
 }
 .quemSomostxt{
     width: 700px;
     font-size: 20px;
-    text-align: justify;
+    text-align: left;
 }
 .quemSomostxt p{
     color: #092930;
@@ -130,6 +130,7 @@
 }
 .quemSomosImg img{
     border-radius: 20px;
+    margin-left: 5%;
 }
 .produtosDestaques{
     font-size: 30px;
@@ -245,13 +246,13 @@
     margin-bottom: 5px;
 }
 .premiumTxt i{
-    color: #c45a14;
+    color: #fc7f2d;
     font-size: 35px;
 }
 .premiumTxt button{
     text-transform: uppercase;
     font-weight: bold;
-    background-color: #1C4C4E;
+    background-color: #fc7f2d;
     margin-top: 10%;
     color: white;
     padding: 20px 40px;

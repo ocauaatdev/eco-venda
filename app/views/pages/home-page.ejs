@@ -41,8 +41,8 @@
         <!-- Quem somos -->
         <section class="quemSomosConteiner">
             <article class="quemSomostxt">
-                <h1>Quem nós somos?</h1>
-                <p>A Eco Venda é uma plataforma agregadora de empresas de todos os portes para promover a venda de produtos sustentáveis. Nosso objetivo é ser referência no mercado sustentável, destacando o impacto positivo desses produtos no meio ambiente. Junto com nossas empresas parceiras, oferecemos itens ecológicos de alta qualidade, como eco bags, roupas e acessórios feitos com materiais reciclados, cosméticos cruelty-free e produtos que contribuem para a redução de resíduos. Queremos incentivar o consumo consciente, mostrando que é possível escolher produtos sustentáveis sem abrir mão de qualidade e propósito.</p>
+                <h1>Quem somos?</h1>
+                <p>A Eco Venda é uma plataforma agregadora de empresas de todos os portes para promover a venda de produtos sustentáveis, visando ser referência no mercado. Oferecemos itens ecológicos de alta qualidade, como eco bags, roupas e acessórios feitos com materiais reciclados, cosméticos cruelty-free e produtos que contribuem para a redução de resíduos. Queremos incentivar o consumo consciente, mostrando que é possível escolher produtos sustentáveis sem abrir mão de qualidade e propósito.</p>
             </article>
             <section class="quemSomosImg">
                 <img src="/imagem/quemsomosimg.png" alt="ilustração">
@@ -71,7 +71,7 @@
         <section class="products-container">
             <section id="root">
                <%- include('../partial/product-template', {
-                  nome: 'Camisa Eco Preta', imagem: '/imagem/camisetas/Preta.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+                  nome: 'Camisa Eco Preta', imagem: '/imagem/camisetas/Preta.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://example.com',categoria: 'Moda',parcelas: 5
                }) %>
          
                <%- include('../partial/product-template', {
@@ -87,8 +87,12 @@
              }) %>
 
              <%- include('../partial/product-template', {
-                nome: 'Camisa Eco Vermelha', imagem: '/imagem/camisetas/Vermelha.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://youtube.com',categoria: 'Moda',parcelas: 5
+                nome: 'Camisa Eco Vermelha', imagem: '/imagem/camisetas/Vermelha.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://example.com',categoria: 'Moda',parcelas: 5
              }) %>
+
+            <%- include('../partial/product-template', {
+                nome: 'Eco Bag', imagem: '/imagem/ecobags/bag-2.png', precoParcelado: '50,00',precoVista: '140,00',link: 'https://example.com',categoria: 'Bags',parcelas: 5
+            }) %>
          
             </section>
          </section>
