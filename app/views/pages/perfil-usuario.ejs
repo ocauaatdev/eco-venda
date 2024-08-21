@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
+    <%- include('../partial/essenciais'); %>
+
+    <!-- CSS da pagina -->
+    <link rel="stylesheet" href="/css/perfil.css">
+    <title>Perfil Cliente</title>
+</head>
+<body>
+    <!-- Menu e menu lateral -->
+    <%- include('../partial/header'); %>
+    <!-- Fim menu e menu lateral -->
+
+    <main>
+        <section class="container">
+            <section class="barraLateral">
+                <ul class="opcoesPerfil">
+                    <li>
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Configurações da Conta</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-bell"></i>
+                        <span>Notificações</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Meus Pedidos</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span>Acompanhar Pedidos</span>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-star"></i>
+                        <span>Assinatura Eco+</span>
+                    </li>
+                </ul>
+                <section class="parteInferior">
+                    <button class="sairBtn">Sair</button>
+                </section>
+                
+            </section> <!--barra lateral-->
+
+            <section class="conteudo">
+                <!-- Aqui será mostrado o conteudo selecionado pelo usuario -->
+                 <div>
+                    CONTEUDO brabo
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores eum nulla consectetur minima illo sunt eos. Eveniet voluptates consequatur, incidunt quos provident reiciendis culpa, sapiente a aspernatur assumenda dolores blanditiis?
+                 </div>
+            </section>
+        </section>
+    </main>
+    
+</body>
+</html>

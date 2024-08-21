@@ -61,4 +61,8 @@ router.post('/cadastro-empresa',
   router.get('/redirecionamento', (req, res) => {
     res.render('pages/redirecionamento');
   });
+  
+  router.get('/perfil-usuario', (req, res) => {
+    res.render('pages/perfil-usuario');
+  });
 module.exports = router;
