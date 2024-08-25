@@ -22,6 +22,8 @@ router.get('/catalogo', (req, res) => {
   res.render('pages/catalogo');
 });
 
+// ======== CADASTRO E LOGIN DO CLIENTE ==========
+
 router.get('/cadastro', (req, res) => {
   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
@@ -49,7 +51,7 @@ router.post('/login',
       usuarioController.logar(req, res);
   });
 
-// Rotas de cadastro e login de empresa
+// ============= Rotas de cadastro e login de empresa ================
 router.get('/cadastro-empresa', (req, res) => {
   res.render('pages/cadastro-empresa', { listaErros: null, valores: { empresa: '', e_mail: '', senha: '', telefone: '', cnpj: '', cep: '', confirm_senha: '' } });
 });
@@ -59,6 +61,18 @@ router.post('/cadastro-empresa',
   async (req, res) => {
       empresaController.cadastrar(req, res);
   });
+
+  router.get('/login-empresa', (req, res) => {
+    res.render('pages/login-empresa', { listaErros: [], query: req.query });
+  });
+  
+  router.post('/login-empresa',
+    empresaController.regrasValidacaoFormLogin,
+    async (req, res) => {
+        empresaController.logar(req, res);
+    });
+
+  // ==============================
 
   router.get('/carrinho', (req, res) => {
     res.render('pages/carrinho');
