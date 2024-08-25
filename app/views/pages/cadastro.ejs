@@ -38,32 +38,32 @@
 
             <!-- ============ Nome de Usuario =========== -->
             <h3 id="usuarioTxt">Nome de Usuário:</h3>
-            <input type="text" name="usuario" id="usuario" placeholder="Digite o seu nome de usuário" required> 
+            <input type="text" name="usuario" id="usuario" placeholder="Digite o seu nome de usuário" value="<%= valores.usuario || '' %>" required> 
 
             <!-- ============ Email =========== -->
             <h3 id="emailTxt">E-mail:</h3>
-            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" required>
+            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" value="<%= valores.e_mail || '' %>" required>
 
             <!-- ============ Telefone =========== -->
             <h3 id="telTxt">Telefone:</h3>
-            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" required>
+            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" value="<%= valores.telefone || '' %>" required>
 
             <!-- ============ CPF =========== -->
             <h3 id="cpfTxt">CPF:</h3>
-            <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF" required>
+            <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF" value="<%= valores.cpf || '' %>" required>
 
             <!-- ============ Data de Nascimento =========== -->
             <h3 id="nascTxt">Data de Nascimento:</h3>
-            <input type="text" name="nascimento" id="nascimento" placeholder="Digite sua data de nascimento" required>
+            <input type="text" name="nascimento" id="nascimento" placeholder="Digite sua data de nascimento" value="<%= valores.nascimento|| '' %>" required>
 
             <!-- ============ CEP =========== -->
             <h3 id="cepTxt">CEP:</h3>
-            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" required>
+            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" value="<%= valores.cep || '' %>" required>
 
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
-                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" value="<%= valores.senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye-slash fa-eye eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
                 </span>
@@ -72,7 +72,7 @@
             <!-- ============ Confirmar senha =========== -->
             <h3 id="confirmTxt">Confirmar Senha:</h3>
             <div class="confirm-container">
-                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" required>
+                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" value="<%= valores.confirm_senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye-slash fa-eye" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
                 </span>
@@ -131,6 +131,147 @@
               status: 'error',
               title: 'Erro no cadastro',
               text: 'E-mail e Usuário já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro') === 'cpfInvalido'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'CPF digitado é invalido!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+
+          if(urlParams.get('cadastro') === 'cep'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'CEP inválido!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro') === 'cpf'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'CPF já cadastrado!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro') === 'senha_invalida'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Suas senhas não coincidem',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro') === 'usuarioemailcpf'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Usuário, Email e CPF já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro') === 'usuariocpf'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Usuário e CPF já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro') === 'emailcpf'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Email e CPF já cadastrados',
               effect: 'fade',
               speed: 300,
               customClass: null,

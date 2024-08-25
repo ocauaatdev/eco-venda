@@ -23,6 +23,18 @@ const clientesModel = {
             return error;
         }
     },
+    findByCpf: async (cpfCliente) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM clientes WHERE cpfCliente = ?",
+                [cpfCliente]
+            );
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
 
     findByEmail: async (emailCliente) => {
         try {

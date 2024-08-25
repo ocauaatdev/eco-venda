@@ -1,4 +1,5 @@
 const usuario = require("../models/usuarioModel");
+const validarCEP = require('../public/js/validarCEP');
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const moment = require('moment');
@@ -36,9 +37,17 @@ const usuarioController = {
                 }
                 return true;
             }),
-        body("cep")
-            .isLength({ min: 8, max: 9 })
-            .withMessage("Mínimo 8 caracteres"),
+            body("cep")
+            .matches(/^\d{5}-\d{3}$/)
+            .withMessage("CEP deve estar no formato XXXXX-XXX")
+            .custom(async (value) => {
+                const cepValido = await validarCEP(value.replace('-', ''));
+                if (!cepValido) {
+                    console.log('CEP inválido ou não encontrado');
+                    throw new Error('CEP inválido ou não encontrado.');
+                }
+                return true;
+            }),
         body("senha")
             .isStrongPassword()
             .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)"),
@@ -78,9 +87,15 @@ const usuarioController = {
         }
     },
     cadastrar: async (req, res) => {
+        // Primeiro, valida o formulário
         const erros = validationResult(req);
-        console.log(erros);
-        var dadosForm = {
+
+        if (!erros.isEmpty()) {
+            req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+        }
+        // Se houver erros, renderiza a página de cadastro com todos os erros
+        // Prepara os dados para o cadastro
+        const dadosForm = {
             nomeCliente: req.body.usuario,
             senhaCliente: bcrypt.hashSync(req.body.senha, salt),
             emailCliente: req.body.e_mail,
@@ -89,32 +104,64 @@ const usuarioController = {
             cepCliente: req.body.cep,
             data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
         };
-        if (!erros.isEmpty()) {
-            console.log(erros);
-            return res.render("pages/cadastro", { listaErros: erros, valores: req.body });
-        }
-        try {
-            // Verifica se o nome de usuário já existe
-            const existingUser = await usuario.findUser(req.body.usuario);
-            // Verifica se o e-mail já existe
-            const existingEmail = await usuario.findByEmail(req.body.e_mail);
+    
 
-            if (existingUser.length > 0 && existingEmail.length > 0) {
-                return res.redirect('/cadastro?cadastro=usuarioemail');
-            } else if (existingUser.length > 0) {
-                return res.redirect('/cadastro?cadastro=usuario');
-            } else if (existingEmail.length > 0) {
-                return res.redirect('/cadastro?cadastro=email');
+        try {
+            
+            const cpfValido = verificaCPF(req.body.cpf);
+            if (!cpfValido) {
+                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                return res.redirect('/cadastro?cadastro=cpfInvalido');
             }
 
-            let create = await usuario.create(dadosForm);
-            console.log(create);
-            res.redirect("/login?cadastro=sucesso");
+            if (req.body.senha !== req.body.confirm_senha) {
+                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                return res.redirect('/cadastro?cadastro=senha_invalida');
+            }
+
+            // Verifica se o nome de usuário, e-mail ou CPF já existem
+            const existingUser = await Usuario.findUser(req.body.usuario);
+            const existingEmail = await Usuario.findByEmail(req.body.e_mail);
+            const existingCpf = await Usuario.findByCpf(req.body.cpf);
+
+            if (existingUser.length > 0 && existingEmail.length > 0 && existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuarioemailcpf');
+            } else if (existingUser.length > 0 && existingEmail.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuarioemail');
+            } else if (existingUser.length > 0 && existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuariocpf');
+            } else if (existingEmail.length > 0 && existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=emailcpf');
+            } else if (existingUser.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuario');
+            } else if (existingEmail.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=email');
+            } else if (existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=cpf');
+            }
+
+            const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+            if (cepValido) {
+                let create = await Usuario.create(dadosForm);
+                req.session.dadosForm = null; // Limpa os dados do formulário na sessão após o sucesso
+                return res.redirect("/login?cadastro=sucesso");
+            } else {
+                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                return res.redirect('/cadastro?cadastro=cep');
+            }
+
         } catch (e) {
             console.log(e);
-            res.render("pages/cadastro", { listaErros: erros.array(), valores: req.body });
+            res.render("pages/cadastro", { listaErros: [{ msg: 'Erro ao criar usuário' }], valores: req.body });
         }
-    }
+    }    
 };
 
 module.exports = usuarioController;

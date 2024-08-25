@@ -22,6 +22,12 @@ router.get('/catalogo', (req, res) => {
   res.render('pages/catalogo');
 });
 
+router.get('/cadastro', (req, res) => {
+  const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
+  req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
+  res.render('pages/cadastro', { listaErros: [], valores });
+});
+
 // Rotas de cadastro e login de usuário
 router.get('/cadastro', (req, res) => {
 res.render('pages/cadastro', { listaErros: [], query: req.query });
