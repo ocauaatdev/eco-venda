@@ -88,80 +88,55 @@ const usuarioController = {
     },
     cadastrar: async (req, res) => {
         // Primeiro, valida o formulário
-        const erros = validationResult(req);
-
-        if (!erros.isEmpty()) {
-            req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
-        }
-        // Se houver erros, renderiza a página de cadastro com todos os erros
-        // Prepara os dados para o cadastro
-        const dadosForm = {
-            nomeCliente: req.body.usuario,
-            senhaCliente: bcrypt.hashSync(req.body.senha, salt),
-            emailCliente: req.body.e_mail,
-            celularCliente: req.body.telefone,
-            cpfCliente: req.body.cpf,
-            cepCliente: req.body.cep,
-            data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
-        };
+        cadastrar: async (req, res) => {
+            const erros = validationResult(req);
     
-
-        try {
-            
-            const cpfValido = verificaCPF(req.body.cpf);
-            if (!cpfValido) {
+            if (!erros.isEmpty()) {
                 req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
-                return res.redirect('/cadastro?cadastro=cpfInvalido');
+                return res.redirect('/cadastro-empresa?cadastro-empresa=erros');
             }
-
-            if (req.body.senha !== req.body.confirm_senha) {
-                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
-                return res.redirect('/cadastro?cadastro=senha_invalida');
-            }
-
-            // Verifica se o nome de usuário, e-mail ou CPF já existem
-            const existingUser = await Usuario.findUser(req.body.usuario);
-            const existingEmail = await Usuario.findByEmail(req.body.e_mail);
-            const existingCpf = await Usuario.findByCpf(req.body.cpf);
-
-            if (existingUser.length > 0 && existingEmail.length > 0 && existingCpf.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuarioemailcpf');
-            } else if (existingUser.length > 0 && existingEmail.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuarioemail');
-            } else if (existingUser.length > 0 && existingCpf.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuariocpf');
-            } else if (existingEmail.length > 0 && existingCpf.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=emailcpf');
-            } else if (existingUser.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuario');
-            } else if (existingEmail.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=email');
-            } else if (existingCpf.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=cpf');
-            }
-
-            const cepValido = await validarCEP(req.body.cep.replace('-', ''));
-            if (cepValido) {
-                let create = await Usuario.create(dadosForm);
-                req.session.dadosForm = null; // Limpa os dados do formulário na sessão após o sucesso
-                return res.redirect("/login?cadastro=sucesso");
-            } else {
-                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
-                return res.redirect('/cadastro?cadastro=cep');
-            }
+    
+            // Dados do formulário
+            const dadosForm = {
+                razaoSocial: req.body.empresa,
+                senhaEmpresa: bcrypt.hashSync(req.body.senha, salt), 
+                emailEmpresa: req.body.e_mail, 
+                celularEmpresa: req.body.telefone,
+                cnpjEmpresa: req.body.cnpj,
+                cepEmpresa: req.body.cep,
+            };
+    
+            try {
+                const existingUser = await Usuario.findUser(req.body.empresa);
+                const existingEmail = await Usuario.findByEmail(req.body.e_mail);
+                const existingCnpj = await Usuario.findByCnpj(req.body.cnpj);
+    
+                if (existingUser.length > 0 || existingEmail.length > 0 || existingCnpj.length > 0) {
+                    req.session.dadosForm = req.body;
+                    let erroMsg = '';
+                    if (existingUser.length > 0) erroMsg += 'usuario';
+                    if (existingEmail.length > 0) erroMsg += 'email';
+                    if (existingCnpj.length > 0) erroMsg += 'cnpj';
+                    
+                    return res.redirect(`/cadastro-empresa?cadastro-empresa=${erroMsg}`);
+                }
+    
+                const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+                if (cepValido) {
+                    await empresa.create(dadosForm);
+                    req.session.dadosForm = null; // Limpa os dados da sessão após sucesso
+                    return res.redirect("/login?cadastro=sucesso");
+                } else {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=cep');
+                }
 
         } catch (e) {
             console.log(e);
             res.render("pages/cadastro", { listaErros: [{ msg: 'Erro ao criar usuário' }], valores: req.body });
         }
     }    
-};
+}
+}
 
 module.exports = usuarioController;

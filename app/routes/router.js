@@ -49,6 +49,11 @@ router.post('/login',
       usuarioController.logar(req, res);
   });
 
+  router.get('/cadastro-empresa', (req, res) => {
+    const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
+    req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
+    res.render('pages/cadastro-empresa', { listaErros: [], valores });
+  });
 // Rotas de cadastro e login de empresa
 router.get('/cadastro-empresa', (req, res) => {
   res.render('pages/cadastro-empresa', { listaErros: null, valores: { empresa: '', e_mail: '', senha: '', telefone: '', cnpj: '', cep: '', confirm_senha: '' } });

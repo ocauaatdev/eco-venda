@@ -11,19 +11,43 @@ const empresaModel = {
     },
 
     // SE DER ERRO, TIRAR ISSO
-    findUser: async (camposForm) => {
+    findUser: async (razaoSocial) => {
         try {
             const [resultados] = await pool.query(
                 "SELECT * FROM empresas WHERE razaoSocial = ?",
-                [camposForm.razaoSocial, camposForm.razaoSocial]
-            )
+                [razaoSocial]
+            );
             return resultados;
         } catch (error) {
             console.log(error);
             return error;
         }
     },
-
+    findByCnpj: async (cnpjempresa) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM empresas WHERE cnpjempresa = ?",
+                [cnpjempresa]
+            );
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
+    
+    findByEmail: async (emailEmpresa) => {
+        try {
+            const [resultados] = await pool.query(
+                "SELECT * FROM empresas WHERE emailEmpresa = ?",
+                [emailEmpresa]
+            );
+            return resultados;
+        } catch (error) {
+            console.log(error);
+            return error;
+        }
+    },
     findId: async (id) => {
         try {
             const [linhas] = await pool.query('SELECT * FROM empresas WHERE idEmpresas = ?', [id]);

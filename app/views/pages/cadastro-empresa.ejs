@@ -15,6 +15,11 @@
 
     <!-- Jquery Mascaras -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
 
     <title>Cadastro Empresa</title>
 </head>
@@ -31,28 +36,28 @@
 
             <!-- ============ Nome da Empresa =========== -->
             <h3 id="empresaTxt">Nome da Empresa:</h3>
-            <input type="text" name="empresa" id="empresa" placeholder="Digite o nome da sua Empresa" required> 
+            <input type="text" name="empresa" id="empresa" placeholder="Digite o nome da sua Empresa" value="<%= valores.empresa || '' %>" required> 
 
             <!-- ============ Email =========== -->
             <h3 id="emailTxt">E-mail:</h3>
-            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" required>
+            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" value="<%= valores.e_mail || '' %>" required>
 
             <!-- ============ Telefone =========== -->
             <h3 id="telTxt">Telefone:</h3>
-            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" required>
+            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" value="<%= valores.telefone || '' %>" required>
 
             <!-- ============ CNPJ =========== -->
             <h3 id="cnpjTxt">CNPJ:</h3>
-            <input type="text" name="cnpj" id="cnpj" placeholder="Digite o CNPJ" required>
+            <input type="text" name="cnpj" id="cnpj" placeholder="Digite o CNPJ" value="<%= valores.cnpj || '' %>" required>
 
             <!-- ============ CEP =========== -->
             <h3 id="cepTxt">CEP:</h3>
-            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" required>
+            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" value="<%= valores.cep || '' %>" required>
 
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
-                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" required>
+                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" value="<%= valores.senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
                 </span>
@@ -61,7 +66,7 @@
             <!-- ============ Confirmar senha =========== -->
             <h3 id="confirmTxt">Confirmar Senha:</h3>
             <div class="confirm-container">
-                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" required>
+                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" value="<%= valores.confirm_senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye fa-eye-slash" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
                 </span>
@@ -70,8 +75,215 @@
             <button onclick="cadastrar()">Cadastrar</button>
         </form>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('cadastro-empresa') === 'usuario'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Este usuario já está cadastrado',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          
+        if(urlParams.get('cadastro-empresa') === 'email'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Este e-mail já está cadastrado',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+        }
+            if(urlParams.get('cadastro-empresa') === 'usuarioemail'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'E-mail e Usuário já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro-empresa') === 'cnpjInvalido'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Cnpj digitado é invalido!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+
+          if(urlParams.get('cadastro-empresa') === 'cep'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'CEP inválido!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro-empresa') === 'cnpj'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'CPF já cadastrado!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro-empresa') === 'senha_invalida'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Suas senhas não coincidem',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro-empresa') === 'usuarioemailcnpj'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Usuário, Email e CPF já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro-empresa') === 'usuariocnpj'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Usuário e CPF já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cadastro-empresa') === 'emailcnpj'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'Email e CPF já cadastrados',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          </script>
 
     <script src="/js/cadastro-empresa.js"></script>
+    <script src="/js/validarCnpj.js"></script>
     <script src="/js/mostrarsenha.js"></script>
     
 </body>
