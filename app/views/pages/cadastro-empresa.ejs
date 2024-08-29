@@ -25,7 +25,7 @@
 </head>
 <body>
     <section>
-        <form action="/cadastro-empresa" method="post" >
+        <form action="/cadastro-empresa" method="post">
             <div class="formHead">
                 <a href="/home-page">
                     <i class="fa-solid fa-house home"></i> <span>Inicio</span>
@@ -58,8 +58,9 @@
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
                 <input type="password" name="senha" id="senha" placeholder="Digite sua senha" value="<%= valores.senha || '' %>" required>
+                <input type="password" name="senha_empresa" id="senha_empresa" placeholder="Digite sua senha" required>
                 <span class="eye-icon">
-                    <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
+                    <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha-empresa" onclick="mostrarSenhaEmpresa()"></i>
                 </span>
             </div>
 
@@ -285,6 +286,7 @@
     <script src="/js/cadastro-empresa.js"></script>
     <script src="/js/validarCnpj.js"></script>
     <script src="/js/mostrarsenha.js"></script>
+    <script src="/js/senha.js"></script>
     
 </body>
 </html>
