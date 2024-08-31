@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var telefone = document.querySelector('#telefone');
     var cnpj = document.querySelector('#cnpj');
     var cep = document.querySelector('#cep');
-    var senha = document.querySelector('#senha_empresa');
+    var senhaEmpresa = document.querySelector('#senhaEmpresa');
     var confirmSenha = document.querySelector('#confirmSenha');
 
     // =====Texts======
@@ -109,50 +109,56 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Senha
-    const regexUppercase = /[A-Z]/; // Verifica se há pelo menos uma letra maiúscula
+// Senha
+const regexUppercase = /[A-Z]/; // Verifica se há pelo menos uma letra maiúscula
     const regexNumber = /\d/; // Verifica se há pelo menos um número
     const regexSpecialChar = /[#_]/; // Adicione outros caracteres especiais conforme necessário
 
-    senha.addEventListener('keyup', () => {
-        const senhaValue = senha.value; // Obter o valor da senha
+    senhaEmpresa.addEventListener('keyup', () => {
+        const senhaValue = senhaEmpresa.value; // Obter o valor da senha
         let validSenha = true;
 
         // Verificar se a senha tem pelo menos 8 caracteres
         if (senhaValue.length < 8) {
+            senhaTxt.classList.add('invalid');
             senhaTxt.setAttribute('style', 'background-color:red');
             senhaTxt.innerHTML = 'Senha <span>*Insira no mínimo 8 caracteres</span>';
             validSenha = false;
         } else if (!regexUppercase.test(senhaValue)) { // Verificar se há pelo menos um caractere maiúsculo
+            senhaTxt.classList.add('invalid');
             senhaTxt.setAttribute('style', 'background-color:red');
             senhaTxt.innerHTML = 'Senha <span>*Insira pelo menos uma letra maiúscula</span>';
             validSenha = false;
         } else if (!regexNumber.test(senhaValue)) { // Verificar se há pelo menos um número
+            senhaTxt.classList.add('invalid');
             senhaTxt.setAttribute('style', 'background-color:red');
             senhaTxt.innerHTML = 'Senha <span>*Insira pelo menos um número</span>';
             validSenha = false;
         } else if (!regexSpecialChar.test(senhaValue)) { // Verificar se há pelo menos um caractere especial
+            senhaTxt.classList.add('invalid');
             senhaTxt.setAttribute('style', 'background-color:red');
             senhaTxt.innerHTML = 'Senha <span>*Insira pelo menos um caractere especial</span>';
             validSenha = false;
         } else {
             senhaTxt.setAttribute('style', 'color:#16CF8C'); // Definir estilo de texto para verde se a senha for válida
-            senhaTxt.innerHTML = 'Senha:';
+            senhaTxt.classList.remove('invalid');
+            senhaTxt.classList.add('valid');
+            senhaTxt.innerHTML = 'Senha de usuário';
             validSenha = true;
         }
     });
 
+
     // Confirmar senha
-    confirmSenha.addEventListener('keyup', () => {
-        if (senha.value !== confirmSenha.value) {
+    confirmSenha.addEventListener('keyup', ()=>{
+        if (senhaEmpresa.value != confirmSenha.value) {
             confirmTxt.setAttribute('style', 'background-color:red');
             confirmTxt.innerHTML = 'Confirmar senha <span>*As senhas não coincidem</span>';
-            validConfirmSenha = false;
+            validConfirm = false;
         } else {
             confirmTxt.setAttribute('style', 'color:#16CF8C');
-            confirmTxt.innerHTML = 'Confirmar Senha:';
-            validConfirmSenha = true;
+            confirmTxt.innerHTML = 'Confirme sua senha:';
+            validConfirm = true;
         }
-    });
-
+        });
 });

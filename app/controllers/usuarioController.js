@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const moment = require('moment');
 const verificaCPF = require('../public/js/verificaCPF'); // Verifique o caminho correto para o arquivo verificaCPF.js
 const Usuario = require('../models/usuarioModel');
+const validarNascimento = require("../public/js/validarNascimento");
 
 const saltRounds = 12; // Número de rounds para o bcrypt
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -38,16 +39,11 @@ const usuarioController = {
                 return true;
             }),
             body("cep")
-            .matches(/^\d{5}-\d{3}$/)
-            .withMessage("CEP deve estar no formato XXXXX-XXX")
-            .custom(async (value) => {
-                const cepValido = await validarCEP(value.replace('-', ''));
-                if (!cepValido) {
-                    console.log('CEP inválido ou não encontrado');
-                    throw new Error('CEP inválido ou não encontrado.');
-                }
-                return true;
-            }),
+                .matches(/^\d{5}-\d{3}$/)
+                .withMessage("CEP deve estar no formato XXXXX-XXX"),
+            body("nascimento")
+                .isDate({ format: 'YYYY-MM-DD' })
+                .withMessage('Data de nascimento inválida'),
         body("senha")
             .isStrongPassword()
             .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)"),
@@ -88,55 +84,85 @@ const usuarioController = {
     },
     cadastrar: async (req, res) => {
         // Primeiro, valida o formulário
-        cadastrar: async (req, res) => {
-            const erros = validationResult(req);
+        const erros = validationResult(req);
+
+        if (!erros.isEmpty()) {
+            req.session.dadosForm = req.body;
+            console.log('Erros na validação do formulário:', erros.array());
+            // return res.render('pages/cadastro', { listaErros: erros.array(), valores: req.body });
+        }
+
+        // Se houver erros, renderiza a página de cadastro com todos os erros
+        // Prepara os dados para o cadastro
+        const dadosForm = {
+            nomeCliente: req.body.usuario,
+            senhaCliente: bcrypt.hashSync(req.body.senha, salt),
+            emailCliente: req.body.e_mail,
+            celularCliente: req.body.telefone,
+            cpfCliente: req.body.cpf,
+            cepCliente: req.body.cep,
+            data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
+        };
     
-            if (!erros.isEmpty()) {
-                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
-                return res.redirect('/cadastro-empresa?cadastro-empresa=erros');
+        try {
+            const dataValida = validarNascimento(req.body.nascimento)
+            if(!dataValida){
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=dataInvalida')
+            }
+            const cpfValido = verificaCPF(req.body.cpf);
+            if (!cpfValido) {
+                // Se o CPF não for válido, redireciona para a página de erro
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=cpfInvalido');
+            }
+            // Verifica se o nome de usuário, e-mail ou CPF já existem
+            const existingUser = await usuario.findUser(req.body.usuario);
+            const existingEmail = await usuario.findByEmail(req.body.e_mail);
+            const existingCpf = await usuario.findByCpf(req.body.cpf);
+    
+            if (existingUser.length > 0 && existingEmail.length > 0 && existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuarioemailcpf');
+            } else if (existingUser.length > 0 && existingEmail.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuarioemail');
+            } else if (existingUser.length > 0 && existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuariocpf');
+            } else if (existingEmail.length > 0 && existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=emailcpf');
+            } else if (existingUser.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=usuario');
+            } else if (existingEmail.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=email');
+            } else if (existingCpf.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=cpf');
             }
     
-            // Dados do formulário
-            const dadosForm = {
-                razaoSocial: req.body.empresa,
-                senhaEmpresa: bcrypt.hashSync(req.body.senha, salt), 
-                emailEmpresa: req.body.e_mail, 
-                celularEmpresa: req.body.telefone,
-                cnpjEmpresa: req.body.cnpj,
-                cepEmpresa: req.body.cep,
-            };
-    
-            try {
-                const existingUser = await Usuario.findUser(req.body.empresa);
-                const existingEmail = await Usuario.findByEmail(req.body.e_mail);
-                const existingCnpj = await Usuario.findByCnpj(req.body.cnpj);
-    
-                if (existingUser.length > 0 || existingEmail.length > 0 || existingCnpj.length > 0) {
-                    req.session.dadosForm = req.body;
-                    let erroMsg = '';
-                    if (existingUser.length > 0) erroMsg += 'usuario';
-                    if (existingEmail.length > 0) erroMsg += 'email';
-                    if (existingCnpj.length > 0) erroMsg += 'cnpj';
-                    
-                    return res.redirect(`/cadastro-empresa?cadastro-empresa=${erroMsg}`);
-                }
-    
-                const cepValido = await validarCEP(req.body.cep.replace('-', ''));
-                if (cepValido) {
-                    await empresa.create(dadosForm);
-                    req.session.dadosForm = null; // Limpa os dados da sessão após sucesso
-                    return res.redirect("/login?cadastro=sucesso");
-                } else {
-                    req.session.dadosForm = req.body;
-                    return res.redirect('/cadastro-empresa?cadastro-empresa=cep');
-                }
+            // Cria o novo usuário se não houver conflitosconst cpfValido = verificaCPF(req.body.cpf);
+            const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+            if (cepValido) {
+                req.session.dadosForm = req.body;
+                console.log('Cadastro sendo realizado com CEP válido');
+                let create = await usuario.create(dadosForm);
+                console.log(create);
+                return res.redirect("/login?cadastro=sucesso");
+            } else {
+                req.session.dadosForm = req.body;
+                console.log('Redirecionando por CEP inválido');
+                return res.redirect('/cadastro?cadastro=cep');
+            }
 
         } catch (e) {
             console.log(e);
             res.render("pages/cadastro", { listaErros: [{ msg: 'Erro ao criar usuário' }], valores: req.body });
         }
     }    
-}
 }
 
 module.exports = usuarioController;

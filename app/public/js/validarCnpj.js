@@ -1,6 +1,6 @@
 // cnpjValidator.js
 
-function validarCNPJ(cnpj) {
+function validarCnpj(cnpj) {
     const b = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     const c = String(cnpj).replace(/[^\d]/g, '');
 
@@ -35,4 +35,4 @@ function validarCNPJ(cnpj) {
     return true;
 }
 
-module.exports = validarCNPJ;
+module.exports = validarCnpj;

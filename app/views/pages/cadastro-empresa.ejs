@@ -57,8 +57,7 @@
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
-                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" value="<%= valores.senha || '' %>" required>
-                <input type="password" name="senha_empresa" id="senha_empresa" placeholder="Digite sua senha" required>
+                <input type="password" name="senhaEmpresa" id="senhaEmpresa" placeholder="Digite sua senha" value="<%= valores.senhaEmpresa || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha-empresa" onclick="mostrarSenhaEmpresa()"></i>
                 </span>
@@ -67,7 +66,7 @@
             <!-- ============ Confirmar senha =========== -->
             <h3 id="confirmTxt">Confirmar Senha:</h3>
             <div class="confirm-container">
-                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" value="<%= valores.confirm_senha || '' %>" required>
+                <input type="password" name="confirmSenha" id="confirmSenha" placeholder="Digite sua senha novamente" value="<%= valores.confirmSenha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye fa-eye-slash" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
                 </span>

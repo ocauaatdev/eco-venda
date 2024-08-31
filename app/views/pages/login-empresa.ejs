@@ -50,6 +50,29 @@
             <p>Esqueci minha senha</p>
         </form>
     </section>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('cadastro-empresa') === 'sucesso'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Notificação',
+              text: 'Empresa cadastrada com sucesso',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }</script>
     
     <script src="/js/senha.js"></script>
     <script src="/js/login.js"></script>
