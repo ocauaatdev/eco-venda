@@ -93,16 +93,7 @@ const usuarioController = {
         }
 
         // Se houver erros, renderiza a página de cadastro com todos os erros
-        // Prepara os dados para o cadastro
-        const dadosForm = {
-            nomeCliente: req.body.usuario,
-            senhaCliente: bcrypt.hashSync(req.body.senha, salt),
-            emailCliente: req.body.e_mail,
-            celularCliente: req.body.telefone,
-            cpfCliente: req.body.cpf,
-            cepCliente: req.body.cep,
-            data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
-        };
+        // Prepara os dados para o cadastr
     
         try {
             const dataValida = validarNascimento(req.body.nascimento)
@@ -111,11 +102,32 @@ const usuarioController = {
                 return res.redirect('/cadastro?cadastro=dataInvalida')
             }
             const cpfValido = verificaCPF(req.body.cpf);
-            if (!cpfValido) {
-                // Se o CPF não for válido, redireciona para a página de erro
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=cpfInvalido');
-            }
+    if (!cpfValido) {
+        req.session.dadosForm = req.body;
+        return res.redirect('/cadastro?cadastro=cpfInvalido');
+    }
+
+    // Validação do CEP
+    const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+    if (!cepValido) {
+        req.session.dadosForm = req.body;
+        console.log('Redirecionando por CEP inválido');
+        return res.redirect('/cadastro?cadastro=cep');
+    }
+
+    // Dados do formulário com CEP válido
+    const dadosForm = {
+        nomeCliente: req.body.usuario,
+        senhaCliente: bcrypt.hashSync(req.body.senha, salt),
+        emailCliente: req.body.e_mail,
+        celularCliente: req.body.telefone,
+        cpfCliente: req.body.cpf,
+        cepCliente: req.body.cep,
+        logradouroCliente: cepValido.logradouro,  // Acessa corretamente o logradouro
+        cidadeCliente: cepValido.localidade,  // Acessa corretamente a cidade
+        ufCliente: cepValido.uf,  // Acessa corretamente o estado (UF)
+        data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
+    };
             // Verifica se o nome de usuário, e-mail ou CPF já existem
             const existingUser = await usuario.findUser(req.body.usuario);
             const existingEmail = await usuario.findByEmail(req.body.e_mail);
@@ -145,18 +157,8 @@ const usuarioController = {
             }
     
             // Cria o novo usuário se não houver conflitosconst cpfValido = verificaCPF(req.body.cpf);
-            const cepValido = await validarCEP(req.body.cep.replace('-', ''));
-            if (cepValido) {
-                req.session.dadosForm = req.body;
-                console.log('Cadastro sendo realizado com CEP válido');
-                let create = await usuario.create(dadosForm);
-                console.log(create);
-                return res.redirect("/login?cadastro=sucesso");
-            } else {
-                req.session.dadosForm = req.body;
-                console.log('Redirecionando por CEP inválido');
-                return res.redirect('/cadastro?cadastro=cep');
-            }
+            await Usuario.create(dadosForm);
+            return res.redirect("/login?cadastro=sucesso");
 
         } catch (e) {
             console.log(e);
