@@ -19,11 +19,7 @@ const validarCEP = async (cep) => {
 
         const responseCep = await response.json();
 
-<<<<<<< HEAD
         if (responseCep.erro || !responseCep.logradouro || !responseCep.bairro || !responseCep.localidade || !responseCep.uf) {
-=======
-        if (responseCep.erro || !responseCep.logradouro || !responseCep.localidade || !responseCep.uf) {
->>>>>>> f70a5ed754bc489ec0fded3d9f053867d15d848c
             console.log('CEP não encontrado ou incompleto');
             return false;
         }

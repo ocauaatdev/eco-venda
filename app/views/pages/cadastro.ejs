@@ -52,15 +52,9 @@
             <h3 id="cpfTxt">CPF:</h3>
             <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF" value="<%= valores.cpf || '' %>" required>
 
-<<<<<<< HEAD
              <!-- ============ Data de Nascimento =========== -->
              <h3 id="nascTxt">Data de Nascimento:</h3>
              <input type="date" name="nascimento" id="nascimento" placeholder="Digite sua data de nascimento" value="<%= valores.nascimento|| '' %>" required>
-=======
-            <!-- ============ Data de Nascimento =========== -->
-            <h3 id="nascTxt">Data de Nascimento:</h3>
-            <input type="date" name="nascimento" id="nascimento" placeholder="Digite sua data de nascimento" value="<%= valores.nascimento|| '' %>" required>
->>>>>>> f70a5ed754bc489ec0fded3d9f053867d15d848c
 
             <!-- ============ CEP =========== -->
             <h3 id="cepTxt">CEP:</h3>
@@ -278,46 +272,6 @@
               status: 'error',
               title: 'Erro no cadastro',
               text: 'Email e CPF já cadastrados',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'dataInvalida'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'A data digitada é invalida!',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'dataInvalida'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'A data digitada é invalida!',
               effect: 'fade',
               speed: 300,
               customClass: null,

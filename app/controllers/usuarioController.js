@@ -5,7 +5,6 @@ const bcrypt = require("bcryptjs");
 const moment = require('moment');
 const verificaCPF = require('../public/js/verificaCPF'); // Verifique o caminho correto para o arquivo verificaCPF.js
 const Usuario = require('../models/usuarioModel');
-const validarNascimento = require("../public/js/validarNascimento");
 
 const saltRounds = 12; // Número de rounds para o bcrypt
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -167,7 +166,6 @@ const usuarioController = {
             console.log(e);
             res.render("pages/cadastro", { listaErros: [{ msg: 'Erro ao criar usuário' }], valores: req.body });
         }
-<<<<<<< HEAD
     },
     perfil: async(req, res)=>{
         if(!req.session.user) {
@@ -222,9 +220,5 @@ const usuarioController = {
         }
     }
 };
-=======
-    }    
-}
->>>>>>> f70a5ed754bc489ec0fded3d9f053867d15d848c
 
 module.exports = usuarioController;
