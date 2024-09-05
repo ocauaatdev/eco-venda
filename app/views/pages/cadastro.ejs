@@ -312,6 +312,26 @@
               position: 'right top'
             })
           }
+          if(urlParams.get('cadastro') === 'dataInvalida'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro no cadastro',
+              text: 'A data digitada é invalida!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
           </script>   
     <script src="/js/senha.js"></script>
     <script src="/js/cadastro.js"></script>

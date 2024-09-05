@@ -9,6 +9,11 @@ const validarCEP = require("../public/js/validarCEP");
 
 const saltRounds = 12; // Número de rounds para o bcrypt
 const salt = bcrypt.genSaltSync(saltRounds);
+const validarCnpj = require("../public/js/validarCnpj");
+const validarCEP = require("../public/js/validarCEP");
+
+const saltRounds = 12; // Número de rounds para o bcrypt
+const salt = bcrypt.genSaltSync(saltRounds);
 
 const empresaController = {
     regrasValidacaoFormLogin: [
@@ -46,10 +51,32 @@ const empresaController = {
                 return true;
             }),
         body("senhaEmpresa")
+            body("cnpj")
+            .isLength({min:14, max:18}).withMessage("Mínimo 14 caracteres")
+            .custom(value => {
+                if (!validarCnpj(value)) {
+                    throw new Error('CNPJ inválido');
+                }
+                return true;
+            }),        
+            body("cep")
+            .matches(/^\d{5}-\d{3}$/)
+            .withMessage("CEP deve estar no formato XXXXX-XXX")
+            .custom(async (value) => {
+                const cepValido = await validarCEP(value.replace('-', ''));
+                if (!cepValido) {
+                    console.log('CEP inválido ou não encontrado');
+                    throw new Error('CEP inválido ou não encontrado.');
+                }
+                return true;
+            }),
+        body("senhaEmpresa")
             .isStrongPassword()
             .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)"),
             body("confirm_senha")
+            body("confirm_senha")
             .custom((value, { req }) => {
+                if (value !== req.body.senha) {
                 if (value !== req.body.senha) {
                     throw new Error('A confirmação de senha deve ser igual à senha.');
                 }
@@ -99,6 +126,12 @@ const empresaController = {
     },
     cadastrar: async (req, res) => {
         const erros = validationResult(req);
+
+        // Inicializa `valores` com todos os valores enviados no form
+        if (!erros.isEmpty()) {
+            req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+        }
+        
 
         // Inicializa `valores` com todos os valores enviados no form
         if (!erros.isEmpty()) {
@@ -184,6 +217,7 @@ const empresaController = {
         // Gere o salt    
         var dadosForm = {
             razaoSocial: req.body.empresa,
+            senhaEmpresa: bcrypt.hashSync(req.body.senhaEmpresa, salt), // Agora `salt` está definido
             senhaEmpresa: bcrypt.hashSync(req.body.senhaEmpresa, salt), // Agora `salt` está definido
             emailEmpresa: req.body.e_mail, 
             celularEmpresa: req.body.telefone,
