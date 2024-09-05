@@ -10,7 +10,6 @@ const clientesModel = {
             return error;
         }
     },
-
     findUser: async (nomeCliente) => {
         try {
             const [resultados] = await pool.query(
@@ -23,6 +22,18 @@ const clientesModel = {
             return error;
         }
     },
+    // findUser: async (nomeCliente) => {
+    //     try {
+    //         const [resultados] = await pool.query(
+    //             "SELECT * FROM clientes WHERE nomeCliente = ?",
+    //             [nomeCliente]
+    //         );
+    //         return resultados;
+    //     } catch (error) {
+    //         console.log(error);
+    //         return error;
+    //     }
+    // },
     findByCpf: async (cpfCliente) => {
         try {
             const [resultados] = await pool.query(
@@ -68,11 +79,20 @@ const clientesModel = {
         }
     },
 
-    update: async (dadosForm, id) => {
+    
+    update: async (id, dadosForm) => {
         try {
-            const [linhas] = await pool.query('UPDATE clientes SET ? WHERE idClientes = ?', [dadosForm, id]);
+            const [linhas] = await pool.query('UPDATE clientes SET nomeCliente = ?, emailCliente = ?, celularCliente = ?, cpfCliente = ?, cepCliente = ? WHERE idClientes = ?', [
+                dadosForm.nomeCliente,
+                dadosForm.emailCliente,
+                dadosForm.celularCliente,
+                dadosForm.cpfCliente,
+                dadosForm.cepCliente,
+                id
+            ]);
             return linhas;
         } catch (error) {
+            console.log(error);
             return error;
         }
     },

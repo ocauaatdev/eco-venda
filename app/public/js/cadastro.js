@@ -33,7 +33,7 @@ var validSenha = false;
 var validConfirm = false;
 
 // ============Mascaras================
-$('#nascimento').mask('00/00/0000');
+// $('#nascimento').mask('00/00/0000');
 $('#cep').mask('00000-000');
 $('#telefone').mask('(00)00000-0000');
 $('#cpf').mask('000.000.000-00', {reverse: true});
@@ -101,17 +101,17 @@ cpf.addEventListener('keyup', ()=>{
     });
 
 // Nascimento
-    nascimento.addEventListener('keyup', ()=>{
-        if (nascimento.value.length <= 9) {
-            nascTxt.setAttribute('style', 'background-color:red')
-            nascTxt.innerHTML = 'Data de Nascimento <span>*Insira no mínimo 8 caracteres</span>'
-            validNascimento = false;
-        } else {
-            nascTxt.setAttribute('style', 'color:#16CF8C')
-            nascTxt.innerHTML = 'Data de Nascimento:'
-            validNascimento = true;
-        }
-        });
+    // nascimento.addEventListener('keyup', ()=>{
+    //     if (nascimento.value.length <= 9) {
+    //         nascTxt.setAttribute('style', 'background-color:red')
+    //         nascTxt.innerHTML = 'Data de Nascimento <span>*Insira no mínimo 8 caracteres</span>'
+    //         validNascimento = false;
+    //     } else {
+    //         nascTxt.setAttribute('style', 'color:#16CF8C')
+    //         nascTxt.innerHTML = 'Data de Nascimento:'
+    //         validNascimento = true;
+    //     }
+    //     });
 
 // CEP
 cep.addEventListener('keyup', ()=>{

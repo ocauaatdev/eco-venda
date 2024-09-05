@@ -1,7 +1,14 @@
 const empresa = require("../models/empresaModel");
+const validarCEP = require("../public/js/validarCEP")
+const validarCnpj = require("../public/js/validarCnpj")
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const moment = require('moment');
+const validarCnpj = require("../public/js/validarCnpj");
+const validarCEP = require("../public/js/validarCEP");
+
+const saltRounds = 12; // Número de rounds para o bcrypt
+const salt = bcrypt.genSaltSync(saltRounds);
 
 const empresaController = {
     regrasValidacaoFormLogin: [
@@ -19,16 +26,31 @@ const empresaController = {
             .isEmail().withMessage("Digite um e_mail válido!"),
         body("telefone")
             .isLength({min: 11,max: 14}).withMessage("Minimo 11 caracteres"),
-        body("cnpj")
-            .isLength({min:14, max:18}).withMessage("Minimo 14 caracteres"),
-        body("cep")
-            .isLength({min:8, max:9}).withMessage("Minimo 8 caracteres"),
-        body("senha_empresa")
+            body("cnpj")
+            .isLength({min:14, max:18}).withMessage("Mínimo 14 caracteres")
+            .custom(value => {
+                if (!validarCnpj(value)) {
+                    throw new Error('CNPJ inválido');
+                }
+                return true;
+            }),        
+            body("cep")
+            .matches(/^\d{5}-\d{3}$/)
+            .withMessage("CEP deve estar no formato XXXXX-XXX")
+            .custom(async (value) => {
+                const cepValido = await validarCEP(value.replace('-', ''));
+                if (!cepValido) {
+                    console.log('CEP inválido ou não encontrado');
+                    throw new Error('CEP inválido ou não encontrado.');
+                }
+                return true;
+            }),
+        body("senhaEmpresa")
             .isStrongPassword()
             .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)"),
-        body("confirm_senha")
+            body("confirm_senha")
             .custom((value, { req }) => {
-                if (value !== req.body.senha_empresa) {
+                if (value !== req.body.senha) {
                     throw new Error('A confirmação de senha deve ser igual à senha.');
                 }
                 return true;
@@ -45,11 +67,11 @@ const empresaController = {
 
         try {
             // Busca a empresa no banco de dados pelo nome
-            const empresaEncontrada = await empresa.findUser({ razaoSocial: nomeEmpresa });
+            const empresaEncontrada = await empresa.findUser(nomeEmpresa); // Agora passando apenas o valor
 
             if (empresaEncontrada.length === 0) {
                 // Empresa não encontrada
-                throw new Error('Nome de empresa ou senha inválidos');
+                return res.render("pages/login-empresa", { listaErros: [{ msg: 'Nome de empresa ou senha inválidos' }] });
             }
 
             const empresaData = empresaEncontrada[0];
@@ -59,46 +81,166 @@ const empresaController = {
 
             if (!senhaCorreta) {
                 // Senha incorreta
-                throw new Error('Nome de empresa ou senha inválidos');
+                return res.render("pages/login-empresa", { listaErros: [{ msg: 'Nome de empresa ou senha inválidos' }] });
             }
 
             // Se tudo estiver correto, define a sessão como autenticada
             req.session.autenticado = {
                 autenticado: empresaData.razaoSocial,
-                id: empresaData.idEmpresas
+                id: empresaData.idEmpresas,
+                tipo: 'empresa' // Adicionado tipo para facilitar a identificação
             };
-            console.log('Login bem-sucedido');
-            res.redirect("/");
+            console.log(`Login de empresa bem-sucedido: ${empresaData.razaoSocial}`);
+            res.redirect("/");  // Redirecionar para a página inicial
         } catch (e) {
             console.log('Erro no login:', e.message);
-            res.render("pages/login-empresa", { listaErros: [{ msg: e.message }] });
+            res.render("pages/login-empresa", { listaErros: [{ msg: 'Erro interno no servidor, tente novamente mais tarde.' }] });
         }
     },
     cadastrar: async (req, res) => {
         const erros = validationResult(req);
+
+        // Inicializa `valores` com todos os valores enviados no form
+        if (!erros.isEmpty()) {
+            req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+        }
+        
         console.log('Erros no cadastro:', erros.array());
+        req.session.dadosForm = req.body;
     
+<<<<<<< HEAD
         // Gere o salt
         const salt = bcrypt.genSaltSync(10); // 10 é o número de rounds para gerar o salt
     
-        var dadosForm = {
-            razaoSocial: req.body.empresa,
-            senhaEmpresa: bcrypt.hashSync(req.body.senha_empresa, salt), // Agora `salt` está definido
-            emailEmpresa: req.body.e_mail, 
-            celularEmpresa: req.body.telefone,
-            cpnjempresa: req.body.cnpj,
-            cepEmpresa: req.body.cep,
-        };
+        
     
         if (!erros.isEmpty()) {
             console.log('Erros no cadastro:', erros.array());
             return res.render("pages/cadastro-empresa", { listaErros: erros.array(), valores: req.body });
         }
-        try {
-            let create = await empresa.create(dadosForm);
-            console.log('Cadastro bem-sucedido:', create);
-            res.redirect("/login-empresa");
+            try {
+                const cnpjValido = validarCnpj(req.body.cnpj);
+                if (!cnpjValido) {
+                    req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=cnpjInvalido');
+                }
+                const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+                if (!cepValido) {
+                    req.session.dadosForm = req.body;
+                    console.log('Redirecionando por CEP inválido');
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=cep');
+                }
+    
+                if (req.body.senha_empresa !== req.body.confirm_senha) {
+                    req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=senha_invalida');
+                }
+
+                var dadosForm = {
+                    razaoSocial: req.body.empresa,
+                    senhaEmpresa: bcrypt.hashSync(req.body.senha_empresa, salt), // Agora `salt` está definido
+                    emailEmpresa: req.body.e_mail, 
+                    celularEmpresa: req.body.telefone,
+                    cpnjempresa: req.body.cnpj,
+                    cepEmpresa: req.body.cep,
+                    logradouroEmpresa: cepValido.logradouro,
+                    bairroEmpresa: cepValido.bairro,
+                    cidadeEmpresa: cepValido.localidade,
+                    ufEmpresa: cepValido.uf,
+                };
+    
+                // Verifica se o nome de usuário, e-mail ou CPF já existem
+                const existingUser = await empresa.findUser(req.body.empresa);
+                const existingEmail = await empresa.findByEmail(req.body.e_mail);
+                const existingCnpj = await empresa.findByCnpj(req.body.cnpj);
+    
+                if (existingUser.length > 0 && existingEmail.length > 0 && existingCnpj.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=usuarioemailcnpj');
+                } else if (existingUser.length > 0 && existingEmail.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=usuarioemail');
+                } else if (existingUser.length > 0 && existingCnpj.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=usuariocnpj');
+                } else if (existingEmail.length > 0 && existingCnpj.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=emailcnpj');
+                } else if (existingUser.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=usuario');
+                } else if (existingEmail.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=email');
+                } else if (existingCnpj.length > 0) {
+                    req.session.dadosForm = req.body;
+                    return res.redirect('/cadastro-empresa?cadastro-empresa=cnpj');
+                }
+
+                await empresa.create(dadosForm);
+                return res.redirect("/login-empresa?cadastro-empresa=sucesso");
         } catch (e) {
+=======
+        // Gere o salt    
+        var dadosForm = {
+            razaoSocial: req.body.empresa,
+            senhaEmpresa: bcrypt.hashSync(req.body.senhaEmpresa, salt), // Agora `salt` está definido
+            emailEmpresa: req.body.e_mail, 
+            celularEmpresa: req.body.telefone,
+            cpnjempresa: req.body.cnpj,
+            cepEmpresa: req.body.cep,
+        };
+        try {
+            const cnpjValido = validarCnpj(req.body.cnpj);
+            if (!cnpjValido) {
+                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                return res.redirect('/cadastro-empresa?cadastro-empresa=cnpjInvalido');
+            }
+
+            if (req.body.senha !== req.body.confirm_senha) {
+                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                return res.redirect('/cadastro-empresa?cadastro-empresa=senha_invalida');
+            }
+
+            // Verifica se o nome de usuário, e-mail ou CPF já existem
+            const existingUser = await empresa.findUser(req.body.empresa);
+            const existingEmail = await empresa.findByEmail(req.body.e_mail);
+            const existingCnpj = await empresa.findByCnpj(req.body.cnpj);
+
+            if (existingUser.length > 0 && existingEmail.length > 0 && existingCnpj.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=usuarioemailcnpj');
+            } else if (existingUser.length > 0 && existingEmail.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=usuarioemail');
+            } else if (existingUser.length > 0 && existingCnpj.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=usuariocnpj');
+            } else if (existingEmail.length > 0 && existingCnpj.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=emailcnpj');
+            } else if (existingUser.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=usuario');
+            } else if (existingEmail.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=email');
+            } else if (existingCnpj.length > 0) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro-empresa?cadastro-empresa=cnpj');
+            }
+
+            const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+            if (cepValido) {
+                let create = await empresa.create(dadosForm);
+                req.session.dadosForm = null; // Limpa os dados do formulário na sessão após o sucesso
+                return res.redirect("/login-empresa?cadastro-empresa=sucesso");
+            } else {
+                req.session.dadosForm = req.body; // Armazena os dados do formulário na sessão
+                return res.redirect('/cadastro-cadastro?cadastro-empresa=cep');
+            }
+        }catch (e) {
+>>>>>>> f70a5ed754bc489ec0fded3d9f053867d15d848c
             console.log('Erro no cadastro:', e.message);
             res.render("pages/cadastro-empresa", { listaErros: [{ msg: e.message }], valores: req.body });
         }

@@ -19,86 +19,21 @@ const validarCEP = async (cep) => {
 
         const responseCep = await response.json();
 
-        console.log('Resposta da API:', responseCep);
-
-        // Verifica se a API retornou um erro indicando que o CEP não foi encontrado
-        if (responseCep.erro) {
-            console.log('CEP não encontrado na API');
+<<<<<<< HEAD
+        if (responseCep.erro || !responseCep.logradouro || !responseCep.bairro || !responseCep.localidade || !responseCep.uf) {
+=======
+        if (responseCep.erro || !responseCep.logradouro || !responseCep.localidade || !responseCep.uf) {
+>>>>>>> f70a5ed754bc489ec0fded3d9f053867d15d848c
+            console.log('CEP não encontrado ou incompleto');
             return false;
         }
 
-        // Verificação adicional para garantir que o CEP retornado seja completo
-        if (!responseCep.logradouro || !responseCep.localidade || !responseCep.uf) {
-            console.log('CEP incompleto ou não associado a um endereço específico');
-            return false;
-        }
+        return responseCep; // Retorna o objeto completo se for válido
 
-        console.log('CEP validado com sucesso');
-        return true;
     } catch (error) {
         console.error('Erro ao validar o CEP:', error);
         return false;
     }
 };
 
-module.exports = validarCEP;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const cep = document.querySelector('#cep');
-// const address = document.querySelector('#address');
-// const bairro = document.querySelector('#bairro');
-// const cidade = document.querySelector('#cidade');
-
-// cep.addEventListener('focusout',async () => {
-//     try {
-//         const onlyNumbers = /^[0-9]+$/;
-//         const cepValid = /^[0-9]{8}$/;
-//         if (!onlyNumbers.test(cep.value) || !cepValid.test(cep.value)) {
-//             throw {cep_error: 'Cep invalid'}
-//         }
-//         const response = await fetch(`https://viacep.com.br/ws/${cep.value}/json/`);
-
-//         if (!response.ok) {
-//             throw await response.json();
-//         }
-//         const responseCep = await response.json();
-
-//         address.value = responseCep.logradouro;   
-//         bairro.value = responseCep.bairro;
-//         cidade.value = responseCep.localidade;
-//     } catch (error) {
-//         if (error?.cep_error) {
-//             message.textContent = error.cep_error;
-//             setTimeout(() =>{
-//                 message.textContent = "";
-//             },5000) 
-//         }
-//         console.log(error)
-//     }
-
-// })
+module.exports = validarCEP; // Certifique-se de que a função está sendo exportada

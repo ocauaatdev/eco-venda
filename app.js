@@ -13,6 +13,11 @@ app.use(session({
     cookie: { secure: false } // Use secure: true em produção com HTTPS
 }));
 
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  next();
+});
+
 app.use(express.static("app/public"));
 
 app.set("view engine", "ejs");

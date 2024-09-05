@@ -56,10 +56,20 @@
                         <span class="text">Perfil</span></a>
     
                         <!-- Dropdown -->
+                        <% if (typeof user == 'undefined') { %> 
                         <ul class="dropdownPerfil">
                             <li id="login-button"><a class="perfilOptions" href="/redirecionamento">Login e Cadastro</a></li>
                             <li class="perfilOptions" id="sairOption" onclick="deslogar()"><a href="">Sair</a></li>   
                         </ul> <!-- Fim Dropdown -->
+                        <% } %>
+
+                        <!-- Dropdown logado -->
+                        <% if (typeof user !== 'undefined') { %> 
+                            <ul class="dropdownPerfil">
+                                <li class="perfilOptions"><a href="/perfil-usuario">Meu Perfil</a></li>
+                                <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>   
+                            </ul> <!-- Fim Dropdown -->
+                        <% } %>
                     </li>
                     <!--FIM Icone de Perfil-->
     

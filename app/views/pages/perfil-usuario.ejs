@@ -20,42 +20,114 @@
         <section class="container">
             <section class="barraLateral">
                 <ul class="opcoesPerfil">
-                    <li>
+                    <li onclick="mostrarSecao('configuracoes')">
                         <i class="fa-solid fa-gear"></i>
                         <span>Configurações da Conta</span>
                     </li>
-                    <li>
+                    <li onclick="mostrarSecao('notificacoes')">
                         <i class="fa-solid fa-bell"></i>
                         <span>Notificações</span>
                     </li>
-                    <li>
+                    <li onclick="mostrarSecao('pedidos')">
                         <i class="fa-solid fa-bag-shopping"></i>
                         <span>Meus Pedidos</span>
                     </li>
-                    <li>
+                    <li onclick="mostrarSecao('acompanhamento')">
                         <i class="fa-solid fa-truck-fast"></i>
                         <span>Acompanhar Pedidos</span>
                     </li>
-                    <li>
+                    <li onclick="mostrarSecao('assinatura')">
                         <i class="fa-solid fa-star"></i>
                         <span>Assinatura Eco+</span>
                     </li>
                 </ul>
                 <section class="parteInferior">
-                    <button class="sairBtn">Sair</button>
+                    <button class="sairBtn" onclick="window.location.href='/logout'">Sair</button>
                 </section>
-                
             </section> <!--barra lateral-->
 
             <section class="conteudo">
-                <!-- Aqui será mostrado o conteudo selecionado pelo usuario -->
-                 <div>
-                    CONTEUDO brabo
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Asperiores eum nulla consectetur minima illo sunt eos. Eveniet voluptates consequatur, incidunt quos provident reiciendis culpa, sapiente a aspernatur assumenda dolores blanditiis?
-                 </div>
+                <!-- Seção Configurações da Conta -->
+                <section id="configuracoes" class="secaoPerfil">
+                    <h2>Configurações da Conta</h2>
+                    <form action="/usuario/atualizar" method="POST" id="userForm">
+                        <div>
+                            <label for="nome">Nome:</label>
+                            <span id="nomeTexto"><%= user.nomeCliente %></span>
+                            <input type="text" id="nome" name="nomeCliente" value="<%= user.nomeCliente %>" style="display: none;">
+                        </div>
+                        <div>
+                            <label for="email">Email:</label>
+                            <span id="emailTexto"><%= user.emailCliente %></span>
+                            <input type="email" id="email" name="emailCliente" value="<%= user.emailCliente %>" style="display: none;">
+                        </div>
+                        <div>
+                            <label for="telefone">Telefone:</label>
+                            <span id="telefoneTexto"><%= user.celularCliente %></span>
+                            <input type="tel" id="telefone" name="celularCliente" value="<%= user.celularCliente %>" style="display: none;">
+                        </div>
+                        <div>
+                            <label for="cpf">CPF:</label>
+                            <span id="cpfTexto"><%= user.cpfCliente %></span>
+                            <input type="text" id="cpf" name="cpfCliente" value="<%= user.cpfCliente %>" style="display: none;">
+                        </div>
+                        <div>
+                            <label for="cep">CEP:</label>
+                            <span id="cepTexto"><%= user.cepCliente %></span>
+                            <input type="text" id="cep" name="cepCliente" value="<%= user.cepCliente %>" style="display: none;">
+                        </div>
+                        <button type="button" id="editarBtn" onclick="toggleEdit()">Editar informações</button>
+                        <button type="submit" id="atualizarBtn" style="display: none;">Salvar</button>
+                    </form>
+                </section>
+
+                <!-- Outras seções podem ser adicionadas aqui -->
+                <section id="notificacoes" class="secaoPerfil">
+                    <!-- Conteúdo da seção de notificações -->
+                </section>
+                <section id="pedidos" class="secaoPerfil">
+                    <!-- Conteúdo da seção de pedidos -->
+                </section>
+                <section id="acompanhamento" class="secaoPerfil">
+                    <!-- Conteúdo da seção de acompanhamento -->
+                </section>
+                <section id="assinatura" class="secaoPerfil">
+                    <!-- Conteúdo da seção de assinatura -->
+                </section>
             </section>
         </section>
     </main>
+
+    <script>
+        function mostrarSecao(secao) {
+            document.querySelectorAll('.secaoPerfil').forEach(el => el.style.display = 'none');
+            document.getElementById(secao).style.display = 'block';
+        }
+
+        // Exibir a seção de configurações da conta por padrão
+        mostrarSecao('configuracoes');
+
+        function toggleEdit() {
+        const inputs = document.querySelectorAll('#userForm input');
+        const spans = document.querySelectorAll('#userForm span');
+        const editarBtn = document.getElementById('editarBtn');
+        const atualizarBtn = document.getElementById('atualizarBtn');
+        
+        if (inputs[0].style.display === 'none') {
+            // Mostrar inputs e botão "Atualizar"
+            inputs.forEach(input => input.style.display = 'inline-block');
+            spans.forEach(span => span.style.display = 'none');
+            editarBtn.style.display = 'none';
+            atualizarBtn.style.display = 'inline-block';
+        } else {
+            // Ocultar inputs e botão "Atualizar"
+            inputs.forEach(input => input.style.display = 'none');
+            spans.forEach(span => span.style.display = 'inline-block');
+            editarBtn.style.display = 'inline-block';
+            atualizarBtn.style.display = 'none';
+        }
+    }
+    </script>
     
 </body>
 </html>

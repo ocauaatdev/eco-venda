@@ -1,0 +1,7 @@
+.tamanhoOption{
+    display: flex;
+    align-items: center;
+}
+.tamanhoOption i{
+    margin-left: 15px;
+}
