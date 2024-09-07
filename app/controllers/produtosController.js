@@ -3,7 +3,7 @@ const produtosModel = require("../models/produtosModel");
 
 const produtosController = {
   regrasValidacaoFormProd: [
-    // Adicione aqui as validações necessárias para o formulário de produto.
+    
   ],
 
   cadastrarProduto: async (req, res) => {
@@ -39,19 +39,47 @@ const produtosController = {
 
   listarProdutos: async (req, res) => {
     try {
-      const results = await produtosModel.findAll();
-  
-      // Converte a imagem BLOB para Base64
+      const categoria = req.query.categoria;
+      let results;
+
+      if (categoria) {
+        console.log('Categoria recebida:', categoria);
+        results = await produtosModel.findByCategoria(categoria);
+      } else {
+        results = await produtosModel.findAll();
+      }
+
       results.forEach((produto) => {
         if (produto.imagemProd) {
           produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
         }
       });
-  
+
+      console.log('Produtos encontrados:', results);
       res.render("pages/catalogo", { listarProdutos: results });
     } catch (e) {
-      console.log(e);
+      console.error('Erro ao listar produtos:', e);
       res.json({ erro: "Falha ao acessar dados" });
+    }
+  },
+  exibirProduto: async (req, res) => {
+    const idProd = req.params.idProd;
+
+    try {
+      const [produto] = await produtosModel.findById(idProd);
+
+      if (produto) {
+        // Converte a imagem BLOB para Base64
+        if (produto.imagemProd) {
+          produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
+        }
+        res.render("pages/individual-produto", { produto });
+      } else {
+        res.status(404).render("pages/404", { mensagem: "Produto não encontrado." });
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(500).render("pages/500", { mensagem: "Erro ao carregar o produto." });
     }
   },
 };

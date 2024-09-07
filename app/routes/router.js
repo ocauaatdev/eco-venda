@@ -130,5 +130,13 @@ router.post('/cadastro-produto',
     produtosController.cadastrarProduto(req, res);
   });
 
+  // ===========
+
+  router.get('/individual-produto', (req, res) => {
+    res.render('pages/individual-produto', { query: req.query, autenticado: req.session.autenticado });
+  });
+
+  // Rota para exibir o produto individualmente
+router.get('/produto/:idProd', produtosController.exibirProduto);
 
 module.exports = router;

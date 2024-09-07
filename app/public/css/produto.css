@@ -82,7 +82,7 @@
       grid-template-columns: repeat(5, 1fr);
     }
   
-    #root .product:nth-child(n+6) {
+    /* #root .product:nth-child(n+6) {
       display: none;
-    }
+    } */
   }

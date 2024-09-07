@@ -17,11 +17,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
 
     <!-- Simple Notify -->
-     <!-- CSS -->
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
-
-    <!-- JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+
+    <!-- Validação de Produto -->
+    <script src="/js/validacao-produto.js"></script>
 </head>
 <body>
     <main>
@@ -29,45 +29,43 @@
         <form action="/cadastro-produto" method="POST" enctype="multipart/form-data">
 
             <!-- NOME PRODUTO -->
-             <h3 class="nomeProdutotxt">Nome do seu Produto:</h3>
-             <input type="text" name="produtoNome" id="produtoNome" placeholder="Digite aqui o nome do Produto" value="<%= valores.produtoNome || '' %>" required>
+            <h3 class="nomeProdutotxt">Nome do seu Produto:</h3>
+            <input type="text" name="produtoNome" id="produtoNome" placeholder="Digite aqui o nome do Produto" value="<%= valores.produtoNome || '' %>" required>
             
             <!-- Descrição do Produto -->
-             <h3 class="descricaoTxt">Descrição:</h3>
-             <input type="text" name="descricaoProduto" id="descricaoProduto" placeholder="Digite uma breve descrição do produto" value="<%= valores.descricaoProduto || '' %>" required>
+            <h3 class="descricaoTxt">Descrição:</h3>
+            <input type="text" name="descricaoProduto" id="descricaoProduto" placeholder="Digite uma breve descrição do produto" value="<%= valores.descricaoProduto || '' %>" required>
 
             <!-- Preço -->
-             <h3 class="precoTxt">Preço a vista:</h3>
-             <input type="text" name="precoProduto" id="precoProduto" placeholder="Digite o preço a vista do seu produto" value="<%= valores.precoProduto || '' %>" required>
+            <h3 class="precoTxt">Preço a vista:</h3>
+            <input type="text" name="precoProduto" id="precoProduto" placeholder="Digite o preço a vista do seu produto" value="<%= valores.precoProduto || '' %>" required>
 
-             <!-- Quantidade em estoque -->
-              <h3 class="qtdeEstoqueTxt">Quantidade em estoque:</h3>
-              <input type="text" name="qtdeEstoque" id="qtdeEstoque" placeholder="Digite a quantidade em estoque" value="<%= valores.qtdeEstoque || '' %>" required>
+            <!-- Quantidade em estoque -->
+            <h3 class="qtdeEstoqueTxt">Quantidade em estoque:</h3>
+            <input type="text" name="qtdeEstoque" id="qtdeEstoque" placeholder="Digite a quantidade em estoque" value="<%= valores.qtdeEstoque || '' %>" required>
 
-              <!-- Tamanho -->
-               <section class="tamanhoOption">
+            <!-- Tamanho -->
+            <section class="tamanhoOption">
                 <h3 class="tamanhoTxt">Tamanho do Produto:</h3><i class="fa-solid fa-circle-exclamation saibaMais"></i>
-                <span class="tamanhoInfo" style="display: none;">A forma que você deve preencher é: "Pequeno" ou "Médio" ou "Grande" ou "Pequeno, Médio e Grande" ou em caso de moda "P,M,G,GG"</span>
-               </section>
-               <input type="text" name="tamanhoProduto" id="tamanhoProduto" placeholder="Preencha conforme o padrão especificado" value="<%= valores.tamanhoProduto || '' %>" required>
+                <span class="tamanhoInfo" style="display: none;">A forma que você deve preencher é: "Pequeno" ou "Médio" ou "Grande" ou "Pequeno, Médio e Grande" ou em caso de moda "P,M,G,GG" ou "Sem tamanho específico"</span>
+            </section>
+            <input type="text" name="tamanhoProduto" id="tamanhoProduto" placeholder="Preencha conforme o padrão especificado" value="<%= valores.tamanhoProduto || '' %>" required>
 
-               <!-- Adicione um campo de seleção para Categorias -->
-                <h3 class="categoriaTxt">Categoria:</h3>
-                <select name="Categorias_idCategorias" id="Categorias_idCategorias" required>
-                    <option value="" disabled selected>Selecione a categoria</option>
-                    <option value="1">Moda</option>
-                    <option value="2">Bags</option>
-                    <option value="3">Cosmeticos</option>
-                    <option value="4">Higiene</option>
-                <!-- Adicione outras categorias conforme necessário -->
-                </select>
+            <!-- Adicione um campo de seleção para Categorias -->
+            <h3 class="categoriaTxt">Categoria:</h3>
+            <select name="Categorias_idCategorias" id="Categorias_idCategorias" required>
+                <option value="" disabled selected>Selecione a categoria</option>
+                <option value="1">Moda</option>
+                <option value="2">Bags</option>
+                <option value="3">Cosmeticos</option>
+                <option value="4">Higiene</option>
+            </select>
 
+            <!-- Imagem -->
+            <input type="file" name="imagemProduto" id="imagemProduto" placeholder="Selecione a imagem do seu produto" value="<%= valores.imagemProduto || '' %>" onchange="loadImg(event)" required>
+            <img id="previewImg" src="#" alt="Preview da Imagem" style="display:none; max-width: 200px;"/>
 
-               <!-- Imagem -->
-               <input type="file" name="imagemProduto" id="imagemProduto" placeholder="Selecione a imagem do seu produto" value="<%= valores.imagemProduto || '' %>" onchange="loadImg(event)" required>
-               <img id="previewImg" src="#" alt="Preview da Imagem" style="display:none; max-width: 200px;"/>
-
-                <button onclick="cadastrarProduto()">Cadastrar Produto</button>
+            <button type="submit">Cadastrar Produto</button>
         </form>
     </main>
 
@@ -90,7 +88,6 @@
         hoverElement.addEventListener('mouseleave', () => {
           hiddenSpan.style.display = 'none';
         });
-      </script>
-    
+    </script>
 </body>
 </html>

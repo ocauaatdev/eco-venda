@@ -3,59 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+ 
     <!-- JQUERY, Fontawesome e css menu e do rodapé -->
-    <%- include('../partial/essenciais'); %> 
-
+    <%- include('../partial/essenciais'); %>
+ 
     <!-- CSS (da pagina) -->
     <link rel="stylesheet" href="/css/catalogo.css">
-
+ 
     <title>Catalogo</title>
 </head>
 <body>
     <!-- Menu e menu lateral -->
     <%- include('../partial/header'); %>
     <!-- Fim menu e menu lateral -->
-
+ 
     <!-- =============== CONTEUDO ===============-->
     <main>
-
+ 
         <section class="catalogo">
             <h3 id="txtProd">Catálogo Eco</h3>
             <p>Na Eco Future você encontra uma grande variedade de produtos e cosméticos com a melhor qualidade e melhor preço do mercado. Confira!</p>
             <section class="img-conteiner">
-                <a href="#camiseta">
+                <a href="/catalogo?categoria=camiseta">
                     <img class="catalogo-img" src="/imagem/Prancheta 1.png" alt="">
                 </a>
-                <a href="#cosmetico">
+                <a href="/catalogo?categoria=cosmetico">
                     <img class="catalogo-img" src="/imagem/Prancheta 2.png" alt="">
                 </a>
-                <a href="#higiene">
+                <a href="/catalogo?categoria=higiene">
                     <img class="catalogo-img" src="/imagem/Prancheta 3.png" alt="">
                 </a>
-                <a href="#bag">
+                <a href="/catalogo?categoria=bag">
                     <img class="catalogo-img" src="/imagem/Prancheta 4.png" alt="">
                 </a>
             </section>
         </section>
-
+ 
         <!-- PRODUTOS -->
         <section class="products-container">
             <section id="root">
-
+ 
                 <%- include('../partial/product-template'); %>
          
             </section>
          </section>
         <!-- FIM PRODUTOS -->
-
+ 
     </main>
-
+ 
     <!-- ========= FIM CONTEUDO ============ -->
     <!-- Rodapé -->
     <%- include('../partial/footer'); %>
-
+ 
     <%- include('../partial/scripts-essenciais'); %>
-    
+   
 </body>
 </html>

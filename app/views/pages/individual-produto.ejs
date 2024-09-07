@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('../partial/essenciais'); %> 
+    <title><%= produto.tituloProd %></title>
+</head>
+<body>
+    <%- include('../partial/header'); %>
+    <main>
+        <section class="container">
+            <section class="imgContainer">
+                <img src="<%= produto.imagemProd %>" alt="<%= produto.tituloProd %>">
+            </section>
+            <section class="produtoInfo">
+                <h3><%= produto.tituloProd %></h3>
+                <h2>R$<%= produto.valorProd %></h2>
+                <h2>6 x de R$<%= (produto.valorProd / 6).toFixed(2) %> + juros no cartão</h2>
+
+                <h3>Selecione o tamanho:</h3>
+                
+                <% 
+                // Verifica e exibe botões de acordo com o tamanho do produto
+                const tamanhos = produto.tamanhoProd ? produto.tamanhoProd.split(',') : [];
+                const tamanhosDisponiveis = ['Pequeno', 'Médio', 'Grande', 'P', 'M', 'G', 'GG'];
+                const tamanhoModa = ['P', 'M', 'G', 'GG'];
+
+                // Se houver tamanhos disponíveis, exibe os botões
+                if (tamanhos.length > 0) {
+                    tamanhos.forEach(tamanho => {
+                        // Exibe o botão apenas se o tamanho estiver na lista de tamanhos disponíveis
+                        if (tamanhosDisponiveis.includes(tamanho.trim())) {
+                            %><button><%= tamanho.trim() %></button><%
+                        }
+                    });
+                } else {
+                    // Caso não haja tamanhos específicos, exibe um botão "Sem tamanho específico"
+                    %><button>Sem tamanho específico</button><%
+                }
+                %>
+
+                <button>Comprar</button> 
+                <button>Adicionar ao carrinho</button>
+            </section>
+        </section>
+
+        <!-- INFORMAÇÕES DO VENDEDOR (EMPRESA) -->
+        <section class="infos">
+            <h3>Vendedor: <%= produto.razaoSocial %></h3> <!-- Nome da empresa que cadastrou o produto -->
+            <p><%= produto.descricaoProd %></p> <!-- Descrição do produto -->
+        </section>
+
+    </main>
+    <%- include('../partial/footer'); %>
+    <%- include('../partial/scripts-essenciais'); %>
+</body>
+</html>

@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const moment = require('moment');
 const verificaCPF = require('../public/js/verificaCPF'); // Verifique o caminho correto para o arquivo verificaCPF.js
 const Usuario = require('../models/usuarioModel');
+const validarNascimento = require('../public/js/validarNascimento');
 
 const saltRounds = 12; // Número de rounds para o bcrypt
 const salt = bcrypt.genSaltSync(saltRounds);
