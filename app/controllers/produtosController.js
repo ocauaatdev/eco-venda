@@ -43,7 +43,7 @@ const produtosController = {
       let results;
 
       if (categoria) {
-        console.log('Categoria recebida:', categoria);
+        // console.log('Categoria recebida:', categoria);
         results = await produtosModel.findByCategoria(categoria);
       } else {
         results = await produtosModel.findAll();
@@ -55,7 +55,7 @@ const produtosController = {
         }
       });
 
-      console.log('Produtos encontrados:', results);
+      // console.log('Produtos encontrados:', results);
       res.render("pages/catalogo", { listarProdutos: results });
     } catch (e) {
       console.error('Erro ao listar produtos:', e);

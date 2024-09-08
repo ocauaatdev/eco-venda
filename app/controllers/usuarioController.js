@@ -194,18 +194,37 @@ const usuarioController = {
         }
     
         try {
-            const { nomeCliente, emailCliente, celularCliente, cpfCliente, cepCliente } = req.body;
+            const { nomeCliente, emailCliente, celularCliente, cpfCliente, cepCliente} = req.body;
     
-            // Verificar os dados recebidos
-            console.log('Dados recebidos:', req.body);
+            // Verifica se o novo nome já está em uso
+            const existingUser = await Usuario.findUser(nomeCliente);
+            if (existingUser.length > 0 && existingUser[0].idClientes !== req.session.user.id) {
+                return res.status(400).send('Nome de usuário já está em uso. Por favor, escolha outro.');
+            }
+
+            // Verifica se o email já está em uso 
+            const existingEmail = await Usuario.findByEmail(emailCliente);
+            if (existingEmail.length > 0 && existingEmail[0].idClientes !== req.session.user.id) {
+                return res.status(400).send('Email já está em uso. Por favor, escolha outro.');
+            }
+
+            // Chama a função de validação do CEP para obter os dados
+            const endereco = await validarCEP(cepCliente.replace('-', ''));
+            if (!endereco) {
+                return res.status(400).send('CEP inválido.');
+            }
     
             // Atualiza as informações do perfil no banco de dados
-            await Usuario.update(req.session.user.id,{
+            await Usuario.update(req.session.user.id, {
                 nomeCliente,
                 emailCliente,
                 celularCliente,
                 cpfCliente,
                 cepCliente,
+                logradouroCliente: endereco.logradouro,
+                bairroCliente: endereco.bairro,
+                cidadeCliente: endereco.localidade,
+                ufCliente: endereco.uf,
             });
     
             // Atualiza as informações na sessão
