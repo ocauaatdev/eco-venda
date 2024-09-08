@@ -1,11 +1,7 @@
-<%if(listarProdutos){ 
-   // let contador = 1;
-   // Provavelmente no link vou precisar adicionar no banco de dados
-   // Revisar se o data-categoria element.categoria é necessario
-   listarProdutos.forEach(element=> {
-      let parcelado = element.valorProd/6
+<% if (listarProdutos) { 
+   listarProdutos.forEach(element => {
+      let parcelado = element.valorProd / 6;
    %>
-   
    <section class="product" data-categoria="<%= element.categoria %>">
       <a href="/produto/<%= element.idProd %>"> 
          <section class="imgProduct">
@@ -14,19 +10,14 @@
       </a>
       <section class="infoProduct">
          <h3 id="nomeProduct"><%= element.tituloProd %></h3>
-         <h1 id="precoParcelado">6 x de <%= parcelado.toFixed(2)%> + juros no cartão</h1>
+         <h1 id="precoParcelado">6 x de <%= parcelado.toFixed(2) %> + juros no cartão</h1>
          <section class="precoAvista">
-           <h2>À vista </h2>
+           <h2>À vista</h2>
            <h2 id="precoReal">R$<%= element.valorProd %></h2>
          </section>
-         <button class="addCart">Adicionar ao Carrinho</button>
+         <button class="addCart" data-id="<%= element.idProd %>" data-nome="<%= element.tituloProd %>" data-preco="<%= element.valorProd %>" data-imagem="<%= element.imagemProd %>" data-tamanho="<%= element.tamanhoProd %>">Adicionar ao Carrinho</button>
       </section>
    </section>
-
    <% 
-   // contador++;
        }); 
-   }%>
-
-
- 
+   } %>

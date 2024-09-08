@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const bodyParser = require("body-parser"); // Importando o body-parser
 const app = express();
 const port = 3000;
 
@@ -23,8 +24,9 @@ app.use(express.static("app/public"));
 app.set("view engine", "ejs");
 app.set("views", "./app/views");
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Aumentando o limite do body-parser
+app.use(bodyParser.json({ limit: '10mb' }));  // Para requisições JSON
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));  // Para requisições urlencoded
 
 var rotas = require("./app/routes/router");
 app.use("/", rotas);

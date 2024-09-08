@@ -21,38 +21,106 @@
                 <h3>Selecione o tamanho:</h3>
                 
                 <% 
-                // Verifica e exibe botões de acordo com o tamanho do produto
                 const tamanhos = produto.tamanhoProd ? produto.tamanhoProd.split(',') : [];
                 const tamanhosDisponiveis = ['Pequeno', 'Médio', 'Grande', 'P', 'M', 'G', 'GG'];
-                const tamanhoModa = ['P', 'M', 'G', 'GG'];
 
-                // Se houver tamanhos disponíveis, exibe os botões
-                if (tamanhos.length > 0) {
-                    tamanhos.forEach(tamanho => {
-                        // Exibe o botão apenas se o tamanho estiver na lista de tamanhos disponíveis
-                        if (tamanhosDisponiveis.includes(tamanho.trim())) {
-                            %><button><%= tamanho.trim() %></button><%
-                        }
-                    });
-                } else {
-                    // Caso não haja tamanhos específicos, exibe um botão "Sem tamanho específico"
-                    %><button>Sem tamanho específico</button><%
-                }
-                %>
+                if (tamanhos.length > 0) { %>
+                    <select name="tamanhoProduto" id="tamanhoSelecionado">
+                        <option value="" disabled selected>Selecione um tamanho</option>
+                        <% tamanhos.forEach(tamanho => { 
+                            const tamanhoFormatado = tamanho.trim();
+                            if (tamanhosDisponiveis.includes(tamanhoFormatado)) { %>
+                                <option value="<%= tamanhoFormatado %>"><%= tamanhoFormatado %></option>
+                            <% }
+                        }); %>
+                    </select>
+                <% } else { %>
+                    <select name="tamanhoProduto" id="tamanhoSelecionado">
+                        <option value="Sem tamanho específico">Sem tamanho específico</option>
+                    </select>
+                <% } %>
 
                 <button>Comprar</button> 
-                <button>Adicionar ao carrinho</button>
+                <button class="adicionarCarrinho" 
+                        data-id="<%= produto.idProd %>" 
+                        data-nome="<%= produto.tituloProd %>" 
+                        data-preco="<%= produto.valorProd %>" 
+                        data-imagem="<%= produto.imagemProd %>">
+                    Adicionar ao carrinho
+                </button>
             </section>
         </section>
 
-        <!-- INFORMAÇÕES DO VENDEDOR (EMPRESA) -->
         <section class="infos">
-            <h3>Vendedor: <%= produto.razaoSocial %></h3> <!-- Nome da empresa que cadastrou o produto -->
-            <p><%= produto.descricaoProd %></p> <!-- Descrição do produto -->
+            <h3>Vendedor: <%= produto.razaoSocial %></h3>
+            <p><%= produto.descricaoProd %></p>
         </section>
-
     </main>
     <%- include('../partial/footer'); %>
     <%- include('../partial/scripts-essenciais'); %>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const adicionarCarrinhoButtons = document.querySelectorAll('.adicionarCarrinho');
+
+            adicionarCarrinhoButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    const id = button.getAttribute('data-id');
+                    const nome = button.getAttribute('data-nome');
+                    const preco = button.getAttribute('data-preco');
+                    const imagem = button.getAttribute('data-imagem');
+                    const tamanho = document.getElementById('tamanhoSelecionado').value;
+
+                    // Verifica se o usuário selecionou um tamanho
+                    if (!tamanho || tamanho === "Selecione um tamanho") {
+                        showNotification("Por favor, selecione um tamanho antes de adicionar ao carrinho!", 'error');
+                        return;
+                    }
+
+                    fetch('/add-to-cart', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ id, nome, preco, imagem, tamanho })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            showNotification("Produto adicionado ao carrinho!");
+                            updateCartItemCount();
+                        }
+                    })
+                    .catch(err => console.error("Erro ao adicionar ao carrinho:", err));
+                });
+            });
+
+            function updateCartItemCount() {
+                fetch('/cart-item-count')
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('cart-item-count').textContent = data.count;
+                        document.getElementById('contador').textContent = `${data.count} Itens`;
+                    })
+                    .catch(err => console.error("Erro ao atualizar o contador do carrinho:", err));
+            }
+
+            function showNotification(message, status = 'success') {
+                new Notify({
+                    status: status,
+                    title: status === 'success' ? 'Produto Adicionado!' : 'Erro!',
+                    text: message,
+                    effect: 'slide',
+                    speed: 500,
+                    autoplay: true,
+                    showIcon: true,
+                    showCloseButton: true,
+                    showDuration: 3000,
+                    theme: 'dark',
+                    position: 'right top'
+                });
+            }
+        });
+    </script>
 </body>
 </html>

@@ -91,9 +91,78 @@ router.get('/logout', (req, res) => {
 });
 // ======================================
 
+// ======== CARRINHO ============
+// router.get('/carrinho', (req, res) => {
+//   const cart = req.session.cart || [];
+//   res.render('pages/carrinho', { cart, query: req.query, autenticado: req.session.autenticado });
+// });
 router.get('/carrinho', (req, res) => {
-  res.render('pages/carrinho', { query: req.query, autenticado: req.session.autenticado });
+  const cart = req.session.cart || [];
+
+  // Calcula o preço total
+  const precoTotal = cart.reduce((total, item) => total + (item.preco * item.quantidade), 0);
+
+  res.render('pages/carrinho', { cart, precoTotal, query: req.query, autenticado: req.session.autenticado });
 });
+
+router.post('/add-to-cart', (req, res) => {
+  const produto = req.body;
+  
+  if (!req.session.cart) {
+      req.session.cart = [];
+  }
+
+  // Adiciona o produto ao carrinhoz
+  req.session.cart.push({
+      id: produto.id,
+      nome: produto.nome,
+      preco: produto.preco,
+      imagem: produto.imagem,
+      quantidade: 1, // Valor inicial de quantidade
+      tamanho: produto.tamanho
+  });
+
+  res.json({ success: true, message: "Produto adicionado ao carrinho!" });
+});
+
+router.get('/cart-item-count', (req, res) => {
+  const cart = req.session.cart || [];
+  const itemCount = cart.reduce((count, item) => count + item.quantidade, 0);
+  res.json({ count: itemCount });
+});
+
+// Rota para atualizar a quantidade de um item no carrinho
+router.post('/atualizar-quantidade', (req, res) => {
+  const { id, acao } = req.body;
+  const cart = req.session.cart || [];
+
+  const produto = cart.find(item => item.id === id);
+
+  if (produto) {
+    if (acao === 'aumentar') {
+      produto.quantidade += 1;
+    } else if (acao === 'diminuir' && produto.quantidade > 1) {
+      produto.quantidade -= 1;
+    }
+  }
+
+  req.session.cart = cart; // Atualiza a sessão
+  res.json({ success: true });
+});
+
+// Rota para excluir um produto do carrinho
+router.post('/excluir-produto', (req, res) => {
+  const { id } = req.body;
+  let cart = req.session.cart || [];
+
+  cart = cart.filter(item => item.id !== id);
+
+  req.session.cart = cart; // Atualiza a sessão
+  res.json({ success: true });
+});
+
+
+// ==============================
 
 router.get('/redirecionamento', (req, res) => {
   res.render('pages/redirecionamento');

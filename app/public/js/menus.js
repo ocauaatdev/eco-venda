@@ -83,3 +83,8 @@ btnSuporte.addEventListener('click',function(){
         scrollTop: $("#suporte").offset().top
       }, 1000); // A animação dura 1segundo
 })
+
+// ======= CONTADOR DE ITENS NO CARRINHO ========
+document.addEventListener('DOMContentLoaded', (event) => {
+    updateCartItemCount();
+});

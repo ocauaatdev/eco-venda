@@ -22,14 +22,45 @@
             <section class="carrinho">
 
             <section class="produtoCarrinho">
-                <!-- Aqui fica os itens adicionados -->
+                <% if (cart && cart.length > 0) { 
+                    cart.forEach(produto => { 
+                %>
+                <section class="produtoItem">
+                <section class="imagemContainer">
+                    <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" class="produtoImg">
+                </section>
+
+                <section class="produtoInfo">
+                    <h3><%= produto.nome %></h3>
+                    <h2>Tamanho:</h2>
+
+                    <% let tamanhos = produto.tamanho.split(','); %>
+                        <select class="tamanho" id="tamanho_<%= produto.id %>" name="tamanho">
+                            <option value="" disabled selected>Selecione um tamanho</option>
+                            <% tamanhos.forEach(tamanho => { %>
+                                <option value="<%= tamanho.trim() %>"><%= tamanho.trim() %></option>
+                            <% }) %>
+                        </select>
+
+
+                    <p>R$<%= produto.preco %></p>
+                <section class="quantidade">
+                    <button class="diminuir" data-id="<%= produto.id %>">-</button>
+                    <span><%= produto.quantidade %></span>
+                    <button class="aumentar" data-id="<%= produto.id %>">+</button>
+                </section>
+                    <i class="fa-solid fa-trash delProduto"></i>
+                </section>
+                </section>
+                <% }); } else { %>
+                <p>Seu carrinho está vazio.</p>
+                <% } %>
             </section>
 
             <section class="infoCarrinho">
                 <section class="head">
                     <h3>Meu Carrinho</h3>
-                    <p id="contador">0
-                    <span>Itens</span></p>
+                    <p id="contador">0<span>Itens</span></p>
                 </section>
 
                 <section class="txtCarrinho">
@@ -38,7 +69,7 @@
                 <h1>Cupons:</h1>
                 <input type="text" name="" id="cupons" placeholder="Digite o código do cupom para receber benefícios.">
                 <h2 class="totalTxt">Total:</h2>
-                <h2 class="precoTotal">R$0,00</h2>
+                <h2 class="precoTotal">R$<%= precoTotal.toFixed(2).replace('.', ',') %></h2>
                 <button class="comprar">Comprar</button>
                 </section>
             </section>
