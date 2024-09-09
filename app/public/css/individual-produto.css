@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins";
+}
+.container{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 50px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 30px;
+}
+.imgContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+.imgContainer img{
+    border: solid #8d8d8d62;
+}
+.produtoInfo{
+    background-color: #fff;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 30px;
+}
+.produtoInfo .nomeProduto{
+    font-size: 35px;
+    color: #0A242A;
+    font-weight: 800;
+}
+.produtoInfo h2{
+    color: #EC9A36;
+    font-size: 30px;
+}
+.produtoInfo h1{
+    font-size: 30px;
+    color: #5D5D5D;
+}
+.produtoInfo select{
+    width: 270px;
+    border: none;
+    background-color: #00985B;
+    color: #fff;
+    padding: 10px;
+    font-size: 17px;
+    font-weight: 500;
+    border-radius: 20px;
+    margin-bottom: 15px;
+}
+.produtoInfo select:focus{
+    border: none;
+}
+.produtoInfo option{
+    background-color: #fff;
+    color: black;
+}
+.buttons button{
+    margin-top: 20px;
+    margin-bottom: 5%;
+    background-color: #fc7f2d;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 10px 10px;
+    font-size: 17px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+}
+.infos{
+    padding: 40px;
+}
+.infoContainer{
+    padding: 30px;
+    border-top: solid #8d8d8d62;
+}
+.infos h3{
+    font-size: 25px;
+    color: #0A242A;
+    font-weight: 800;
+}
+.infos h2{
+    font-size: 20px;
+    color: #fc7f2d;
+    font-weight: 700;
+}
+.infos p {
+    font-size: 16px; /* Ajusta o tamanho da fonte */
+    white-space: pre-wrap;
+}

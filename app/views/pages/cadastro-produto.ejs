@@ -25,8 +25,15 @@
 </head>
 <body>
     <main>
-        <h2>Cadastro de Produto</h2>
+
         <form action="/cadastro-produto" method="POST" enctype="multipart/form-data">
+                <div class="formHead">
+                    <a href="/home-page">
+                        <i class="fa-solid fa-house home"></i> <span>Inicio</span>
+                    </a>
+                    <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+                    <h1>Cadastro de Produto</h1>
+                </div>
 
             <!-- NOME PRODUTO -->
             <h3 class="nomeProdutotxt">Nome do seu Produto:</h3>
@@ -34,7 +41,8 @@
             
             <!-- Descrição do Produto -->
             <h3 class="descricaoTxt">Descrição:</h3>
-            <input type="text" name="descricaoProduto" id="descricaoProduto" placeholder="Digite uma breve descrição do produto" value="<%= valores.descricaoProduto || '' %>" required>
+            <textarea name="descricaoProduto" class="produtoDescricao" id="descricaoProduto" placeholder="Digite uma breve descrição do produto" required><%= valores.descricaoProduto || '' %></textarea>
+            <!-- <input type="text" name="descricaoProduto" id="descricaoProduto" placeholder="Digite uma breve descrição do produto" value="<%= valores.descricaoProduto || '' %>" required> -->
 
             <!-- Preço -->
             <h3 class="precoTxt">Preço a vista:</h3>
@@ -47,8 +55,8 @@
             <!-- Tamanho -->
             <section class="tamanhoOption">
                 <h3 class="tamanhoTxt">Tamanho do Produto:</h3><i class="fa-solid fa-circle-exclamation saibaMais"></i>
-                <span class="tamanhoInfo" style="display: none;">A forma que você deve preencher é: "Pequeno" ou "Médio" ou "Grande" ou "Pequeno, Médio, Grande" ou em caso de moda "P,M,G,GG" ou "Sem tamanho específico"</span>
             </section>
+            <p class="tamanhoInfo" style="display: none;">A forma que você deve preencher é: "Pequeno" ou "Médio" ou "Grande" ou "Pequeno, Médio, Grande" ou em caso de moda "P,M,G,GG" ou "Sem tamanho específico"</p>
             <input type="text" name="tamanhoProduto" id="tamanhoProduto" placeholder="Preencha conforme o padrão especificado" value="<%= valores.tamanhoProduto || '' %>" required>
 
             <!-- Adicione um campo de seleção para Categorias -->

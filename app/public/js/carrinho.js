@@ -56,6 +56,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
+  // =============================
+
+  // ESVAZIA CARRINHO ASSIM QUE O USUARIO FECHA A ABA DO SITE
+  // SÓ ESTÁ FUNCIONANDO NA PAGINA carrinho.ejs
+
+  // Detecta o carregamento da página e cria uma chave no sessionStorage
+window.addEventListener('load', function () {
+  sessionStorage.setItem('isTabOpen', 'true'); // Define que a aba está aberta
+});
+
+// Detecta o fechamento da aba usando 'pagehide'
+window.addEventListener('pagehide', function (e) {
+  // O evento 'pagehide' é disparado quando a aba é fechada ou o usuário navega para outra página
+  if (e.persisted === false) { // Verifica se a página está sendo realmente descarregada (não em cache)
+    // Envia requisição para esvaziar o carrinho na sessão
+    fetch('/esvaziar-carrinho', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    sessionStorage.removeItem('isTabOpen'); // Remove o indicador de aba aberta
+  }
+});
+
+// Detecta a transição de visibilidade (quando a aba se torna oculta ou visível)
+document.addEventListener('visibilitychange', function () {
+  if (document.visibilityState === 'hidden') {
+    // Quando a aba se torna invisível, podemos marcar que ela está prestes a ser fechada
+    sessionStorage.setItem('isTabClosing', 'true');
+  } else {
+    // Se a aba volta a ser visível, significa que ela não foi fechada
+    sessionStorage.removeItem('isTabClosing');
+  }
+});
+
+// Detecta o evento 'unload', que ocorre quando a página está sendo descarregada
+window.addEventListener('unload', function () {
+  // Verifica se a aba realmente foi fechada e não apenas recarregada
+  if (sessionStorage.getItem('isTabClosing')) {
+    // Envia requisição para esvaziar o carrinho na sessão do servidor
+    fetch('/esvaziar-carrinho', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    sessionStorage.removeItem('isTabOpen'); // Remove o indicador de aba aberta
+  }
+});
 
 
 

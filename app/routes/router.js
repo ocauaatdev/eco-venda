@@ -161,6 +161,12 @@ router.post('/excluir-produto', (req, res) => {
   res.json({ success: true });
 });
 
+// Rota para esvaziar o carrinho quando a aba é fechada
+// SÓ ESTÁ FUNCIONANDO NA PAGINA carrinho.ejs
+router.post('/esvaziar-carrinho', (req, res) => {
+  req.session.cart = []; // Limpa o carrinho
+  res.json({ success: true, message: "Carrinho esvaziado com sucesso!" });
+});
 
 // ==============================
 

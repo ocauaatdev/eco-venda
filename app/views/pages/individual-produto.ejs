@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/individual-produto.css">
+
     <%- include('../partial/essenciais'); %> 
     <title><%= produto.tituloProd %></title>
 </head>
@@ -14,9 +18,9 @@
                 <img src="<%= produto.imagemProd %>" alt="<%= produto.tituloProd %>">
             </section>
             <section class="produtoInfo">
-                <h3><%= produto.tituloProd %></h3>
+                <h3 class="nomeProduto"><%= produto.tituloProd %></h3>
                 <h2>R$<%= produto.valorProd %></h2>
-                <h2>6 x de R$<%= (produto.valorProd / 6).toFixed(2) %> + juros no cartão</h2>
+                <h1>6 x de R$<%= (produto.valorProd / 6).toFixed(2) %> + juros no cartão</h1>
 
                 <h3>Selecione o tamanho:</h3>
                 
@@ -27,12 +31,22 @@
                 if (tamanhos.length > 0) { %>
                     <select name="tamanhoProduto" id="tamanhoSelecionado">
                         <option value="" disabled selected>Selecione um tamanho</option>
-                        <% tamanhos.forEach(tamanho => { 
+                        <% 
+                        let hasSpecificSize = false;
+                        tamanhos.forEach(tamanho => { 
                             const tamanhoFormatado = tamanho.trim();
-                            if (tamanhosDisponiveis.includes(tamanhoFormatado)) { %>
+                            if (tamanhosDisponiveis.includes(tamanhoFormatado)) {
+                                hasSpecificSize = true;
+                                %>
                                 <option value="<%= tamanhoFormatado %>"><%= tamanhoFormatado %></option>
                             <% }
-                        }); %>
+                        }); 
+                        
+                        // Se não houver tamanhos específicos, exibe a opção "Sem tamanho específico"
+                        if (!hasSpecificSize) { %>
+                            <option value="Sem tamanho específico">Sem tamanho específico</option>
+                        <% } 
+                        %>
                     </select>
                 <% } else { %>
                     <select name="tamanhoProduto" id="tamanhoSelecionado">
@@ -40,6 +54,7 @@
                     </select>
                 <% } %>
 
+                <section class="buttons">
                 <button>Comprar</button> 
                 <button class="adicionarCarrinho" 
                         data-id="<%= produto.idProd %>" 
@@ -48,12 +63,17 @@
                         data-imagem="<%= produto.imagemProd %>">
                     Adicionar ao carrinho
                 </button>
+                </section>
+                
             </section>
         </section>
 
         <section class="infos">
-            <h3>Vendedor: <%= produto.razaoSocial %></h3>
-            <p><%= produto.descricaoProd %></p>
+            <section class="infoContainer">
+                <h3>Vendedor: <%= produto.razaoSocial %></h3>
+                <h2>Descrição do produto:</h2>
+                <p><%= produto.descricaoProd %></p>
+            </section>
         </section>
     </main>
     <%- include('../partial/footer'); %>
