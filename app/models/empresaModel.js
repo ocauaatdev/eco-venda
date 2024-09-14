@@ -62,9 +62,19 @@ const empresaModel = {
         }
     },
 
-    update: async (dadosForm, id) => {
+    update: async (id, dadosForm) => {
         try {
-            const [linhas] = await pool.query('UPDATE empresas SET ? WHERE idEmpresas = ?', [dadosForm, id]);
+            const [linhas] = await pool.query('UPDATE empresas SET razaoSocial = ?, emailEmpresa = ?, celularEmpresa = ?, cepEmpresa = ?, logradouroEmpresa = ?, bairroEmpresa = ?, cidadeEmpresa = ?, ufEmpresa = ? WHERE idEmpresas = ?', [
+                dadosForm.razaoSocial,
+                dadosForm.emailEmpresa,
+                dadosForm.celularEmpresa,
+                dadosForm.cepEmpresa,
+                dadosForm.logradouroEmpresa,
+                dadosForm.bairroEmpresa,
+                dadosForm.cidadeEmpresa,
+                dadosForm.ufEmpresa,
+                id
+            ]);
             return linhas;
         } catch (error) {
             return error;

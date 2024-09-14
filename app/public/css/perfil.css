@@ -1,63 +1,216 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800;900&display=swap');
-*{
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins';
+    font-family: 'Poppins', sans-serif;
     text-decoration: none;
+    transition: all 0.3s ease;
 }
-.container{
+
+body {
+    background-color: #f0f5f5;
+}
+
+.container {
     width: 100%;
     height: 100%;
     display: flex;
 }
-.barraLateral{
+
+.barraLateral {
     width: 30%;
     height: 100vh;
-    padding: 20px;
+    padding: 30px;
     background-color: #063C46;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
-.barraLateral ul{
+
+.barraLateral ul {
     list-style: none;
-    height: 70%;
 }
-.opcoesPerfil i{
+
+.opcoesPerfil li{
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 10px;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.opcoesPerfil li a{
+    color: #fff;
+}
+
+.opcoesPerfil li:hover {
+    background-color: #07565e;
+    transform: scale(1.05);
+}
+
+.opcoesPerfil li.active {
+    background-color: #07565e;
+    transform: scale(1.05);
+    font-weight: bold;
+}
+
+.opcoesPerfil i {
     font-size: 30px;
 }
-.opcoesPerfil span{
+
+.opcoesPerfil span {
     font-size: 17px;
     margin-left: 10px;
 }
-.opcoesPerfil li{
-    margin-bottom: 25px;
-    color: #fff;
-    cursor: pointer;
-}
-.opcoesPerfil li:hover{
-    transform: scale(1.1);
-}
-.parteInferior{
+
+.parteInferior {
     height: 30%;
 }
-.sairBtn{
+
+.sairBtn {
     text-transform: uppercase;
     font-weight: bold;
-    background-color: #fc7f2d;
-    margin-top: 10%;
+    background-color: #FC7F2D;
     color: white;
-    padding: 10px 20px 10px 20px;
+    padding: 10px 20px;
     font-size: 17px;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-}
-.conteudo{
-    padding: 30px;   
+    transition: background-color 0.3s ease;
 }
 
-/* ============PERFIL RESPONSIVO============ */
-@media(max-width:1440px){
-    .barraLateral{
+.sairBtn:hover {
+    background-color: #e86c1b;
+}
+
+.conteudo {
+    flex-grow: 1;
+    padding: 30px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.secaoPerfil {
+    display: none;
+}
+
+#configuracoes {
+    display: block;
+}
+
+h2 {
+    color: #063C46;
+    font-size: 35px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+label {
+    font-weight: 500;
+    color: #063C46;
+    margin-bottom: 5px;
+    font-size: 20px;
+}
+
+.secaoPerfil span {
+    font-weight: 400;
+    color: #555;
+    font-size: 20px;
+}
+
+input {
+    width: 60%;
+    padding: 5px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+input:read-only {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+input:focus {
+    border-color: #FC7F2D;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.botoesAcao {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px; /* Espaçamento entre os botões */
+}
+
+#atualizarBtn, #cancelarBtn {
+    width: auto; /* Deixe os botões ajustarem seu tamanho ao conteúdo */
+}
+
+
+#editarBtn {
+    background-color: #063C46;
+    color: white;
+}
+
+#editarBtn:hover {
+    background-color: #07565e;
+}
+
+#atualizarBtn {
+    background-color: #FC7F2D;
+    color: white;
+}
+
+#atualizarBtn:hover {
+    background-color: #e86c1b;
+}
+
+#cancelarBtn {
+    background-color: #bbb;
+    color: white;
+}
+
+#cancelarBtn:hover {
+    background-color: #999;
+}
+
+/* Responsividade */
+@media(max-width: 1440px) {
+    .barraLateral {
         width: 40%;
+    }
+}
+
+@media(max-width: 768px) {
+    .barraLateral {
+        width: 100%;
+        height: auto;
+    }
+
+    .conteudo {
+        margin: 10px;
     }
 }

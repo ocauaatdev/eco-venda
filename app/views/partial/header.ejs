@@ -49,36 +49,31 @@
                 <!-- Icones Menu -->
                 <ul class="iconesMenu">
 
-                    <!--Icone de Perfil-->
                     <li class="iconPerfil">
-                        <a class="menuicon" href="#"> <!--aqui fica o link do icone do perfil-->
-                        <span class="icon"><i class="fa-solid fa-user"></i></span>     
-                        <span class="text">Perfil</span></a>
+    <a class="menuicon" href="#">
+        <span class="icon"><i class="fa-solid fa-user"></i></span>     
+        <span class="text">Perfil</span>
+    </a>
     
-                        <!-- Dropdown -->
-                        <% if (typeof user == 'undefined') { %> 
-                        <ul class="dropdownPerfil">
-                            <li id="login-button"><a class="perfilOptions" href="/redirecionamento">Login e Cadastro</a></li>
-                            <li class="perfilOptions" id="sairOption" onclick="deslogar()"><a href="">Sair</a></li>   
-                        </ul> <!-- Fim Dropdown -->
-                        <% } %>
-
-                        <!-- Dropdown logado -->
-                        <% if (typeof user !== 'undefined') { %> 
-                            <ul class="dropdownPerfil">
-                                <li class="perfilOptions"><a href="/perfil-usuario">Meu Perfil</a></li>
-                                <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>   
-                            </ul> <!-- Fim Dropdown -->
-                        <% } %>
-                    </li>
-                    <!--FIM Icone de Perfil-->
+    <ul class="dropdownPerfil">
+        <% if (!autenticado || !autenticado.id) { %>
+          <li id="login-button"><a class="perfilOptions" href="/redirecionamento">Login e Cadastro</a></li>
+        <% } else if (autenticado.tipo === 'usuario') { %>
+          <li class="perfilOptions"><a href="/perfil-usuario">Meu Perfil</a></li>
+          <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
+        <% } else if (autenticado.tipo === 'empresa') { %>
+          <li class="perfilOptions"><a href="/perfil-empresa">Meu Perfil</a></li>
+          <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
+        <% } %>
+      </ul>
+</li>
     
                     <!-- Icone Carrinho -->
-                    <li><a class="menuicon" href="/carrinho"> <!--link para entrar na pagina do carrinho-->
-                        <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
-                        <span class="text">Carrinho</span>
-                        <span id="cart-item-count" class="item-count">0</span>
-                    </a></li> <!-- Fim Icone Carrinho -->    
+<li><a class="menuicon" href="/carrinho"> <!--link para entrar na pagina do carrinho-->
+    <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
+    <span class="text">Carrinho</span>
+    <span id="cart-item-count" class="item-count"><%= qtdItensCarrinho %></span>
+</a></li> <!-- Fim Icone Carrinho -->   
     
                 <!--Icone Menu Hamburguer-->
                 <li><span class="icon menuicon menuhamburguer btnMenu"><i class="fa-solid fa-bars"></i></span></li>  

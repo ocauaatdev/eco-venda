@@ -77,7 +77,8 @@ const usuarioController = {
 
             req.session.user = {
                 id: user.idClientes,
-                nomeCliente: user.nomeCliente
+                nomeCliente: user.nomeCliente,
+                tipo: 'user'
             };
             return res.redirect(`/home-page?login=sucesso&nome=${user.nomeCliente}` );
         } catch (err) {
@@ -176,11 +177,17 @@ const usuarioController = {
         try {
             console.log('ID do usuário na sessão:', req.session.user.id);
 
+            // Verifica se o usuario é do tipo 'usuario'
+            if (req.session.user.tipo !== 'user') {
+                return res.redirect('/login');
+            }
+
             const user = await Usuario.findId(req.session.user.id);
             if (user.length === 0) {
                 return res.status(404).send('Usuário não encontrado');
             }
-            res.render('pages/perfil-usuario', { user: user[0] });
+
+            res.render('pages/perfil-usuario', { user: user[0], autenticado: req.session.autenticado, tipo: 'usuario' });
             
         }catch(err){
             console.error(err);
@@ -202,12 +209,6 @@ const usuarioController = {
                 return res.status(400).send('Nome de usuário já está em uso. Por favor, escolha outro.');
             }
 
-            // Verifica se o email já está em uso 
-            const existingEmail = await Usuario.findByEmail(emailCliente);
-            if (existingEmail.length > 0 && existingEmail[0].idClientes !== req.session.user.id) {
-                return res.status(400).send('Email já está em uso. Por favor, escolha outro.');
-            }
-
             // Chama a função de validação do CEP para obter os dados
             const endereco = await validarCEP(cepCliente.replace('-', ''));
             if (!endereco) {
@@ -226,12 +227,6 @@ const usuarioController = {
                 cidadeCliente: endereco.localidade,
                 ufCliente: endereco.uf,
             });
-    
-            // Atualiza as informações na sessão
-            req.session.user = {
-                id: req.session.user.id,
-                nomeCliente
-            };
     
             res.redirect('/perfil-usuario?update=sucesso');
         } catch (err) {

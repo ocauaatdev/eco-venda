@@ -56,7 +56,7 @@ const produtosController = {
       });
 
       // console.log('Produtos encontrados:', results);
-      res.render("pages/catalogo", { listarProdutos: results });
+      res.render("pages/catalogo", { listarProdutos: results, autenticado: req.session.autenticado });
     } catch (e) {
       console.error('Erro ao listar produtos:', e);
       res.json({ erro: "Falha ao acessar dados" });
@@ -73,7 +73,7 @@ const produtosController = {
         if (produto.imagemProd) {
           produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
         }
-        res.render("pages/individual-produto", { produto });
+        res.render("pages/individual-produto", { produto,autenticado: req.session.autenticado });
       } else {
         res.status(404).render("pages/404", { mensagem: "Produto não encontrado." });
       }

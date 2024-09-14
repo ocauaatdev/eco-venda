@@ -72,4 +72,4 @@ const produtosModel = {
 };
     
 
-module.exports = produtosModel
+module.exports = produtosModel;

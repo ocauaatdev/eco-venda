@@ -71,7 +71,7 @@ const empresaController = {
                 tipo: 'empresa' // Adicionado tipo para facilitar a identificação
             };
             console.log(`Login de empresa bem-sucedido: ${empresaData.razaoSocial}`);
-            res.redirect("/");  // Redirecionar para a página inicial
+            return res.redirect(`/home-page?login=sucesso&nome=${empresaData.razaoSocial}`);
         } catch (e) {
             console.log('Erro no login:', e.message);
             res.render("pages/login-empresa", { listaErros: [{ msg: 'Erro interno no servidor, tente novamente mais tarde.' }] });
@@ -155,6 +155,64 @@ const empresaController = {
         } catch (e) {
             console.log('Erro no cadastro:', e.message);
             res.render("pages/cadastro-empresa", { listaErros: [{ msg: e.message }], valores: req.body });
+        }
+    },
+    perfilEmpresa: async (req, res) =>{
+        if(!req.session.autenticado) {
+            return res.redirect('/login-empresa');
+        }
+        try {
+            console.log('ID da empresa na sessão:', req.session.autenticado.id);
+ 
+            // Verifica se o usuario é do tipo 'empresa'
+            if (req.session.autenticado.tipo !== 'empresa') {
+                return res.redirect('/login-empresa');
+            }
+ 
+            const Empresa = await empresa.findId(req.session.autenticado.id);
+            if (Empresa.length === 0) {
+                return res.status(404).send('Empresa não encontrada');
+            }
+            // Renderiza a página de perfil da empresa com os dados
+            res.render('pages/perfil-empresa', { Empresa: Empresa[0], autenticado: req.session.autenticado, tipo: 'empresa' });
+           
+ 
+       
+        } catch (error) {
+            console.error('Erro ao carregar perfil da empresa:', error);
+            res.status(500).send('Erro ao carregar perfil');
+        }
+    },
+    atualizarPerfilEmpresa: async (req, res) => {
+        if (!req.session.autenticado) {
+            return res.redirect('/login-empresa');
+        }
+   
+        try {
+            const { razaoSocial, emailEmpresa, celularEmpresa, cpnjempresa, cepEmpresa } = req.body;
+            const endereco = await validarCEP(cepEmpresa.replace('-', ''));
+            if (!endereco) {
+                return res.status(400).send('CEP inválido.');
+            }
+   
+            // Atualizar as informações da empresa
+            const result = await empresa.update(req.session.autenticado.id, {
+                razaoSocial,
+                emailEmpresa,
+                celularEmpresa,
+                cpnjempresa,
+                cepEmpresa,
+                logradouroEmpresa: endereco.logradouro,
+                bairroEmpresa: endereco.bairro,
+                cidadeEmpresa: endereco.localidade,
+                ufEmpresa: endereco.uf,
+            });
+   
+            console.log('Resultado da atualização no controller:', result); // Adicione isso para depuração
+            res.redirect('/perfil-empresa?update=sucesso');
+        } catch (error) {
+            console.error('Erro ao atualizar perfil da empresa:', error);
+            res.status(500).send('Erro ao atualizar perfil');
         }
     }
 }

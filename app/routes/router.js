@@ -5,6 +5,27 @@ const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
 const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAutorizado } = require("../models/autenticador");
 const uploadFile = require("../util/uploader")();
+const { carrinhoController } = require("../controllers/carrinhoController");
+
+
+// Middleware para inicializar o carrinho
+router.use((req, res, next) => {
+  if (!req.session.carrinho) {
+    req.session.carrinho = [];
+  }
+  res.locals.qtdItensCarrinho = req.session.carrinho.length;
+  next();
+});
+
+// Middleware para configurar o estado autenticado
+router.use((req, res, next) => {
+  if (req.session.autenticado && req.session.autenticado.id) {
+    res.locals.autenticado = req.session.autenticado;
+  } else {
+    res.locals.autenticado = null; // Explicitamente "não autenticado"
+  }
+  next();
+});
 
 
 // Rotas de páginas
@@ -22,14 +43,30 @@ router.get('/ecopremium', (req, res) => {
 
 router.get('/catalogo', (req, res) => {
   // res.render('pages/catalogo', { query: req.query, autenticado: req.session.autenticado });
-  produtosController.listarProdutos(req,res)
+  produtosController.listarProdutos(req, res, { autenticado: req.session.autenticado });
 });
 
 // ======== CADASTRO E LOGIN DO CLIENTE ==========
 
+// router.get('/cadastro', (req, res) => {
+//   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
+//   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
+
+//   // Se o usuario estiver logado não permite acessar a pagina
+//   if(req.session.user || req.session.autenticado){
+//     return res.redirect('/?erro=logado');
+//   }
+//   res.render('pages/cadastro', { listaErros: [], valores });
+// });
+// Rota de cadastro do usuário
 router.get('/cadastro', (req, res) => {
-  const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
+  const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão
   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
+
+  // Se o usuario estiver logado, não permite acessar a pagina de cadastro
+  if (req.session.autenticado && req.session.autenticado.id) {
+    return res.redirect('/?erro=logado'); // Verifica explicitamente o ID
+  }
   res.render('pages/cadastro', { listaErros: [], valores });
 });
 
@@ -39,7 +76,17 @@ router.post('/cadastro',
     usuarioController.cadastrar(req, res);
   });
 
+// router.get('/login', (req, res) => {
+//   if(req.session.user || req.session.autenticado){
+//     return res.redirect('/?erro=logado');
+//   }
+//   res.render('pages/login', { listaErros: [], query: req.query });
+// });
 router.get('/login', (req, res) => {
+  // Se o usuario estiver logado, não permite acessar a pagina de login
+  if (req.session.autenticado && req.session.autenticado.id) {
+    return res.redirect('/?erro=logado'); // Verifica explicitamente o ID
+  }
   res.render('pages/login', { listaErros: [], query: req.query });
 });
 
@@ -49,16 +96,25 @@ router.post('/login',
     usuarioController.logar(req, res);
   });
 
-  router.get('/cadastro-empresa', (req, res) => {
-    const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
-    req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
-    res.render('pages/cadastro-empresa', { listaErros: [], valores });
-  });
-// Rotas de cadastro e login de empresa
 // ============= Rotas de cadastro e login de empresa ================
+// router.get('/cadastro-empresa', (req, res) => {
+//   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
+//   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
+
+//   // Se o usuario estiver logado não permite acessar a pagina
+//   if(req.session.autenticado || req.session.user){
+//     return res.redirect('/?erro=logado');
+//   }
+//   res.render('pages/cadastro-empresa', { listaErros: [], valores });
+// });
 router.get('/cadastro-empresa', (req, res) => {
-  const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
+  const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão
   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
+
+  // Se o usuario estiver logado, não permite acessar a pagina de cadastro da empresa
+  if (req.session.autenticado && req.session.autenticado.id) {
+    return res.redirect('/?erro=logado');
+  }
   res.render('pages/cadastro-empresa', { listaErros: [], valores });
 });
 
@@ -68,7 +124,18 @@ router.post('/cadastro-empresa',
     empresaController.cadastrar(req, res);
   });
 
+
+// router.get('/login-empresa', (req, res) => {
+//   if(req.session.autenticado || req.session.user){
+//     return res.redirect('/?erro=logado');
+//   }
+//   res.render('pages/login-empresa', { listaErros: [], query: req.query });
+// });
 router.get('/login-empresa', (req, res) => {
+  // Se o usuario estiver logado, não permite acessar a pagina de login da empresa
+  if (req.session.autenticado && req.session.autenticado.id) {
+    return res.redirect('/?erro=logado');
+  }
   res.render('pages/login-empresa', { listaErros: [], query: req.query });
 });
 
@@ -91,82 +158,6 @@ router.get('/logout', (req, res) => {
 });
 // ======================================
 
-// ======== CARRINHO ============
-// router.get('/carrinho', (req, res) => {
-//   const cart = req.session.cart || [];
-//   res.render('pages/carrinho', { cart, query: req.query, autenticado: req.session.autenticado });
-// });
-router.get('/carrinho', (req, res) => {
-  const cart = req.session.cart || [];
-
-  // Calcula o preço total
-  const precoTotal = cart.reduce((total, item) => total + (item.preco * item.quantidade), 0);
-
-  res.render('pages/carrinho', { cart, precoTotal, query: req.query, autenticado: req.session.autenticado });
-});
-
-router.post('/add-to-cart', (req, res) => {
-  const produto = req.body;
-  
-  if (!req.session.cart) {
-      req.session.cart = [];
-  }
-
-  // Adiciona o produto ao carrinhoz
-  req.session.cart.push({
-      id: produto.id,
-      nome: produto.nome,
-      preco: produto.preco,
-      imagem: produto.imagem,
-      quantidade: 1, // Valor inicial de quantidade
-      tamanho: produto.tamanho
-  });
-
-  res.json({ success: true, message: "Produto adicionado ao carrinho!" });
-});
-
-router.get('/cart-item-count', (req, res) => {
-  const cart = req.session.cart || [];
-  const itemCount = cart.reduce((count, item) => count + item.quantidade, 0);
-  res.json({ count: itemCount });
-});
-
-// Rota para atualizar a quantidade de um item no carrinho
-router.post('/atualizar-quantidade', (req, res) => {
-  const { id, acao } = req.body;
-  const cart = req.session.cart || [];
-
-  const produto = cart.find(item => item.id === id);
-
-  if (produto) {
-    if (acao === 'aumentar') {
-      produto.quantidade += 1;
-    } else if (acao === 'diminuir' && produto.quantidade > 1) {
-      produto.quantidade -= 1;
-    }
-  }
-
-  req.session.cart = cart; // Atualiza a sessão
-  res.json({ success: true });
-});
-
-// Rota para excluir um produto do carrinho
-router.post('/excluir-produto', (req, res) => {
-  const { id } = req.body;
-  let cart = req.session.cart || [];
-
-  cart = cart.filter(item => item.id !== id);
-
-  req.session.cart = cart; // Atualiza a sessão
-  res.json({ success: true });
-});
-
-// Rota para esvaziar o carrinho quando a aba é fechada
-// SÓ ESTÁ FUNCIONANDO NA PAGINA carrinho.ejs
-router.post('/esvaziar-carrinho', (req, res) => {
-  req.session.cart = []; // Limpa o carrinho
-  res.json({ success: true, message: "Carrinho esvaziado com sucesso!" });
-});
 
 // ==============================
 
@@ -176,13 +167,14 @@ router.get('/redirecionamento', (req, res) => {
 
 // ==========PERFIS=================
 
-  // router.get('/perfil-usuario', (req, res) => {
-  //   res.render('pages/perfil-usuario');
-  // });
-
   router.get('/perfil-usuario', usuarioController.perfil);
 
   router.post('/usuario/atualizar', usuarioController.atualizarPerfil);
+
+  // Visualizar perfil empresa 
+  router.get('/perfil-empresa', empresaController.perfilEmpresa);
+  // Atualizar perfil empresa
+  router.post('/empresa/atualizar', empresaController.atualizarPerfilEmpresa);
 
 // ===========================
 
@@ -213,5 +205,22 @@ router.post('/cadastro-produto',
 
   // Rota para exibir o produto individualmente
 router.get('/produto/:idProd', produtosController.exibirProduto);
+
+// CARRINHO
+router.get("/addItem", function (req, res) {
+  carrinhoController.addItem(req, res);
+});
+
+router.get("/removeItem", function (req, res) {
+  carrinhoController.removeItem(req, res);
+});
+
+router.get("/excluirItem", function (req, res) {
+  carrinhoController.excluirItem(req, res);
+});
+
+router.get("/carrinho", verificarUsuAutenticado, function (req, res) {
+  carrinhoController.listarcarrinho(req, res);
+});
 
 module.exports = router;

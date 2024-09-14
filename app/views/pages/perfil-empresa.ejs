@@ -17,28 +17,35 @@
     <!-- Fim menu e menu lateral -->
 
     <main>
+        <!-- ===================================== Seções do perfil ==================================================-->
         <section class="container">
             <section class="barraLateral">
                 <ul class="opcoesPerfil">
-                    <li onclick="mostrarSecao('configuracoes')">
+                    <li onclick="mostrarSecao('configuracoes', event)">
                         <i class="fa-solid fa-gear"></i>
                         <span>Configurações da Conta</span>
                     </li>
-                    <li onclick="mostrarSecao('notificacoes')">
-                        <i class="fa-solid fa-bell"></i>
-                        <span>Notificações</span>
+
+                    <li onclick="mostrarSecao('meus-produtos')">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                        <span>Meus produtos</span>
                     </li>
-                    <li onclick="mostrarSecao('pedidos')">
-                        <i class="fa-solid fa-bag-shopping"></i>
-                        <span>Meus Pedidos</span>
+
+                    <li>
+                        <a href="/cadastro-produto" >
+                            <i class="fa-solid fa-circle-plus"></i>
+                            <span>Novo produto</span>
+                        </a>
                     </li>
-                    <li onclick="mostrarSecao('acompanhamento')">
-                        <i class="fa-solid fa-truck-fast"></i>
-                        <span>Acompanhar Pedidos</span>
+
+                    <li onclick="mostrarSecao('vendidos')">
+                        <i class="fa-solid fa-dollar-sign"></i>
+                        <span>Produtos vendidos</span>
                     </li>
-                    <li onclick="mostrarSecao('assinatura')">
-                        <i class="fa-solid fa-star"></i>
-                        <span>Assinatura Eco+</span>
+
+                    <li onclick="mostrarSecao('monitorar')">
+                        <i class="fa-regular fa-eye"></i>
+                        <span>Monitorar vendas</span>
                     </li>
                 </ul>
                 <section class="parteInferior">
@@ -47,64 +54,64 @@
             </section> <!--barra lateral-->
 
             <section class="conteudo">
-
-                <!--============================================= Seção Configurações da Conta =================================================================-->
+                <!-- Seção Configurações da Conta -->
                 <section id="configuracoes" class="secaoPerfil">
-                    <h2>Configurações da Conta</h2>
-                    <form action="/usuario/atualizar" method="POST" id="userForm">
+                    <h2>Configurações da Conta da Empresa</h2>
+                    <form action="/empresa/atualizar" method="POST" id="empresaForm">
                         <div>
-                            <label for="nome">Nome:</label>
-                            <span id="nomeTexto"><%= user.nomeCliente %></span>
-                            <input type="text" id="nome" name="nomeCliente" value="<%= user.nomeCliente %>" style="display: none;">
+                            <label for="razaoSocial">Razão Social:</label>
+                            <span id="razaoSocialTexto"><%= Empresa.razaoSocial %></span>
+                            <input type="text" id="razaoSocial" name="razaoSocial" value="<%= Empresa.razaoSocial %>" style="display: none;">
                         </div>
-
+                
                         <div>
                             <label for="email">Email:</label>
-                            <span id="emailTexto"><%= user.emailCliente %></span>
-                            <input type="email" id="email" name="emailCliente" value="<%= user.emailCliente %>" style="display: none;">
+                            <span id="emailTexto"><%= Empresa.emailEmpresa %></span>
+                            <input type="email" id="email" name="emailEmpresa" value="<%= Empresa.emailEmpresa %>" style="display: none;">
                         </div>
-
+                
                         <div>
                             <label for="telefone">Telefone:</label>
-                            <span id="telefoneTexto"><%= user.celularCliente %></span>
-                            <input type="tel" id="telefone" name="celularCliente" value="<%= user.celularCliente %>" style="display: none;">
+                            <span id="telefoneTexto"><%= Empresa.celularEmpresa %></span>
+                            <input type="tel" id="telefone" name="celularEmpresa" value="<%= Empresa.celularEmpresa %>" style="display: none;">
                         </div>
-
+                
                         <div>
-                            <label for="cpf">CPF:</label>
-                            <span id="cpfTexto"><%= user.cpfCliente %></span>
-                            <input type="text" id="cpf" name="cpfCliente" value="<%= user.cpfCliente %>" style="display: none; border: none;" readonly>
+                            <label for="cnpj">CNPJ:</label>
+                            <span id="cnpjTexto"><%= Empresa.cpnjempresa %></span>
+                            <input type="text" id="cnpj" name="cnpjEmpresa" value="<%= Empresa.cpnjempresa %>" style="display: none;" readonly>
                         </div>
-
+                
                         <div>
                             <label for="cep">CEP:</label>
-                            <span id="cepTexto"><%= user.cepCliente %></span>
-                            <input type="text" id="cep" name="cepCliente" value="<%= user.cepCliente %>" style="display: none;">
+                            <span id="cepTexto"><%= Empresa.cepEmpresa %></span>
+                            <input type="text" id="cep" name="cepEmpresa" value="<%= Empresa.cepEmpresa %>" style="display: none;">
                         </div>   
-
+                
                         <div>
                             <label for="logradouro">Logradouro:</label>
-                            <span id="logradouroTexto"><%= user.logradouroCliente %></span>
-                            <input type="text" id="logradouro" name="logradouroCliente" value="<%= user.logradouroCliente %>" style="display: none; border: none;" readonly>
+                            <span id="logradouroTexto"><%= Empresa.logradouroEmpresa %></span>
+                            <input type="text" id="logradouro" name="logradouroEmpresa" value="<%= Empresa.logradouroEmpresa %>" style="display: none;" readonly>
                         </div>
-
+                
                         <div>
                             <label for="bairro">Bairro:</label>
-                            <span id="bairroTexto"><%= user.bairroCliente %></span>
-                            <input type="text" id="bairro" name="bairroCliente" value="<%= user.bairroCliente %>" style="display: none; border: none;" readonly>
+                            <span id="bairroTexto"><%= Empresa.bairroEmpresa %></span>
+                            <input type="text" id="bairro" name="bairroEmpresa" value="<%= Empresa.bairroEmpresa %>" style="display: none;" readonly>
                         </div>
-
+                
                         <div>
                             <label for="cidade">Cidade:</label>
-                            <span id="cidadeTexto"><%= user.cidadeCliente %></span>
-                            <input type="text" id="cidade" name="cidadeCliente" value="<%= user.cidadeCliente %>" style="display: none; border: none;" readonly>
+                            <span id="cidadeTexto"><%= Empresa.cidadeEmpresa %></span>
+                            <input type="text" id="cidade" name="cidadeEmpresa" value="<%= Empresa.cidadeEmpresa %>" style="display: none;" readonly>
                         </div>
-
+                
                         <div>
                             <label for="uf">Uf:</label>
-                            <span id="ufTexto"><%= user.ufCliente %></span>
-                            <input type="text" id="uf" name="ufCliente" value="<%= user.ufCliente %>" style="display: none; border: none;" readonly>
+                            <span id="ufTexto"><%= Empresa.ufEmpresa %></span>
+                            <input type="text" id="uf" name="ufEmpresa" value="<%= Empresa.ufEmpresa %>" style="display: none;" readonly>
                         </div>
+                        
                         <div class="botoesAcao">
                             <button type="button" id="editarBtn" onclick="toggleEdit()">Editar informações</button>
                             <button type="submit" id="atualizarBtn" style="display: none;">Salvar</button>
@@ -112,19 +119,20 @@
                         </div>
                     </form>
                 </section>
+                
 
                 <!-- Outras seções podem ser adicionadas aqui -->
-                <section id="notificacoes" class="secaoPerfil">
-                    <h2>Notificações</h2>
+                <section id="meus-produtos"class="secaoPerfil">
+                    <!-- Conteúdo da seção de notificações -->
                 </section>
-                <section id="pedidos" class="secaoPerfil">
-                    <h2>Meus pedidos</h2>
+                <section id="novo-produto" class="secaoPerfil">
+                    <!-- Conteúdo da seção de pedidos -->
                 </section>
-                <section id="acompanhamento" class="secaoPerfil">
-                    <h2>Acompanhar pedidos</h2>
+                <section id="vendidos" class="secaoPerfil">
+                    <!-- Conteúdo da seção de acompanhamento -->
                 </section>
-                <section id="assinatura" class="secaoPerfil">
-                    <h2>Assinatura</h2>
+                <section id="monitorar" class="secaoPerfil">
+                    <!-- Conteúdo da seção de assinatura -->
                 </section>
             </section>
         </section>
@@ -134,8 +142,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
     <script>
-
-        // ========================= Notify============================================
         const urlParams = new URLSearchParams(window.location.search);
         if(urlParams.get('update') === 'sucesso'){
             
@@ -158,8 +164,6 @@
             })
           }
 
-
-        // ================================================ Mascara =================================================== 
         $('#cep').mask('00000-000');
         $('#telefone').mask('(00)00000-0000');
 
@@ -175,8 +179,8 @@
         mostrarSecao('configuracoes');
 
         function toggleEdit() {
-            const inputs = document.querySelectorAll('#userForm input');
-            const spans = document.querySelectorAll('#userForm span');
+            const inputs = document.querySelectorAll('#empresaForm input');
+            const spans = document.querySelectorAll('#empresaForm span');
             const editarBtn = document.getElementById('editarBtn');
             const atualizarBtn = document.getElementById('atualizarBtn');
             const cancelarBtn = document.getElementById('cancelarBtn');

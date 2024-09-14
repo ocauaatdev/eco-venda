@@ -1,23 +1,65 @@
 <% if (listarProdutos) { 
-   listarProdutos.forEach(element => {
-      let parcelado = element.valorProd / 6;
+   listarProdutos.forEach(item => {
+      let parcelado = parseFloat(item.valorProd) / 6;
    %>
-   <section class="product" data-categoria="<%= element.categoria %>">
-      <a href="/produto/<%= element.idProd %>"> 
+   <section class="product" data-categoria="<%= item.categoria %>">
+      <a href="/produto/<%= item.idProd %>"> 
          <section class="imgProduct">
-            <img src="<%= element.imagemProd %>" alt="<%= element.tituloProd %>" class="images">
+            <img src="<%= item.imagemProd %>" alt="<%= item.tituloProd %>" class="images">
          </section>
       </a>
       <section class="infoProduct">
-         <h3 id="nomeProduct"><%= element.tituloProd %></h3>
+         <h3 id="nomeProduct"><%= item.tituloProd %></h3>
          <h1 id="precoParcelado">6 x de <%= parcelado.toFixed(2) %> + juros no cartão</h1>
          <section class="precoAvista">
            <h2>À vista</h2>
-           <h2 id="precoReal">R$<%= element.valorProd %></h2>
+           <h2 id="precoReal">R$<%= item.valorProd %></h2>
          </section>
-         <button class="addCart" data-id="<%= element.idProd %>" data-nome="<%= element.tituloProd %>" data-preco="<%= element.valorProd %>" data-imagem="<%= element.imagemProd %>" data-tamanho="<%= element.tamanhoProd %>">Adicionar ao Carrinho</button>
+
+         <a class="adicionarCarrinho" href="/addItem?id=<%= item.idProd %>&preco=<%= parseFloat(item.valorProd).toFixed(2) %>">
+         <button class="btn-add-carrinho" data-id="<%= item.idProd %>" data-preco="<%= parseFloat(item.valorProd).toFixed(2) %>">Adicionar ao Carrinho</button>
+         </a>
+
+
+
       </section>
    </section>
    <% 
        }); 
    } %>
+
+   <script>
+    // Função para exibir notificações
+    function exibirNotificacao(tipo, mensagem) {
+        new Notify({
+            status: tipo, // success ou error
+            title: tipo === 'success' ? 'Sucesso' : 'Erro',
+            text: mensagem,
+            effect: 'fade',
+            speed: 300,
+            autoclose: true,
+            autotimeout: 1500,
+            position: 'right top'
+        });
+    }
+
+    // Adicionar um evento de clique para todos os botões de "Adicionar ao Carrinho"
+    document.querySelectorAll('.btn-add-carrinho').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault(); // Previne o redirecionamento imediato
+
+            // Pega o ID e o preço do produto
+            const idProduto = this.getAttribute('data-id');
+            const precoProduto = this.getAttribute('data-preco');
+            
+            // Exibe a notificação de sucesso
+            exibirNotificacao('success', 'Produto adicionado ao carrinho com sucesso!');
+
+            // Redireciona o usuário para a URL do carrinho após 2 segundos
+            setTimeout(() => {
+                window.location.href = `/addItem?id=${idProduto}&preco=${precoProduto}`;
+            }, 900); // Tempo de espera para exibir a notificação antes de redirecionar
+        });
+    });
+</script>
+

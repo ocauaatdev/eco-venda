@@ -22,6 +22,7 @@
 }
 .imgContainer img{
     border: solid #8d8d8d62;
+    width: 80%;
 }
 .produtoInfo{
     background-color: #fff;
@@ -70,6 +71,7 @@
     text-transform: uppercase;
     font-weight: 600;
     padding: 10px 10px;
+    width: 200px;
     font-size: 17px;
     border: none;
     border-radius: 10px;

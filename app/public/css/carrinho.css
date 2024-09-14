@@ -61,7 +61,7 @@
 .precoTotal{
     color: #df8621;
 }
-.comprar{
+.btn-primary{
     border: none;
     border-radius: 5px;
     background-color: #df8621;
@@ -71,7 +71,20 @@
     font-size: 19px;
     font-weight: 600;
 }
-
+.btn-warning{
+    border: none;
+    border-radius: 5px;
+    background-color: #df8621;
+    cursor: pointer;
+    color: #fff;
+    padding: 15px 25px 15px 25px;
+    font-size: 19px;
+    font-weight: 600;
+}
+.btn-warning a{
+    text-decoration: none;
+    color: #fff;
+}
 .produtoItem{
     display: flex;
     align-items: center;
@@ -95,12 +108,17 @@
     height: 100%;
     padding: 15px;
     display: grid;
-    grid-template-columns: repeat(6,1fr);
-    grid-gap: 20px;
+    grid-template-columns: repeat(4,1fr);
+    grid-gap: 10px;
     align-items: center;
 }
+.preco_e_nome{
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
+}
 .produtoInfo h3{
-    font-size: 25px;
+    font-size: 19px;
     width: 180px;
     color: #0A242A;
     font-weight: 600;
@@ -115,32 +133,42 @@
 .produtoInfo p{
     font-size: 25px;
     font-weight: 800;
+    width: 130px;
 }
+
 .produtoInfo i{
     font-size: 25px;
     cursor: pointer;
-    color: #0A242A;
 }
-.produtoInfo .tamanho{
-    width: 20px;
-    border: none;
+.quantidade i{
     background-color: #fff;
+    padding: 5px 5px 5px 5px;
+    margin-right: 5px;
+    margin-left: 5px;
 }
 .quantidade{
-    padding: 5px 5px 5px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .diminuir{
-    padding: 5px 8px 5px 8px;
-    border: none;
-    background-color: #fff;
-    cursor: pointer;
+    color: red;
 }
 .aumentar{
-    padding: 5px 8px 5px 8px;
-    border: none;
-    background-color: #fff;
-    cursor: pointer;
+    color: #0A242A;
+}
+.deletar{
+    color: #0A242A;
+    width: 100%;
+    text-align: center;
 }
 .vazio{
     text-align: center;
+}
+.tamanhos{
+    border: none;
+    font-size: 15px;
+    width: 220px;
+    min-width: 220px;
+    max-width: 220px;
 }

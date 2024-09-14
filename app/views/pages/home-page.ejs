@@ -116,14 +116,36 @@
 
     <!-- Rodapé -->
     <%- include('../partial/footer'); %>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         if(urlParams.get('login') === 'sucesso'){
             
             new Notify({
               status: 'success',
-              title: 'Notificação',
-              text: 'Usuário logado com sucesso',
+              title: 'Seja bem vindo(a)!',
+              text: 'Usuário logado com sucesso.',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+
+          if(urlParams.get('erro') === 'logado'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Voçê já está logado.',
+              text: 'Não foi possível acessar a página, você ja está logado, faça logoff e tente novamente.',
               effect: 'fade',
               speed: 300,
               customClass: null,

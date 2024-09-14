@@ -22,45 +22,79 @@
             <section class="carrinho">
 
             <section class="produtoCarrinho">
-                <% if (cart && cart.length > 0) { 
-                    cart.forEach(produto => { 
+                <!-- verificar se o carrinho contém itens antes de renderizar a tabela com os itens do carrinho-->
+                <% if(carrinho){ %>
+                
+                <% 
+                var total=0; 
+                carrinho.forEach(function(item){ 
+                total += (item.qtde * item.preco); 
                 %>
+
                 <section class="produtoItem">
-                <section class="imagemContainer">
-                    <img src="<%= produto.imagem %>" alt="<%= produto.nome %>" class="produtoImg">
-                </section>
 
-                <section class="produtoInfo">
-                    <h3><%= produto.nome %></h3>
-                    <h2>Tamanho:</h2>
+                    <section class="imagemContainer">
+                        <img src="data:image/png;base64,<%= item.imagemProduto %>" alt="<%= item.nome_produto %>" class="produtoImg">
+                    </section>
 
-                    <% let tamanhos = produto.tamanho.split(','); %>
-                        <select class="tamanho" id="tamanho_<%= produto.id %>" name="tamanho">
+                    <section class="produtoInfo">
+                       
+                        <section class="preco_e_nome">
+                            <h3><%= item.nome_produto %></h3>
+                            <p>R$ <%= item.preco.toFixed(2) %></p>
+                        </section>
+                        
+                        
+                        <select class="tamanhos" id="tamanho-select">
                             <option value="" disabled selected>Selecione um tamanho</option>
-                            <% tamanhos.forEach(tamanho => { %>
-                                <option value="<%= tamanho.trim() %>"><%= tamanho.trim() %></option>
-                            <% }) %>
+                        <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
+                            <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
+                        <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
+                            <option value="Pequeno">Pequeno</option>
+                            <option value="Médio">Médio</option>
+                            <option value="Grande">Grande</option>
+                    <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
+                            <option value="P">P</option>
+                            <option value="M">M</option>
+                            <option value="G">G</option>
+                            <option value="GG">GG</option>
+                    <% } else { %>
+                            <option value="Sem tamanho específico">Sem tamanho específico</option>
+                    <% } %>
                         </select>
 
+                        <section class="quantidade">
+                            <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
+                            <i class="fa-solid fa-plus aumentar"></i></a>
 
-                    <p>R$<%= produto.preco %></p>
-                <section class="quantidade">
-                    <button class="diminuir" data-id="<%= produto.id %>">-</button>
-                    <span><%= produto.quantidade %></span>
-                    <button class="aumentar" data-id="<%= produto.id %>">+</button>
+                                <span class="qtde-cart"><%= item.qtde %></span>
+
+                            <a href="/removeItem?id=<%= item.codproduto %>&qtde=1">
+                            <i class="fa-solid fa-minus diminuir"></i></a>   
+                        </section>
+
+                        <a href="/excluirItem?id=<%= item.codproduto %>">
+                        <i class="fa-solid fa-trash deletar"></i>
+                        </a>
+
+                        <a class="codigoproduto" href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>"></a>
+
+                    </section>
                 </section>
-                    <i class="fa-solid fa-trash delProduto"></i>
-                </section>
-                </section>
-                <% }); } else { %>
-                <p>Seu carrinho está vazio.</p>
-                <% } %>
+
+                <% 
+                });
+                %>
+
             </section>
+
+            <%
+            }
+            %>
 
             <section class="infoCarrinho">
                 <section class="head">
                     <h3>Meu Carrinho</h3>
-                    <p id="contador">0<span>Itens</span></p>
                 </section>
 
                 <section class="txtCarrinho">
@@ -69,8 +103,14 @@
                 <h1>Cupons:</h1>
                 <input type="text" name="" id="cupons" placeholder="Digite o código do cupom para receber benefícios.">
                 <h2 class="totalTxt">Total:</h2>
-                <h2 class="precoTotal">R$<%= precoTotal.toFixed(2).replace('.', ',') %></h2>
-                <button class="comprar">Comprar</button>
+                <h2 class="precoTotal">R$ <%= total.toFixed(2) %> </h2>
+                
+                <% if(autenticado.autenticado){%>
+                    <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Comprar</button>
+                <% }else {%>
+                        <p class="btn btn-warning btn-lg btn-block"><a href="/login">Para comprar faça Login</a></p>
+                <% }%>
+
                 </section>
             </section>
         </section>
@@ -80,7 +120,7 @@
     <%- include('../partial/footer'); %>
 
     <%- include('../partial/scripts-essenciais'); %>
-    <script src="/js/carrinho.js"></script>
+
     
 </body>
 </html>
