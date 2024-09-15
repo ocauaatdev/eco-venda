@@ -3,10 +3,11 @@ var router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
 const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
+const Usuario = require('../models/usuarioModel');
 const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAutorizado } = require("../models/autenticador");
 const uploadFile = require("../util/uploader")();
 const { carrinhoController } = require("../controllers/carrinhoController");
-
+const jwt = require('jsonwebtoken');
 
 // Middleware para inicializar o carrinho
 router.use((req, res, next) => {
@@ -76,6 +77,24 @@ router.post('/cadastro',
     usuarioController.cadastrar(req, res);
   });
 
+  router.get('/ativar-conta', async (req, res) => {
+    const { token } = req.query;
+ 
+    try {
+        // Verificar e decodificar o token JWT
+        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const userId = decoded.userId;
+ 
+        // Ativar a conta do usuário
+        await Usuario.atualizarStatusAtivo(userId); // Supondo que você tenha uma função para isso
+        console.log('Conta ativada com sucesso!')
+        return res.redirect("/login?cadastro=sucesso");
+    } catch (e) {
+        console.log(e);
+        return res.redirect('/login?ativar-conta=erro');
+    }
+});
+
 // router.get('/login', (req, res) => {
 //   if(req.session.user || req.session.autenticado){
 //     return res.redirect('/?erro=logado');
@@ -96,6 +115,33 @@ router.post('/login',
     usuarioController.logar(req, res);
   });
 
+  router.get("/recuperar-senha",
+    verificarUsuAutenticado,
+    function (req, res){
+      res.render("pages/rec-senha",
+        {listaErros:[]}
+      )
+    }
+);
+
+router.post("/recuperar-senha",
+verificarUsuAutenticado,
+usuarioController.regrasValidacaoFormRecSenha,
+function(req,res){
+  usuarioController.recuperarSenha(req,res);
+}
+);
+router.get("/resetar-senha",
+function(req,res){
+  usuarioController.validarTokenNovaSenha(req,res);
+}
+);
+router.post("/reset-senha",
+usuarioController.regrasValidacaoFormNovaSenha,
+function (req, res){
+  usuarioController.resetarSenha(req,res);
+}
+);
 // ============= Rotas de cadastro e login de empresa ================
 // router.get('/cadastro-empresa', (req, res) => {
 //   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem

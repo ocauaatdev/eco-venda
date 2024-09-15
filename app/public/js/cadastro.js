@@ -129,7 +129,7 @@ cep.addEventListener('keyup', ()=>{
 // Senha
     const regexUppercase = /[A-Z]/; // Verifica se há pelo menos uma letra maiúscula
     const regexNumber = /\d/; // Verifica se há pelo menos um número
-    const regexSpecialChar = /[#_]/; // Adicione outros caracteres especiais conforme necessário
+    const regexSpecialChar = /[!_@#$%&]/; // Adicione outros caracteres especiais conforme necessário
 
     senha.addEventListener('keyup', () => {
         const senhaValue = senha.value; // Obter o valor da senha
