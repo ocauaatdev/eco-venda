@@ -54,7 +54,7 @@
             <% } %>
 
             <a href="/cadastro-empresa">Precisa cadastrar sua empresa? Clique aqui!</a>
-            <p>Esqueci minha senha</p>
+            <a href="/recuperar-senha-empresa">Esqueci minha senha</a>
         </form>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
@@ -64,8 +64,8 @@
             
             new Notify({
               status: 'success',
-              title: 'Notificação',
-              text: 'Empresa cadastrado com sucesso',
+              title: 'Sucesso',
+              text: 'Conta ativada, use seu e-mail e senha para acessar o seu perfil',
               effect: 'fade',
               speed: 300,
               customClass: null,
@@ -79,7 +79,68 @@
               type: 'outline',
               position: 'right top'
             })
-          }</script>
+          }
+          if(urlParams.get('login-empresa') === 'senha'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Recuperação de senha',
+              text: 'Enviamos um email com instruções para resetar sua senha',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('ativar-conta') === 'erro'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Ativação de conta',
+              text: 'Token inválido ou expirado',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('login-empresa') === 'alteracao'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Perfil alterado',
+              text: 'Nova senha registrada',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          </script>
     <script src="/js/senha.js"></script>
     <script src="/js/login.js"></script>
 </body>

@@ -4,6 +4,9 @@ const validarCnpj = require("../public/js/validarCnpj")
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 const moment = require('moment');
+const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+const enviarEmail = require("../public/js/email");
 
 const empresaController = {
     regrasValidacaoFormLogin: [
@@ -36,6 +39,23 @@ const empresaController = {
                 return true;
             })
     ],
+    regrasValidacaoFormRecSenha:[
+        body('email')
+          .isEmail()
+          .withMessage('Por favor, insira um e-mail válido.'),
+    ],
+      regrasValidacaoFormNovaSenha:[
+        body("senha_empresa")
+            .isStrongPassword()
+            .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)"),
+        body("confirm_senha")
+            .custom((value, { req }) => {
+                if (value !== req.body.senha) {
+                    throw new Error('A confirmação de senha deve ser igual à senha.');
+                }
+                return true;
+            })
+      ],
     logar: async (req, res) => {
         const erros = validationResult(req);
         if (!erros.isEmpty()) {
@@ -150,12 +170,117 @@ const empresaController = {
                     return res.redirect('/cadastro-empresa?cadastro-empresa=cnpj');
                 }
 
-                await empresa.create(dadosForm);
-                return res.redirect("/login-empresa?cadastro-empresa=sucesso");
+                let create = await empresa.create(dadosForm);
+       
+        // Gerar token JWT
+        const token = jwt.sign(
+            { userId: create.insertId },
+            process.env.SECRET_KEY,
+            { expiresIn: '1h' } // Defina o tempo de expiração conforme necessário
+        );
+        console.log(token);
+ 
+        const url = `${process.env.URL_BASE}/ativar-conta-empresa?token=${token}`;  //`localhost:3000/ativar-conta?token=${token}`
+        console.log(url)
+        // Gerar HTML para o e-mail
+        const html = require('../util/email-ativar-conta-empre')(url, token);
+ 
+        // Enviar e-mail
+        enviarEmail(dadosForm.emailEmpresa, "Cadastro no site exemplo", null, html, () => {
+            return res.redirect('/cadastro-empresa?cadastro-empresa=sucesso');
+        });
+       
         } catch (e) {
-            console.log('Erro no cadastro:', e.message);
-            res.render("pages/cadastro-empresa", { listaErros: [{ msg: e.message }], valores: req.body });
+            console.log(e);
         }
+    },
+    recuperarSenha:async(req,res) =>{
+        const erros = validationResult(req);
+ 
+        if (!erros.isEmpty()) {
+            req.session.dadosForm = req.body;
+            res.render("pages/rec-senha",
+                erros.array()
+            )
+            // return res.render('pages/cadastro', { listaErros: erros.array(), valores: req.body });
+        };
+
+        try{
+            const user = await empresa.findEmpresaCustom({
+                emailEmpresa: req.body.e_mail,
+            });
+            if (!user || user.length === 0) {
+                return res.render("pages/rec-senha-empresa", { erros: [{ msg: 'Usuário não encontrado com este e-mail.' }] });
+            }
+    
+            // Gera o token JWT usando o ID do usuário
+            const token = jwt.sign(
+                { userId: user[0].idEmpresas }, // Certifique-se de usar o campo correto do banco de dados
+                process.env.SECRET_KEY,
+                { expiresIn: '40m' } // Define o tempo de expiração
+            );
+    
+            // Gera o link de recuperação de senha
+            const url = `${process.env.URL_BASE}/resetar-senha-empresa?token=${token}`;
+            const html = require('../util/email-reset-senha-empresa')(url, token);
+ 
+        // Enviar e-mail
+        enviarEmail(req.body.e_mail, "Pedido de recuperação de senha", null, html, () => {
+            return res.redirect('/recuperar-senha-empresa?recuperar-senha-empresa=senha');
+        });
+       
+        } catch (e) {
+            console.log(e);
+        }
+
+    },
+
+    validarTokenNovaSenha: async(req, res)=>{
+        const token = req.query.token;
+        console.log(token);
+
+        jwt.verify(token, process.env.SECRET_KEY, (err, decoded) =>{
+            if(err){
+                res.render("pages/rec-senha-empresa")
+            } else{
+                res.render("pages/resetar-senha-empresa",{
+                    autenticado: req.session.autenticado,
+                    idEmpresas: decoded.userId,
+                })
+            }
+        })
+    },
+
+    resetarSenha: async(req,res) =>{
+        const erros = validationResult(req);
+        console.log(erros);
+        if(!erros.isEmpty()){
+        };
+
+        try {
+            const { idEmpresas, senha_empresa } = req.body;
+
+        // Verifique se idEmpresas e senha foram fornecidos
+
+        // Criptografa a senha. Verifique se a variável 'senha' está corretamente preenchida
+        const senhaHash = bcrypt.hashSync(senha_empresa, 10); 
+
+        // Confirme se a senha foi criptografada corretamente
+        console.log("Senha criptografada:", senhaHash);
+
+        // Atualiza a senha do cliente no banco de dados usando o ID
+        const resultado = await empresa.atualizarSenhaEmpresa(idEmpresas, senhaHash);
+
+        if (resultado.affectedRows > 0) {
+            res.redirect("/login-empresa?login-empresa=alteracao");
+        } else {
+            res.status(400).send("Nenhum cliente encontrado com esse ID.");
+        }
+        } catch (error) {
+            console.log("Erro ao atualizar a senha:", error);
+            res.status(500).send("Erro no servidor.");
+        }        
+        
     },
     perfilEmpresa: async (req, res) =>{
         if(!req.session.autenticado) {

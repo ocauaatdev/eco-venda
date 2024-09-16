@@ -1,0 +1,30 @@
+<form action="/recuperar-senha-empresa" method="POST">
+    <label for="email">Digite seu e-mail para recuperação de senha:</label>
+    <input type="email" name="e_mail" id="email" required>
+    <button type="submit" onclick="recuperarSenha()">Enviar</button>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('recuperar-senha') === 'senha'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Recuperação de senha',
+              text: 'Enviamos um email com instruções para resetar sua senha',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+    </script>
