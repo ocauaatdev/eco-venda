@@ -9,6 +9,14 @@ const uploadFile = require("../util/uploader")();
 const { carrinhoController } = require("../controllers/carrinhoController");
 const jwt = require('jsonwebtoken');
 
+// SDK do Mercado Pago
+const { MercadoPagoConfig, Preference } = require('mercadopago');
+const { pedidoController } = require("../controllers/pedidoController");
+// Adicione as credenciais
+const client = new MercadoPagoConfig({
+  accessToken: process.env.accessToken
+});
+
 // Middleware para inicializar o carrinho
 router.use((req, res, next) => {
   if (!req.session.carrinho) {
@@ -267,6 +275,30 @@ router.get("/excluirItem", function (req, res) {
 
 router.get("/carrinho", verificarUsuAutenticado, function (req, res) {
   carrinhoController.listarcarrinho(req, res);
+});
+
+router.post("/create-preference", function (req, res) {
+  const preference = new Preference(client);
+  console.log(req.body.items);
+  preference.create({
+    body: {
+      items: req.body.items,
+      back_urls: {
+        "success": process.env.URL_BASE + "/feedback",
+        "failure": process.env.URL_BASE + "/feedback",
+        "pending": process.env.URL_BASE + "/feedback"
+      },
+      auto_return: "approved",
+    }
+  })
+    .then((value) => {
+      res.json(value)
+    })
+    .catch(console.log)
+});
+
+router.get("/feedback", function (req, res) {
+  pedidoController.gravarPedido(req, res);
 });
 
 module.exports = router;

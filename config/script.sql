@@ -137,6 +137,7 @@ DROP TABLE IF EXISTS `cupons`;
 CREATE TABLE `cupons` (
   `idCupons` int NOT NULL,
   `descontoCupons` varchar(45) DEFAULT NULL,
+  `prazoCupons` date NOT NULL,
   PRIMARY KEY (`idCupons`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -183,33 +184,33 @@ LOCK TABLES `empresas` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `item pedido`
+-- Table structure for table `item_pedido`
 --
 
-DROP TABLE IF EXISTS `item pedido`;
+DROP TABLE IF EXISTS `item_pedido`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `item pedido` (
-  `idItem pedido` int NOT NULL,
+CREATE TABLE `item_pedido` (
+  `iditem_pedido` int NOT NULL,
   `produtos_das_empresas_idProd` int NOT NULL,
   `Pedidos_idPedidos` int NOT NULL,
   `qtde` varchar(45) DEFAULT NULL,
   `subtotal` decimal(10,2) DEFAULT NULL,
-  PRIMARY KEY (`idItem pedido`),
-  KEY `fk_Item pedido_produtos_das_empresas1_idx` (`produtos_das_empresas_idProd`),
-  KEY `fk_Item pedido_Pedidos1_idx` (`Pedidos_idPedidos`),
-  CONSTRAINT `fk_Item pedido_Pedidos1` FOREIGN KEY (`Pedidos_idPedidos`) REFERENCES `pedidos` (`idPedidos`),
-  CONSTRAINT `fk_Item pedido_produtos_das_empresas1` FOREIGN KEY (`produtos_das_empresas_idProd`) REFERENCES `produtos_das_empresas` (`idProd`)
+  PRIMARY KEY (`iditem_pedido`),
+  KEY `fk_item_pedido_produtos_das_empresas1_idx` (`produtos_das_empresas_idProd`),
+  KEY `fk_item_pedido_Pedidos1_idx` (`Pedidos_idPedidos`),
+  CONSTRAINT `fk_item_pedido_Pedidos1` FOREIGN KEY (`Pedidos_idPedidos`) REFERENCES `pedidos` (`idPedidos`),
+  CONSTRAINT `fk_item_pedido_produtos_das_empresas1` FOREIGN KEY (`produtos_das_empresas_idProd`) REFERENCES `produtos_das_empresas` (`idProd`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `item pedido`
+-- Dumping data for table `item_pedido`
 --
 
-LOCK TABLES `item pedido` WRITE;
-/*!40000 ALTER TABLE `item pedido` DISABLE KEYS */;
-/*!40000 ALTER TABLE `item pedido` ENABLE KEYS */;
+LOCK TABLES `item_pedido` WRITE;
+/*!40000 ALTER TABLE `item_pedido` DISABLE KEYS */;
+/*!40000 ALTER TABLE `item_pedido` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -225,6 +226,9 @@ CREATE TABLE `pedidos` (
   `Clientes_idClientes` int NOT NULL,
   `data_pedido` date DEFAULT NULL,
   `total_pedido` varchar(45) DEFAULT NULL,
+  `statusPedido` int DEFAULT '1',
+  `status_pagamento` varchar(20) DEFAULT NULL,
+  `id_pagamento` int DEFAULT NULL,
   PRIMARY KEY (`idPedidos`),
   KEY `fk_Pedidos_Clientes1_idx` (`Clientes_idClientes`),
   CONSTRAINT `fk_Pedidos_Clientes1` FOREIGN KEY (`Clientes_idClientes`) REFERENCES `clientes` (`idClientes`)
