@@ -4,6 +4,7 @@ const usuarioController = require('../controllers/usuarioController');
 const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
 const Usuario = require('../models/usuarioModel');
+const empresa = require('../models/empresaModel');
 const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAutorizado } = require("../models/autenticador");
 const uploadFile = require("../util/uploader")();
 const { carrinhoController } = require("../controllers/carrinhoController");
@@ -103,17 +104,25 @@ router.post('/cadastro',
     }
 });
 
-// router.get('/login', (req, res) => {
-//   if(req.session.user || req.session.autenticado){
-//     return res.redirect('/?erro=logado');
-//   }
-//   res.render('pages/login', { listaErros: [], query: req.query });
-// });
-router.get('/login', (req, res) => {
-  // Se o usuario estiver logado, não permite acessar a pagina de login
-  if (req.session.autenticado && req.session.autenticado.id) {
-    return res.redirect('/?erro=logado'); // Verifica explicitamente o ID
+router.get('/ativar-conta-empresa', async (req, res) => {
+  const { token } = req.query;
+
+  try {
+      // Verificar e decodificar o token JWT
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      const userId = decoded.userId;
+
+      // Ativar a conta do usuário
+      await empresa.atualizarStatusAtivoEmpre(userId); // Supondo que você tenha uma função para isso
+      console.log('Conta ativada com sucesso!')
+      return res.redirect("/login-empresa?cadastro=sucesso");
+  } catch (e) {
+      console.log(e);
+      return res.redirect('/login-empresa?ativar-conta=erro');
   }
+});
+
+router.get('/login', (req, res) => {
   res.render('pages/login', { listaErros: [], query: req.query });
 });
 
@@ -124,30 +133,59 @@ router.post('/login',
   });
 
   router.get("/recuperar-senha",
-    verificarUsuAutenticado,
-    function (req, res){
-      res.render("pages/rec-senha",
-        {listaErros:[]}
-      )
-    }
+      verificarUsuAutenticado,
+      function (req, res){
+        res.render("pages/rec-senha",
+          {listaErros:[]}
+        )
+      }
 );
 
 router.post("/recuperar-senha",
-verificarUsuAutenticado,
-usuarioController.regrasValidacaoFormRecSenha,
-function(req,res){
-  usuarioController.recuperarSenha(req,res);
-}
+  verificarUsuAutenticado,
+  usuarioController.regrasValidacaoFormRecSenha,
+  function(req,res){
+    usuarioController.recuperarSenha(req,res);
+  }
 );
 router.get("/resetar-senha",
-function(req,res){
-  usuarioController.validarTokenNovaSenha(req,res);
-}
+  function(req,res){
+    usuarioController.validarTokenNovaSenha(req,res);
+  }
 );
 router.post("/reset-senha",
-usuarioController.regrasValidacaoFormNovaSenha,
+  usuarioController.regrasValidacaoFormNovaSenha,
+  function (req, res){
+    usuarioController.resetarSenha(req,res);
+  }
+);
+
+
+router.get("/recuperar-senha-empresa",
+  verificarUsuAutenticado,
+  function (req, res){
+    res.render("pages/rec-senha-empresa",
+      {listaErros:[]}
+    )
+  }
+);
+
+router.post("/recuperar-senha-empresa",
+verificarUsuAutenticado,
+empresaController.regrasValidacaoFormRecSenha,
+function(req,res){
+empresaController.recuperarSenha(req,res);
+}
+);
+router.get("/resetar-senha-empresa",
+function(req,res){
+empresaController.validarTokenNovaSenha(req,res);
+}
+);
+router.post("/reset-senha-empresa",
+empresaController.regrasValidacaoFormNovaSenha,
 function (req, res){
-  usuarioController.resetarSenha(req,res);
+empresaController.resetarSenha(req,res);
 }
 );
 // ============= Rotas de cadastro e login de empresa ================

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/4494a50fc2.js" crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/cadastro.css">
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
+
+    <!-- Jquery Mascaras -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+    <!-- Simple Notify -->
+     <!-- CSS -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
+
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+
+    <title>Cadastro Usuário</title>
+</head>
+<body>
+    <form action="/reset-senha-empresa" method="POST">
+        <input type="hidden" name="idEmpresas" value="<%= idEmpresas %>">
+        <h3 id="senhaTxt">Senha:</h3> 
+                <div class="senha-container">
+                    <input type="password" name="senha_empresa" id="senha_empresa" placeholder="Digite sua nova senha"  required>
+                    <span class="eye-icon">
+                        <i class="fa-solid fa-eye-slash fa-eye eye-senha" id="btn-senha" onclick="mostrarSenhaEmpresa()"></i>
+                    </span>
+                </div>
+    
+                <!-- ============ Confirmar senha =========== -->
+                <h3 id="confirmTxt">Confirmar Senha:</h3>
+                <div class="confirm-container">
+                    <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente"  required>
+                    <span class="eye-icon">
+                        <i class="fa-solid fa-eye-slash fa-eye" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
+                    </span>
+                </div>
+        <button type="submit" onclick="resetarSenha()">Enviar</button>
+    </form>
+</body>
+</html>
+<script src="/js/senha.js"></script>
+<script src="/js/cadastro.js"></script>
+<script src="/js/mostrarsenha.js"></script>
