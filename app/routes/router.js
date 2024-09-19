@@ -5,6 +5,7 @@ const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
 const Usuario = require('../models/usuarioModel');
 const empresa = require('../models/empresaModel');
+const produto = require('../models/produtosModel');
 const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAutorizado } = require("../models/autenticador");
 const uploadFile = require("../util/uploader")();
 const { carrinhoController } = require("../controllers/carrinhoController");
@@ -17,6 +18,14 @@ const { pedidoController } = require("../controllers/pedidoController");
 const client = new MercadoPagoConfig({
   accessToken: process.env.accessToken
 });
+
+function verificaEmpresa(req, res, next){
+  if(req.session && req.session.autenticado && req.session.autenticado.id && req.session.autenticado.tipo === 'empresa'){
+    next();
+  }else{
+    res.redirect('/?acesso=negado')
+  }
+}
 
 // Middleware para inicializar o carrinho
 router.use((req, res, next) => {
@@ -58,16 +67,6 @@ router.get('/catalogo', (req, res) => {
 
 // ======== CADASTRO E LOGIN DO CLIENTE ==========
 
-// router.get('/cadastro', (req, res) => {
-//   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
-//   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
-
-//   // Se o usuario estiver logado não permite acessar a pagina
-//   if(req.session.user || req.session.autenticado){
-//     return res.redirect('/?erro=logado');
-//   }
-//   res.render('pages/cadastro', { listaErros: [], valores });
-// });
 // Rota de cadastro do usuário
 router.get('/cadastro', (req, res) => {
   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão
@@ -189,16 +188,7 @@ empresaController.resetarSenha(req,res);
 }
 );
 // ============= Rotas de cadastro e login de empresa ================
-// router.get('/cadastro-empresa', (req, res) => {
-//   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão, se existirem
-//   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
 
-//   // Se o usuario estiver logado não permite acessar a pagina
-//   if(req.session.autenticado || req.session.user){
-//     return res.redirect('/?erro=logado');
-//   }
-//   res.render('pages/cadastro-empresa', { listaErros: [], valores });
-// });
 router.get('/cadastro-empresa', (req, res) => {
   const valores = req.session.dadosForm || {}; // Carrega os dados do formulário armazenados na sessão
   req.session.dadosForm = null; // Limpa os dados da sessão após carregá-los
@@ -217,12 +207,6 @@ router.post('/cadastro-empresa',
   });
 
 
-// router.get('/login-empresa', (req, res) => {
-//   if(req.session.autenticado || req.session.user){
-//     return res.redirect('/?erro=logado');
-//   }
-//   res.render('pages/login-empresa', { listaErros: [], query: req.query });
-// });
 router.get('/login-empresa', (req, res) => {
   // Se o usuario estiver logado, não permite acessar a pagina de login da empresa
   if (req.session.autenticado && req.session.autenticado.id) {
@@ -237,8 +221,6 @@ router.post('/login-empresa',
     empresaController.logar(req, res);
   });
 
-// ==============================
-
 // ========== DESLOGAR USUARIO ATUAL ===========
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -249,9 +231,6 @@ router.get('/logout', (req, res) => {
   });
 });
 // ======================================
-
-
-// ==============================
 
 router.get('/redirecionamento', (req, res) => {
   res.render('pages/redirecionamento');
@@ -267,10 +246,14 @@ router.get('/redirecionamento', (req, res) => {
   router.get('/perfil-empresa', empresaController.perfilEmpresa);
   // Atualizar perfil empresa
   router.post('/empresa/atualizar', empresaController.atualizarPerfilEmpresa);
+  // Rota para remover produto
+  router.post('/empresa/remover-produto/:id', produto.removerProduto);
+  // Rota para editar produto
+  router.post('/empresa/editar-produto/:id', produto.editarProduto);
 
 // ===========================
 
-router.get('/cadastro-produto', verificarUsuAutenticado, (req, res) => {
+router.get('/cadastro-produto', verificarUsuAutenticado,verificaEmpresa, (req, res) => {
   const valores = {
     produtoNome: '',
     descricaoProduto: '',

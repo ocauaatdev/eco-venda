@@ -32,7 +32,7 @@
                     </li>
 
                     <li>
-                        <a href="/cadastro-produto" >
+                        <a href="/cadastro-produto">
                             <i class="fa-solid fa-circle-plus"></i>
                             <span>Novo produto</span>
                         </a>
@@ -54,6 +54,8 @@
             </section> <!--barra lateral-->
 
             <section class="conteudo">
+
+                
                 <!-- Seção Configurações da Conta -->
                 <section id="configuracoes" class="secaoPerfil">
                     <h2>Configurações da Conta da Empresa</h2>
@@ -122,9 +124,70 @@
                 
 
                 <!-- Outras seções podem ser adicionadas aqui -->
-                <section id="meus-produtos"class="secaoPerfil">
-                    <!-- Conteúdo da seção de notificações -->
+                <section id="meus-produtos" class="secaoPerfil">
+                    <h2>Meus Produtos</h2>
+                    <div class="produtos-container">
+                      <% produtos.forEach(produto => { %>
+                        <div class="produto-card">
+                          <% if (produto.imagemProd) { %>
+                            <img src="<%= produto.imagemProd %>" alt="<%= produto.tituloProd %>" class="imagem-produto" />
+                          <% } %>
+                          <div class="info-produto">
+                            <h4><%= produto.tituloProd %></h4>
+                            <p class="descProduto">Descrição: <%= produto.descricaoProd %></p>
+                            <p>Preço: R$ <%= produto.valorProd %></p>
+                            <p>Estoque: <%= produto.qtdeEstoque %></p>
+                          </div>
+                          
+                          <div class="acoes-produto">
+                            <button type="button" onclick="abrirModal({
+                                idProd: '<%= produto.idProd %>',
+                                tituloProd: '<%= produto.tituloProd %>',
+                                descricaoProd: '<%= escape(produto.descricaoProd) %>',
+                                valorProd: '<%= produto.valorProd %>',
+                                qtdeEstoque: '<%= produto.qtdeEstoque %>'
+                            })">
+                                Editar
+                            </button>
+                            
+
+                            <form action="/empresa/remover-produto/<%= produto.idProd %>" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este produto?');">
+                                <button type="submit">Remover</button>
+                            </form>
+                          </div>
+                        </div>
+                      <% }) %>
+                    </div>
+
+                    <!-- Modal de Edição de Produto -->
+                    <div id="editarProdutoModal" class="modal">
+                        <div class="modal-content">
+                            <span class="close">&times;</span>
+
+                            <!-- Formulário de edição de produto -->
+                            <form id="editarProdutoForm" method="POST">
+                                <input type="hidden" id="produtoId" name="idProd">
+                                
+                                <label for="titulo">Título:</label>
+                                <input type="text" id="titulo" name="tituloProd">
+
+                                <label for="descricao">Descrição:</label>
+                                <!-- Substitua o input por um textarea -->
+                                <textarea id="descricao" name="descricaoProd" rows="5"></textarea>
+
+                                <label for="valor">Preço:</label>
+                                <input type="text" id="valor" name="valorProd">
+
+                                <label for="estoque">Quantidade em Estoque:</label>
+                                <input type="number" id="estoque" name="qtdeEstoque">
+
+                                <button type="submit">Salvar Alterações</button>
+                            </form>
+                        </div>
+                    </div>
+
                 </section>
+                  
                 <section id="novo-produto" class="secaoPerfil">
                     <!-- Conteúdo da seção de pedidos -->
                 </section>
@@ -200,6 +263,40 @@
         }
 
     </script>
+
+    <script>
+        // Obter elementos do DOM
+        const modal = document.getElementById("editarProdutoModal");
+        const closeModal = document.getElementsByClassName("close")[0];
+        const editarProdutoForm = document.getElementById("editarProdutoForm");
+
+        // Função para abrir o modal com os dados do produto
+        function abrirModal(produto) {
+            modal.style.display = "block";
+            
+            // Preencher o formulário com os dados do produto
+            document.getElementById("produtoId").value = produto.idProd;
+            document.getElementById("titulo").value = produto.tituloProd;
+            document.getElementById("descricao").value = produto.descricaoProd; // Agora preenche o textarea
+            document.getElementById("valor").value = produto.valorProd;
+            document.getElementById("estoque").value = produto.qtdeEstoque;
+
+            editarProdutoForm.action = `/empresa/editar-produto/${produto.idProd}`;
+        }
+
+        // Função para fechar o modal
+        closeModal.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Fechar o modal ao clicar fora dele
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+
     
 </body>
 </html>

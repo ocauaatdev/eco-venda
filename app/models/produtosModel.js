@@ -68,6 +68,44 @@ const produtosModel = {
         ];
         return pool.query(sql, params);
       },
+      findByEmpresaId: async (empresaId) => {
+        try {
+            const [linhas] = await pool.query('SELECT * FROM produtos_das_empresas WHERE Empresas_idEmpresas = ?', [empresaId]);
+            return linhas;
+        } catch (error) {
+            console.error('Erro ao buscar produtos por empresa:', error);
+            throw error;
+        }
+    },
+    removerProduto: async (req, res) => {
+      const produtoId = req.params.id;
+  
+      try {
+          await pool.query('DELETE FROM produtos_das_empresas WHERE idProd = ?', [produtoId]);
+          res.redirect('/perfil-empresa?produtoRemovido=true');
+      } catch (error) {
+          console.error('Erro ao remover produto:', error);
+          res.status(500).send('Erro ao remover produto');
+      }
+    },
+    editarProduto: async (req, res) => {
+      const produtoId = req.params.id;
+      const { tituloProd, descricaoProd, valorProd, qtdeEstoque } = req.body;
+  
+      console.log('Dados recebidos:', { tituloProd, descricaoProd, valorProd, qtdeEstoque });
+      console.log('ID do Produto:', produtoId);
+
+      try {
+          await pool.query(
+              'UPDATE produtos_das_empresas SET tituloProd = ?, descricaoProd = ?, valorProd = ?, qtdeEstoque = ? WHERE idProd = ?',
+              [tituloProd, descricaoProd, valorProd, qtdeEstoque, produtoId]
+          );
+          res.redirect('/perfil-empresa?produtoAtualizado=true');
+      } catch (error) {
+          console.error('Erro ao atualizar produto:', error);
+          res.status(500).send('Erro ao atualizar produto');
+      }
+    },
 
 };
     

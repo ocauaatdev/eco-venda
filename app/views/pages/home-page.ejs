@@ -160,6 +160,27 @@
               position: 'right top'
             })
           }
+
+          if(urlParams.get('acesso') === 'negado'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Acesso negado!',
+              text: 'Esta página é direcionada somente para empresas.',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
         
           </script>
 

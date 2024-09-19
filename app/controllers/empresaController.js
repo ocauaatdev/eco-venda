@@ -1,4 +1,5 @@
 const empresa = require("../models/empresaModel");
+const produtosModel = require("../models/produtosModel");
 const validarCEP = require("../public/js/validarCEP")
 const validarCnpj = require("../public/js/validarCnpj")
 const { body, validationResult } = require("express-validator");
@@ -282,27 +283,34 @@ const empresaController = {
         }        
         
     },
-    perfilEmpresa: async (req, res) =>{
-        if(!req.session.autenticado) {
+    perfilEmpresa: async (req, res) => {
+        if (!req.session.autenticado) {
             return res.redirect('/login-empresa');
         }
         try {
-            console.log('ID da empresa na sessão:', req.session.autenticado.id);
- 
-            // Verifica se o usuario é do tipo 'empresa'
-            if (req.session.autenticado.tipo !== 'empresa') {
-                return res.redirect('/login-empresa');
-            }
- 
-            const Empresa = await empresa.findId(req.session.autenticado.id);
+            const empresaId = req.session.autenticado.id;
+
+            // Busca os dados da empresa
+            const Empresa = await empresa.findId(empresaId);
             if (Empresa.length === 0) {
                 return res.status(404).send('Empresa não encontrada');
             }
+
+            // Busca os produtos da empresa
+            const produtos = await produtosModel.findByEmpresaId(empresaId);
+
+            produtos.forEach((produto) => {
+                if (produto.imagemProd) {
+                  produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
+                }
+              });
+
             // Renderiza a página de perfil da empresa com os dados
-            res.render('pages/perfil-empresa', { Empresa: Empresa[0], autenticado: req.session.autenticado, tipo: 'empresa' });
-           
- 
-       
+            res.render('pages/perfil-empresa', {
+                Empresa: Empresa[0],
+                autenticado: req.session.autenticado,
+                produtos // Adiciona a lista de produtos
+            });
         } catch (error) {
             console.error('Erro ao carregar perfil da empresa:', error);
             res.status(500).send('Erro ao carregar perfil');
