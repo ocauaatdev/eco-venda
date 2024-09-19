@@ -140,7 +140,7 @@
                           </div>
                           
                           <div class="acoes-produto">
-                            <button type="button" onclick="abrirModal({
+                            <button class="editarBtn" type="button" onclick="abrirModal({
                                 idProd: '<%= produto.idProd %>',
                                 tituloProd: '<%= produto.tituloProd %>',
                                 descricaoProd: '<%= escape(produto.descricaoProd) %>',
@@ -152,7 +152,7 @@
                             
 
                             <form action="/empresa/remover-produto/<%= produto.idProd %>" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este produto?');">
-                                <button type="submit">Remover</button>
+                                <button class="removerBtn" type="submit">Remover</button>
                             </form>
                           </div>
                         </div>
@@ -277,7 +277,8 @@
             // Preencher o formulário com os dados do produto
             document.getElementById("produtoId").value = produto.idProd;
             document.getElementById("titulo").value = produto.tituloProd;
-            document.getElementById("descricao").value = produto.descricaoProd; // Agora preenche o textarea
+            // Usar unescape para mostrar a descrição sem caracteres especiais escapados
+            document.getElementById("descricao").value = unescape(produto.descricaoProd);
             document.getElementById("valor").value = produto.valorProd;
             document.getElementById("estoque").value = produto.qtdeEstoque;
 

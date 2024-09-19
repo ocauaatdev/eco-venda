@@ -1,7 +1,7 @@
 var pool = require("../../config/pool-conexoes");
 
 const categoriasMap = {
-  camiseta: 1,
+  moda: 1,
   cosmetico: 3,
   higiene: 4,
   bag: 2
