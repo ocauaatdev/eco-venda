@@ -9,6 +9,9 @@
 
     <!-- CSS da pagina -->
     <link rel="stylesheet" href="/css/perfil.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    
     <title>Perfil Cliente</title>
 </head>
 <body>
@@ -151,9 +154,10 @@
                             </button>
                             
 
-                            <form action="/empresa/remover-produto/<%= produto.idProd %>" method="POST" onsubmit="return confirm('Tem certeza que deseja remover este produto?');">
-                                <button class="removerBtn" type="submit">Remover</button>
+                            <form action="/empresa/remover-produto/<%= produto.idProd %>" method="POST" class="remover-produto-form">
+                                <button class="removerBtn" type="button" onclick="confirmarRemocao('<%= produto.idProd %>')">Remover</button>
                             </form>
+
                           </div>
                         </div>
                       <% }) %>
@@ -181,7 +185,7 @@
                                 <label for="estoque">Quantidade em Estoque:</label>
                                 <input type="number" id="estoque" name="qtdeEstoque">
 
-                                <button type="submit">Salvar Alterações</button>
+                                <button type="submit" onclick="confirmarEdicao(event)">Salvar Alterações</button>
                             </form>
                         </div>
                     </div>
@@ -298,6 +302,51 @@
         }
     </script>
 
-    
+<script>
+    function confirmarRemocao(produtoId) {
+Swal.fire({
+    title: 'Tem certeza?',
+    text: "Você não poderá reverter isso!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sim, remover!',
+    cancelButtonText: 'Cancelar'
+}).then((result) => {
+    if (result.isConfirmed) {
+        // Submeter o formulário após confirmação
+        document.querySelector(`form[action="/empresa/remover-produto/${produtoId}"]`).submit();
+    }
+});
+}
+</script>
+
+<script>
+    function confirmarEdicao(event) {
+        event.preventDefault(); // Impede o envio do formulário automaticamente
+
+        Swal.fire({
+            title: "Você quer salvar as alterações feitas neste produto?",
+            showDenyButton: true, // Mostra o botão de negação
+            showCancelButton: true, // Mostra o botão de cancelar
+            confirmButtonText: "Salvar",
+            denyButtonText: `Não salvar`,
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire("Salvo!", "As alterações foram salvas.", "success");
+                // Submete o formulário após confirmação
+                document.getElementById('editarProdutoForm').submit();
+            } else if (result.isDenied) {
+                Swal.fire("Alterações não salvas", "Nenhuma alteração foi feita.", "info");
+            }
+        });
+    }
+</script>
+
+
 </body>
 </html>

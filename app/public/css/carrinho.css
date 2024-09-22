@@ -175,3 +175,6 @@
 .container_payment{
     display: none;
 }
+.hidden{
+    display: none;
+}
