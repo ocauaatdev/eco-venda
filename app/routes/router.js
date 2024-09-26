@@ -60,10 +60,15 @@ router.get('/ecopremium', (req, res) => {
   res.render('pages/ecopremium', { query: req.query, autenticado: req.session.autenticado });
 });
 
+
 router.get('/catalogo', (req, res) => {
-  // res.render('pages/catalogo', { query: req.query, autenticado: req.session.autenticado });
-  produtosController.listarProdutos(req, res, { autenticado: req.session.autenticado });
+  const categoria = req.query.categoria || null; // Obtém a categoria da query string
+  produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
 });
+// router.get('/catalogo', (req, res) => {
+//   // res.render('pages/catalogo', { query: req.query, autenticado: req.session.autenticado });
+//   produtosController.listarProdutos(req, res, { autenticado: req.session.autenticado });
+// });
 
 // ======== CADASTRO E LOGIN DO CLIENTE ==========
 
@@ -244,6 +249,15 @@ router.get('/redirecionamento', (req, res) => {
 
   // Visualizar perfil empresa 
   router.get('/perfil-empresa', empresaController.perfilEmpresa);
+
+  // Adiciona a rota para pedidos vendidos
+  router.get('/perfil-empresa/pedidos-vendidos', pedidoController.pedidosVendidosPorEmpresa);
+
+  // Rota para enviar a notificação do pedido
+router.post('/atualizar-pedido', pedidoController.atualizarPedido);
+
+router.get('/ocorrencias/:idPedido', pedidoController.buscarOcorrencias);
+
   // Atualizar perfil empresa
   router.post('/empresa/atualizar', empresaController.atualizarPerfilEmpresa);
   // Rota para remover produto

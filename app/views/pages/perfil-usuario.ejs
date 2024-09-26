@@ -28,10 +28,10 @@
                         <i class="fa-solid fa-bell"></i>
                         <span>Notificações</span>
                     </li>
-                    <li onclick="mostrarSecao('pedidos')">
+                    <!-- <li onclick="mostrarSecao('pedidos')">
                         <i class="fa-solid fa-bag-shopping"></i>
                         <span>Meus Pedidos</span>
-                    </li>
+                    </li> -->
                     <li onclick="mostrarSecao('acompanhamento')">
                         <i class="fa-solid fa-truck-fast"></i>
                         <span>Acompanhar Pedidos</span>
@@ -117,12 +117,46 @@
                 <section id="notificacoes" class="secaoPerfil">
                     <h2>Notificações</h2>
                 </section>
-                <section id="pedidos" class="secaoPerfil">
+                <!-- <section id="pedidos" class="secaoPerfil">
                     <h2>Meus pedidos</h2>
-                </section>
+                </section> -->
                 <section id="acompanhamento" class="secaoPerfil">
                     <h2>Acompanhar pedidos</h2>
+                
+                    <table class="table-pedidos">
+                        <thead>
+                            <tr>
+                                <th>ID do Pedido</th>
+                                <th>Data</th>
+                                <th>Ocorrências</th>
+                                <th>Código de Rastreamento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (pedidos.length > 0) { %>
+                                <% pedidos.forEach(pedido => { %>
+                                    <tr>
+                                        <td><%= pedido.idPedidos %></td>
+                                        <td><%= new Date(pedido.data_pedido).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td>
+                                        <td>
+                                            <% pedido.ocorrencias.forEach(ocorrencia => { %>
+                                                <p><%= ocorrencia.descricao %> - <%= ocorrencia.dataocorrencia ? ocorrencia.dataocorrencia.toLocaleDateString('pt-BR') : 'Sem data' %></p>
+                                            <% }); %>
+                                        </td>
+                                        <td>
+                                            <%= pedido.codigorastreio ? pedido.codigorastreio : 'Código de rastreio indisponível no momento' %>
+                                        </td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="4">Nenhum pedido encontrado</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
                 </section>
+                
                 <section id="assinatura" class="secaoPerfil">
                     <h2>Assinatura</h2>
                 </section>

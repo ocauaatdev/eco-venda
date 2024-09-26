@@ -8,6 +8,7 @@ const moment = require('moment');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const enviarEmail = require("../public/js/email");
+const pedidoModel = require("../models/pedidoModel")
 
 const empresaController = {
     regrasValidacaoFormLogin: [
@@ -289,27 +290,31 @@ const empresaController = {
         }
         try {
             const empresaId = req.session.autenticado.id;
-
+    
             // Busca os dados da empresa
             const Empresa = await empresa.findId(empresaId);
             if (Empresa.length === 0) {
                 return res.status(404).send('Empresa não encontrada');
             }
-
+    
             // Busca os produtos da empresa
             const produtos = await produtosModel.findByEmpresaId(empresaId);
-
+            
+            // Busca os pedidos vendidos
+            const pedidosVendidos = await pedidoModel.findPedidosPorEmpresa(empresaId); // Correção aqui
+    
             produtos.forEach((produto) => {
                 if (produto.imagemProd) {
-                  produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
+                    produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
                 }
-              });
-
+            });
+    
             // Renderiza a página de perfil da empresa com os dados
             res.render('pages/perfil-empresa', {
                 Empresa: Empresa[0],
                 autenticado: req.session.autenticado,
-                produtos // Adiciona a lista de produtos
+                produtos, // Adiciona a lista de produtos
+                pedidos: pedidosVendidos
             });
         } catch (error) {
             console.error('Erro ao carregar perfil da empresa:', error);

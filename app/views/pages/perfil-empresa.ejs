@@ -46,10 +46,6 @@
                         <span>Produtos vendidos</span>
                     </li>
 
-                    <li onclick="mostrarSecao('monitorar')">
-                        <i class="fa-regular fa-eye"></i>
-                        <span>Monitorar vendas</span>
-                    </li>
                 </ul>
                 <section class="parteInferior">
                     <button class="sairBtn" onclick="window.location.href='/logout'">Sair</button>
@@ -126,7 +122,7 @@
                 </section>
                 
 
-                <!-- Outras seções podem ser adicionadas aqui -->
+                <!-- Sessão meus produtos -->
                 <section id="meus-produtos" class="secaoPerfil">
                     <h2>Meus Produtos</h2>
                     <div class="produtos-container">
@@ -193,19 +189,136 @@
                 </section>
                   
                 <section id="novo-produto" class="secaoPerfil">
-                    <!-- Conteúdo da seção de pedidos -->
+                    <!-- Sessão novo produto -->
                 </section>
-                <section id="vendidos" class="secaoPerfil">
-                    <!-- Conteúdo da seção de acompanhamento -->
-                </section>
-                <section id="monitorar" class="secaoPerfil">
-                    <!-- Conteúdo da seção de assinatura -->
-                </section>
+
+
+<!-- Sessão Produtos Vendidos -->
+<section id="vendidos" class="secaoPerfil">
+    <h2>Produtos Vendidos</h2>
+
+    <% if (pedidos && pedidos.length > 0) { %>
+        <table class="tabelaPedidos">
+            <thead>
+                <tr>
+                    <th>ID do Pedido</th>
+                    <th>Data do Pedido</th>
+                    <th>Valor Total</th>
+                    <th>Nome do Cliente</th>
+                    <th>Status Pedido</th>
+                    <th>Ocorrências</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pedidos.forEach(pedido => { %>
+                    <tr>
+                        <td><%= pedido.idPedidos %></td>
+                        <td><%= new Date(pedido.data_pedido).toLocaleDateString() %></td>
+                        <td>R$ <%= pedido.total_pedido %></td>
+                        <td><%= pedido.nomeCliente %></td>
+                        <td>
+                            <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %> <!-- Exibe a última ocorrência -->
+                        </td>
+                        <td>
+                            <button class="notificarBtn" data-id="<%= pedido.idPedidos %>" data-pedido='<%= JSON.stringify(pedido) %>'>Notificar</button>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <!-- Formulário de Notificação (fora da tabela) -->
+        <div class="formNotificar" style="display: none;">
+            <form id="formNotificar" action="/atualizar-pedido" method="post">
+                <input type="hidden" name="idPedido" id="idPedido">
+                
+                <article class="txtForm">
+                    <h2>Andamento do Pedido</h2>
+                    <span><i class="fa-solid fa-xmark fecharForm" onclick="fecharForm()"></i></span>
+                </article>
+
+                <div id="codigoRastreioContainer"></div> <!-- Código de rastreio será preenchido via JS -->
+
+                <div id="ocorrencias">
+                    
+                </div>
+
+                <p>O pedido foi:</p>
+                <select name="andamentoPedido" id="andamentoPedido">
+                    <option value="" disabled selected>Andamento do Pedido</option>
+                    <option value="1">Coletado</option>
+                    <option value="2">Em andamento</option>
+                    <option value="3">Pedido entregue</option>
+                    <option value="4">Falha ao entregar</option>
+                    <option value="5">Nova tentativa de entrega</option>
+                    <option value="6">Pedido cancelado</option>
+                </select>
+
+                <p>Data da ocorrência:</p>
+                <input type="date" name="dataOcorrencia" id="dataOcorrencia">
+
+                <button type="submit">Notificar</button>
+            </form>
+        </div>
+
+    <% } else { %>
+        <p>Nenhum pedido vendido ainda.</p>
+    <% } %>
+</section>
+                
+
             </section>
         </section>
     </main>
 
     <%- include('../partial/scripts-essenciais'); %>
+
+    <script>
+        document.querySelectorAll('.notificarBtn').forEach(button => {
+    button.addEventListener('click', async function () {
+        const pedido = JSON.parse(this.getAttribute('data-pedido'));
+        document.getElementById('idPedido').value = pedido.idPedidos;
+
+        // Preencher o código de rastreio
+        const codigoRastreioContainer = document.getElementById('codigoRastreioContainer');
+        if (pedido.codigorastreio) {
+            codigoRastreioContainer.innerHTML = `<h3>Código de Rastreio: ${pedido.codigorastreio}</h3>`;
+        } else {
+            codigoRastreioContainer.innerHTML = `<p>Código de rastreio da transportadora (opcional)</p>
+                                                 <input type="text" id="codigoRastreio" name="codigoRastreio" placeholder="Digite o código de rastreio emitido pela transportadora">`;
+        }
+
+        // Buscar e exibir ocorrências anteriores
+        const ocorrenciasDiv = document.getElementById('ocorrencias');
+        try {
+            const response = await fetch(`/ocorrencias/${pedido.idPedidos}`);
+            const ocorrencias = await response.json();
+
+            if (ocorrencias.length === 0) {
+                ocorrenciasDiv.innerHTML = "<p>Sem ocorrências anteriores</p>";
+            } else {
+                ocorrenciasDiv.innerHTML = ocorrencias.map(ocorrencia => 
+                    `<p>${ocorrencia.descricao} - ${new Date(ocorrencia.dataocorrencia).toLocaleString()}</p>`
+                ).join('');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar ocorrências:', error);
+            ocorrenciasDiv.innerHTML = "<p>Erro ao carregar ocorrências</p>";
+        }
+
+        // Exibir o formulário
+        document.querySelector('.formNotificar').style.display = 'block';      
+    });
+});
+    
+    // Fechar Form
+    function fecharForm(params) {
+        document.querySelector('.formNotificar').style.display = 'none';
+    }
+
+    </script>
+    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
     <script>

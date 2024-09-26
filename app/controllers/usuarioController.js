@@ -1,4 +1,6 @@
 const usuario = require("../models/usuarioModel");
+const PedidoModel = require("../models/pedidoModel");
+const rastreioModel = require("../models/rastreioModel");
 const validarCEP = require('../public/js/validarCEP');
 const { body, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
@@ -292,27 +294,41 @@ const usuarioController = {
         }        
         
     },
-    perfil: async(req, res)=>{
-        if(!req.session.user) {
+    perfil: async (req, res) => {
+        if (!req.session.user) {
             return res.redirect('/login');
         }
-
+    
         try {
             console.log('ID do usuário na sessão:', req.session.user.id);
-
+    
             // Verifica se o usuario é do tipo 'usuario'
             if (req.session.user.tipo !== 'user') {
                 return res.redirect('/login');
             }
-
+    
             const user = await Usuario.findId(req.session.user.id);
             if (user.length === 0) {
                 return res.status(404).send('Usuário não encontrado');
             }
-
-            res.render('pages/perfil-usuario', { user: user[0], autenticado: req.session.autenticado, tipo: 'usuario' });
-            
-        }catch(err){
+    
+            // Busque os pedidos do usuário com suas ocorrências
+            const pedidos = await PedidoModel.findPedidosPorUsuario(req.session.user.id);
+    
+            // Para cada pedido, busque suas ocorrências
+            for (let pedido of pedidos) {
+                const ocorrencias = await rastreioModel.buscarOcorrenciasPorPedido(pedido.idPedidos);
+                pedido.ocorrencias = ocorrencias.length > 0 ? ocorrencias : [{ descricao: 'Pendente' }];
+            }
+    
+            res.render('pages/perfil-usuario', {
+                user: user[0],
+                pedidos: pedidos,
+                autenticado: req.session.autenticado,
+                tipo: 'usuario'
+            });
+    
+        } catch (err) {
             console.error(err);
             res.status(500).send('Erro ao carregar o perfil');
         }

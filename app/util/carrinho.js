@@ -75,6 +75,11 @@ const carrinho = {
         } catch (error) {
             console.error(error);
         }
+    },
+     // Função corrigida
+     limparCarrinho: (req) => {
+        req.session.carrinho = [];
+        carrinho.itensCarrinho = [];
     }
 }
 module.exports = { carrinho };

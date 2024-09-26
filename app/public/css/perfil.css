@@ -100,6 +100,7 @@ body {
     border-radius: 10px;
     margin: 20px;
     overflow: scroll; /* Exibe a barra de rolagem sempre */
+    position: relative; /* Necessário para usar position: absolute no .formNotificar */
 }
 
 .secaoPerfil {
@@ -324,7 +325,54 @@ button {
     text-overflow: ellipsis; 
     width: 200px; 
 }
-  
+.tabelaPedidos{
+    width: 100%;
+    table-layout: fixed; /* Faz a tabela usar um layout fixo */
+    border-collapse: collapse; /* Remove espaços entre as células */
+    padding: 10px;
+    border: 1px solid #888;
+}
+.tabelaPedidos th{
+    background-color: #07565e;
+    color: #fff;
+}
+.tabelaPedidos td{
+    background-color: #ffffff;
+}
+.tabelaPedidos th, td {
+    padding: 10px; /* Espaçamento interno */
+    text-align: left; /* Alinhamento do texto */
+    border: 1px solid #ddd; /* Borda das células */
+}
+.formNotificar{
+    width: 60%;
+    position: absolute; /* Faz com que o formulário seja posicionado em relação ao .conteudo */
+    top: 50%; /* Centraliza verticalmente */
+    left: 50%; /* Centraliza horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta o deslocamento para que o centro do elemento esteja no centro da tela */
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 10; /* Garante que o formulário fique por cima */
+}
+.formNotificar input{
+    width: 100%;
+}
+.formNotificar article{
+    display: flex;
+    justify-content: space-between;
+}
+.formNotificar span{
+    cursor: pointer;
+    color: #a12e2e;
+}
+.formNotificar i{
+    font-size: 25px;
+}
+.formNotificar input::placeholder{
+    font-size: 13px;
+}
 /* Responsividade */
 @media(max-width: 1440px) {
     .barraLateral {
