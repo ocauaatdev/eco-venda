@@ -3,6 +3,7 @@ var router = express.Router();
 const usuarioController = require('../controllers/usuarioController');
 const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
+const assinaturaController = require("../controllers/assinaturaController");
 const Usuario = require('../models/usuarioModel');
 const empresa = require('../models/empresaModel');
 const produto = require('../models/produtosModel');
@@ -312,6 +313,14 @@ router.get("/carrinho", verificarUsuAutenticado, function (req, res) {
   carrinhoController.listarcarrinho(req, res);
 });
 
+// ================================= Assinatura ==========================================
+// Rota para criar a preferência de pagamento da assinatura
+router.post("/create-preference-a", assinaturaController.criarPreferencia);
+// Rota para o feedback de pagamento da assinatura
+router.get("/feedback-a", assinaturaController.feedbackPagamento);
+
+
+// =================================== Produtos ==========================================
 router.post("/create-preference", function (req, res) {
   const preference = new Preference(client);
   console.log(req.body.items);

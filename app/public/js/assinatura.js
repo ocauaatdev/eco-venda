@@ -25,5 +25,31 @@ function assinatura() {
   document.querySelector('.assinarBtn').addEventListener('click',redirecionarCompra);
   
   function redirecionarCompra() {
-    window.location.href = '../pages/pagamento.html'
+    const selectedPlan = document.querySelector('select').value;
+    let item = {};
+    let planoId = '';
+
+    if (selectedPlan === "opção1") {
+        item = { title: "Plano Básico", unit_price: 10.00, quantity: 1 };
+        planoId = 1; // ID do plano Básico
+    } else if (selectedPlan === "opção2") {
+        item = { title: "Plano Médio", unit_price: 18.00, quantity: 1 };
+        planoId = 2; // ID do plano Médio
+    } else if (selectedPlan === "opção3") {
+        item = { title: "Plano Pro", unit_price: 26.00, quantity: 1 };
+        planoId = 3; // ID do plano Pro
+    }
+
+    fetch('/create-preference-az', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ items: [item], planoId: planoId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        window.location.href = data.init_point;
+    })
+    .catch(error => console.error('Error:', error));
   }

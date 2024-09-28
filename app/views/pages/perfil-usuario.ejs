@@ -159,6 +159,21 @@
                 
                 <section id="assinatura" class="secaoPerfil">
                     <h2>Assinatura</h2>
+                    <% if (assinatura) { %>
+                        <div>
+                            <strong>Nível da Assinatura:</strong> <%= assinatura.planoNome %><br>
+                            <strong>Dias restantes:</strong> <%= assinatura.diasRestantes >= 0 ? assinatura.diasRestantes + ' dias' : 'Assinatura expirada' %>
+                        </div>
+                        <div class="botoesAcao">
+                            <button onclick="mudarPlano()">Mudar Plano</button>
+                            <button onclick="cancelarAssinatura()">Cancelar Assinatura</button>
+                        </div>
+                    <% } else { %>
+                        <div>
+                            <p>Você ainda não possui uma assinatura.</p>
+                            <button><a href="/ecopremium"> Assinar agora </a></button>
+                        </div>
+                    <% } %>
                 </section>
             </section>
         </section>

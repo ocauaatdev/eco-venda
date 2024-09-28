@@ -47,7 +47,9 @@
                 <option value="opção3">Pro</option>
             </select>
             <h1 class="txtBaixo" id="textAss">Agora é só concluir!</h1>
-            <button class="assinarBtn">ASSINAR ECO+</button>
+            <form action="/create-preference-a" method="POST">
+                <button class="assinarBtn">ASSINAR ECO+</button>
+            </form>
             </section>
         </section>
         <!-- Fim Caixa para escolher a assinatura -->
@@ -104,6 +106,36 @@
 
     <%- include('../partial/scripts-essenciais'); %>
     <script src="/js/assinatura.js"></script>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('assinante') === 'true'){
+            
+            Swal.fire({
+                title: 'Você já é um assinante!',
+                text: 'Deseja mudar ou cancelar seu plano?',
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonText: 'Mudar plano',
+                cancelButtonText: 'Cancelar plano',
+                footer: '<button id="fechar-btn">Fechar</button>',
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    // Lógica para mudar o plano
+                    console.log('Mudando o plano...');
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    // Lógica para cancelar o plano
+                    console.log('Cancelando o plano...');
+                }
+                });
+
+                // Adicionando o evento de clique para o botão "Fechar"
+                document.getElementById('fechar-btn')?.addEventListener('click', () => {
+                Swal.close();
+            });
+
+          }
+    </script>
     
 </body>
 </html>

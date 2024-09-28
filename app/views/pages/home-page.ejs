@@ -181,6 +181,17 @@
               position: 'right top'
             })
           }
+
+          if(urlParams.get('assinatura') === 'sucesso'){
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Assinatura realizada com sucesso!",
+                text: "Para alteração ou cancelamento do plano, acesse seu perfil.",
+                showConfirmButton: false,
+                timer: 3000
+            });
+          }
         
           </script>
 

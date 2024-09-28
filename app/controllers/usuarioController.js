@@ -11,6 +11,7 @@ const validarNascimento = require('../public/js/validarNascimento');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const enviarEmail = require("../public/js/email")
+const assinaturaModel = require("../models/assinaturaModel")
 
 
 const saltRounds = 12; // Número de rounds para o bcrypt
@@ -320,12 +321,16 @@ const usuarioController = {
                 const ocorrencias = await rastreioModel.buscarOcorrenciasPorPedido(pedido.idPedidos);
                 pedido.ocorrencias = ocorrencias.length > 0 ? ocorrencias : [{ descricao: 'Pendente' }];
             }
-    
+
+            const usuarioId = req.session.autenticado.id;  // ID do usuário autenticado
+            const assinatura = await assinaturaModel.getAssinatura(usuarioId)
+
             res.render('pages/perfil-usuario', {
                 user: user[0],
                 pedidos: pedidos,
                 autenticado: req.session.autenticado,
-                tipo: 'usuario'
+                tipo: 'usuario',
+                assinatura: assinatura
             });
     
         } catch (err) {
