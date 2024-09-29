@@ -25,7 +25,8 @@
 .infoCarrinho{
     background-color: #cfcfcf;
     width: 30%;
-    height: 450px; /* Ajuste a altura para auto para que não sobreponha outros elementos */
+    /* height: 450px; */
+    height: 100%;
     position: -webkit-sticky; /* Para navegadores baseados em WebKit */
     position: sticky;
     top: 0; /* Fica fixo no topo da viewport */
@@ -162,8 +163,13 @@
     width: 100%;
     text-align: center;
 }
-.vazio{
-    text-align: center;
+.carrinho-vazio{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.vazioImg{
+    width: 50%;
 }
 .tamanhos{
     border: none;

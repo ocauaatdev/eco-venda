@@ -3,156 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
     <%- include('../partial/essenciais'); %> 
-
-    <!-- CSS (da pagina) -->
     <link rel="stylesheet" href="/css/carrinho.css">
-
     <script src="https://sdk.mercadopago.com/js/v2"></script>
     <title>Carrinho de Compras</title>
 </head>
 <body>
-    <!-- Menu e menu lateral -->
     <%- include('../partial/header'); %>
-    <!-- Fim menu e menu lateral -->
-
     <main>
-            <h3 class="tituloCarrinho">Seu Carrinho de Compras</h3>
-
-            <section class="carrinho">
-
+        <h3 class="tituloCarrinho">Seu Carrinho de Compras</h3>
+        <section class="carrinho">
             <section class="produtoCarrinho">
-                <!-- verificar se o carrinho contém itens antes de renderizar a tabela com os itens do carrinho-->
-                <% if(carrinho){ %>
-                
-                <% 
-                var total=0; 
-                carrinho.forEach(function(item){ 
-                total += (item.qtde * item.preco); 
-                %>
-
-                <section class="produtoItem">
-
-                    <section class="imagemContainer">
-                        <img src="data:image/png;base64,<%= item.imagemProduto %>" alt="<%= item.nome_produto %>" class="produtoImg">
-                    </section>
-
-                    <section class="produtoInfo">
-                       
-                        <section class="preco_e_nome">
-                            <h3><%= item.nome_produto %></h3>
-                            <p>R$ <%= item.preco.toFixed(2) %></p>
+                <% var total = 0; %> <!-- Mova a declaração do total para o início -->
+                <% if (qtdItensCarrinho > 0) { %>
+                    <% carrinho.forEach(function(item) { 
+                        total += (item.qtde * item.preco); 
+                    %>
+                    <section class="produtoItem">
+                        <section class="imagemContainer">
+                            <img src="data:image/png;base64,<%= item.imagemProduto %>" alt="<%= item.nome_produto %>" class="produtoImg">
                         </section>
-                        
-                        
-                        <select class="tamanhos" id="tamanho-select">
-                            <option value="" disabled selected>Selecione um tamanho</option>
-                        <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
-                            <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
-                        <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
-                            <option value="Pequeno">Pequeno</option>
-                            <option value="Médio">Médio</option>
-                            <option value="Grande">Grande</option>
-                    <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
-                            <option value="P">P</option>
-                            <option value="M">M</option>
-                            <option value="G">G</option>
-                            <option value="GG">GG</option>
-                    <% } else { %>
-                            <option value="Sem tamanho específico">Sem tamanho específico</option>
-                    <% } %>
-                        </select>
-
-                        <section class="quantidade">
-                            <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
-                            <i class="fa-solid fa-plus aumentar"></i></a>
-
+                        <section class="produtoInfo">
+                            <section class="preco_e_nome">
+                                <h3><%= item.nome_produto %></h3>
+                                <p>R$ <%= item.preco.toFixed(2) %></p>
+                            </section>
+                            <select class="tamanhos" id="tamanho-select">
+                                <option value="" disabled selected>Selecione um tamanho</option>
+                                <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
+                                    <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
+                                <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
+                                    <option value="Pequeno">Pequeno</option>
+                                    <option value="Médio">Médio</option>
+                                    <option value="Grande">Grande</option>
+                                <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
+                                    <option value="P">P</option>
+                                    <option value="M">M</option>
+                                    <option value="G">G</option>
+                                    <option value="GG">GG</option>
+                                <% } else { %>
+                                    <option value="Sem tamanho específico">Sem tamanho específico</option>
+                                <% } %>
+                            </select>
+                            <section class="quantidade">
+                                <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
+                                <i class="fa-solid fa-plus aumentar"></i></a>
                                 <span class="qtde-cart"><%= item.qtde %></span>
-
-                            <a href="/removeItem?id=<%= item.codproduto %>&qtde=1">
-                            <i class="fa-solid fa-minus diminuir"></i></a>   
+                                <a href="/removeItem?id=<%= item.codproduto %>&qtde=1">
+                                <i class="fa-solid fa-minus diminuir"></i></a>   
+                            </section>
+                            <a href="/excluirItem?id=<%= item.codproduto %>">
+                                <i class="fa-solid fa-trash deletar"></i>
+                            </a>
                         </section>
-
-                        <a href="/excluirItem?id=<%= item.codproduto %>">
-                        <i class="fa-solid fa-trash deletar"></i>
-                        </a>
-
-                        <a class="codigoproduto" href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>"></a>
-
                     </section>
-                </section>
-
-                <% 
-                });
-                %>
-
+                    <% }); %>
+                <% } else { %>
+                    <section class="carrinho-vazio">
+                        <img class="vazioImg" src="/imagem/seu_Carrinho_está_vazio.png" alt="Carrinho vazio" class="img-carrinho-vazio">
+                    </section>
+                <% } %>
             </section>
-
-            <%
-            }
-            %>
 
             <section class="infoCarrinho">
                 <section class="head">
                     <h3>Meu Carrinho</h3>
                 </section>
-
                 <section class="txtCarrinho">
-                <h1>Local de Envio:</h1>
-                <input type="text" name="" id="inputLocal" placeholder="Digite o CEP que deseja receber os produtos.">
-                <h1>Cupons:</h1>
-                <input type="text" name="" id="cupons" placeholder="Digite o código do cupom para receber benefícios.">
-                <h2 class="totalTxt">Total:</h2>
-                <h2 class="precoTotal">R$ <%= total.toFixed(2) %> </h2>
-                
-                <% if(autenticado.autenticado){%>
-                    <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Comprar</button>
-                <% }else {%>
+                    <h1>Local de Envio:</h1>
+                    <% if (autenticado && endereco) { %>
+                        <p><strong>CEP:</strong> <%= endereco.cep %></p>
+                        <p><strong>Logradouro:</strong> <%= endereco.logradouro %></p>
+                        <p><strong>Bairro:</strong> <%= endereco.bairro %></p>
+                        <p><strong>Cidade:</strong> <%= endereco.cidade %> - <%= endereco.uf %></p>
+                    <% } else { %>
+                        <p>Você precisa estar logado para ver as informações de endereço.</p>
+                    <% } %>
+                    <h1>Cupons:</h1>
+                    <input type="text" name="" id="cupons" placeholder="Digite o código do cupom para receber benefícios.">
+                    <h2 class="totalTxt">Total:</h2>
+                    <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
+                    
+                    <% if(autenticado && autenticado.autenticado){%>
+                        <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Comprar</button>
+                    <% } else { %>
                         <p class="btn btn-warning btn-lg btn-block"><a href="/login">Para comprar faça Login</a></p>
-                <% }%>
-
+                    <% } %>
                 </section>
             </section>
-
-           
-            
         </section>
         <div class="container_payment">
-            <div class="block-heading"> <h2>Checkout</h2> </div>
+            <div class="block-heading"><h2>Checkout</h2></div>
             <div class="form-payment">
                 <div class="products">
                     <h2 class="title">Resumo do pedido</h2>
-                    <% 
-                    var total = 0; 
-                    carrinho.forEach(function(item){ 
-                        total +=(item.qtde * item.preco); 
-                    %>
+                    <% carrinho.forEach(function(item){ %>
                         <div class="item">
                             <span class="price hidden" id="summary-price">R$ <%= item.preco.toFixed(2) %> </span>
                             <span class="price" id="subtot-price">R$ <%= (item.qtde * item.preco).toFixed(2) %> </span>
-                            <p class="item-name"> <%= item.nome_produto %> 
-                                (<span id="summary-quantity"> <%= item.qtde %>
-                                </span>x R$ <%= item.preco.toFixed(2) %>) 
+                            <p class="item-name"><%= item.nome_produto %> 
+                                (<span id="summary-quantity"><%= item.qtde %></span>x R$ <%= item.preco.toFixed(2) %>) 
                             </p>
                         </div>
                     <% }); %>
+
+                    <div class="address-info">
+                        <h1>Local de Envio:</h1>
+                        <% if (autenticado && endereco) { %>
+                            <p><strong>CEP:</strong> <%= endereco.cep %></p>
+                            <p><strong>Logradouro:</strong> <%= endereco.logradouro %></p>
+                            <p><strong>Bairro:</strong> <%= endereco.bairro %></p>
+                            <p><strong>Cidade:</strong> <%= endereco.cidade %> - <%= endereco.uf %></p>
+                        <% } else { %>
+                            <p>Você precisa estar logado para ver as informações de endereço.</p>
+                        <% } %>
+                    </div>
+
                     <div class="total">
-                        <span class="price" id="summary-total">Total R$ <%= total.toFixed(2) %> </span>
+                        <span class="price" id="summary-total">Total R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </span>
                     </div>
                 </div>
-
                 <div class="payment-details">
                     <div class="form-group col-sm-12">
                         <br>
                         <div id="button-checkout"></div>
                         <br>
                         <a id="go-back">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10"
-                                class="chevron-left">
-                                <path fill="#009EE3" fill-rule="nonzero" id="chevron_left"
-                                    d="M7.05 1.4L6.2.552 1.756 4.997l4.449 4.448.849-.848-3.6-3.6z"></path>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 10 10" class="chevron-left">
+                                <path fill="#009EE3" fill-rule="nonzero" id="chevron_left" d="M7.05 1.4L6.2.552 1.756 4.997l4.449 4.448.849-.848-3.6-3.6z"></path>
                             </svg>
                             Voltar ao carrinho
                         </a>
@@ -161,12 +139,8 @@
             </div>
         </div>
     </main>
-
-    <!-- Rodapé -->
     <%- include('../partial/footer'); %>
     <script src="/js/comprar-carrinho.js"></script>
-
     <%- include('../partial/scripts-essenciais'); %>
-
 </body>
 </html>

@@ -50,11 +50,19 @@ router.use((req, res, next) => {
 
 // Rotas de páginas
 router.get('/', (req, res) => {
-  res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
+  const categoria = req.query.categoria || null; // Obtém a categoria da query string
+  produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
 });
+// router.get('/', (req, res) => {
+//   res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
+// });
 
+// router.get('/home-page', (req, res) => {
+//   res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
+// });
 router.get('/home-page', (req, res) => {
-  res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
+  const categoria = req.query.categoria || null; // Obtém a categoria da query string
+  produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
 });
 
 router.get('/ecopremium', (req, res) => {
@@ -128,6 +136,10 @@ router.get('/ativar-conta-empresa', async (req, res) => {
 });
 
 router.get('/login', (req, res) => {
+  // Se o usuario estiver logado, não permite acessar a pagina de login da empresa
+  if (req.session.autenticado && req.session.autenticado.id) {
+    return res.redirect('/?erro=logado');
+  }
   res.render('pages/login', { listaErros: [], query: req.query });
 });
 
@@ -309,7 +321,10 @@ router.get("/excluirItem", function (req, res) {
   carrinhoController.excluirItem(req, res);
 });
 
-router.get("/carrinho", verificarUsuAutenticado, function (req, res) {
+// router.get("/carrinho", verificarUsuAutenticado, function (req, res) {
+//   carrinhoController.listarcarrinho(req, res);
+// });
+router.get('/carrinho', verificarUsuAutenticado, carrinhoController.enderecoCliente, function(req,res){
   carrinhoController.listarcarrinho(req, res);
 });
 
@@ -343,6 +358,16 @@ router.post("/create-preference", function (req, res) {
 
 router.get("/feedback", function (req, res) {
   pedidoController.gravarPedido(req, res);
+});
+
+router.get('/checkout', verificarUsuAutenticado, carrinhoController.enderecoCliente, function(req, res) {
+  // Carregar os dados do carrinho e endereço
+  res.render('pages/checkout', {
+      autenticado: req.session.autenticado,
+      carrinho: req.session.carrinho,
+      endereco: req.session.endereco, // Passar o endereço para o EJS
+      listaErros: null
+  });
 });
 
 module.exports = router;

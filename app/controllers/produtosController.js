@@ -42,21 +42,25 @@ const produtosController = {
       const categoria = req.query.categoria;
       let results;
 
+      // Verifica se foi passada uma categoria
       if (categoria) {
-        // console.log('Categoria recebida:', categoria);
         results = await produtosModel.findByCategoria(categoria);
       } else {
         results = await produtosModel.findAll();
       }
 
+      // Transforma o buffer de imagem em base64 para exibição
       results.forEach((produto) => {
         if (produto.imagemProd) {
           produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
         }
       });
 
-      // console.log('Produtos encontrados:', results);
-      res.render("pages/catalogo", { listarProdutos: results, autenticado: req.session.autenticado });
+      // Define qual página será renderizada com base na rota acessada
+      const pagina = req.route.path === '/home-page' || req.route.path === '/' ? 'pages/home-page' : 'pages/catalogo';
+
+      // Renderiza a página com os produtos e status de autenticação
+      res.render(pagina, { listarProdutos: results, autenticado: req.session.autenticado });
     } catch (e) {
       console.error('Erro ao listar produtos:', e);
       res.json({ erro: "Falha ao acessar dados" });

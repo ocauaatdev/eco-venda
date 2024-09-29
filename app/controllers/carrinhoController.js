@@ -1,4 +1,5 @@
 const { carrinho } = require("../util/carrinho");
+const clientesModel = require("../models/usuarioModel");  // Certifique-se de usar o caminho correto
 
 const carrinhoController = {
 
@@ -97,6 +98,62 @@ const carrinhoController = {
                     tipo: "error"
                 }
             })
+        }
+    },
+    enderecoCliente: async (req, res) => {
+        try {
+            const userId = req.session.autenticado ? req.session.autenticado.id : null;
+            
+            if (!userId) {
+                return res.render('pages/carrinho', {
+                    autenticado: req.session.autenticado,
+                    carrinho: req.session.carrinho,
+                    endereco: null, // Nenhum endereço se o usuário não estiver autenticado
+                    listaErros: null,
+                });
+            }
+
+            // Buscar as informações de endereço do cliente autenticado
+            const [cliente] = await clientesModel.findId(userId);
+
+            if (cliente) {
+                const endereco = {
+                    cep: cliente.cepCliente,
+                    logradouro: cliente.logradouroCliente,
+                    bairro: cliente.bairroCliente,
+                    cidade: cliente.cidadeCliente,
+                    uf: cliente.ufCliente,
+                };
+
+                res.render('pages/carrinho', {
+                    autenticado: req.session.autenticado,
+                    carrinho: req.session.carrinho,
+                    endereco, // Passa o endereço para a view
+                    listaErros: null,
+                    qtdItensCarrinho: carrinho.getQtdeItens(),  // Quantidade de itens no carrinho
+                });
+            } else {
+                // Caso não encontre o cliente
+                res.render('pages/carrinho', {
+                    autenticado: req.session.autenticado,
+                    carrinho: req.session.carrinho,
+                    endereco: null,
+                    listaErros: null,
+                    qtdItensCarrinho: carrinho.getQtdeItens(),
+                });
+            }
+        } catch (error) {
+            console.log(error);
+            res.render("pages/carrinho", {
+                autenticado: req.session.autenticado,
+                carrinho: null,
+                listaErros: null,
+                dadosNotificacao: {
+                    titulo: "Erro ao buscar o endereço!",
+                    mensagem: "Tente novamente mais tarde!",
+                    tipo: "error"
+                }
+            });
         }
     },
 }
