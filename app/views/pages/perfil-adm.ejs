@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- JQUERY, Fontawesome e css menu e do rodapé -->
+    <%- include('../partial/essenciais'); %>
+
+    <!-- CSS da pagina -->
+    <link rel="stylesheet" href="/css/perfil.css">
+    <title>Perfil ADM</title>
+</head>
+<body>
+    <!-- Menu e menu lateral -->
+    <%- include('../partial/header'); %>
+    <!-- Fim menu e menu lateral -->
+
+    <main>
+        <section class="container">
+            <section class="barraLateral">
+                <ul class="opcoesPerfil">
+                    <li onclick="mostrarSecao('configuracoes')">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Configurações</span>
+                    </li>
+                    <li onclick="mostrarSecao('meus-produtos')">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Aprovar Produtos</span>
+                    </li>
+                    <li onclick="mostrarSecao('contas')">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Contas</span>
+                    </li>
+                </ul>
+                <section class="parteInferior">
+                    <button class="sairBtn" onclick="window.location.href='/logout'">Sair</button>
+                </section>
+            </section> <!--barra lateral-->
+
+            <section class="conteudo">
+                <section id="meus-produtos" class="secaoPerfil"></section>
+                    <h2>Aprovar Produtos</h2>
+                    <div class="produtos-container">
+                      <% solicitacoes.forEach(solicitacao => { %>
+                        <div class="produto-card">
+                          <% if (solicitacao.imagemProd) { %>
+                            <img src="<%= solicitacao.imagemProd %>" alt="<%= solicitacao.tituloProd %>" class="imagem-produto" />
+                          <% } %>
+                          <div class="info-produto">
+                            <h4><%= solicitacao.tituloProd %></h4>
+                            <p class="descProduto">Descrição: <%= solicitacao.descricaoProd %></p>
+                            <p>Preço: R$ <%= solicitacao.valorProd %></p>
+                            <p>Estoque: <%= solicitacao.qtdeEstoque %></p>
+                          </div>
+                          
+                          <div class="acoes-produto">
+                            <form action="/aprovar-produto/<%= solicitacao.idSolicitacao %>" method="POST">
+                            <button class="editarBtn" type="submit">Aprovar</button>
+                            </form>
+                            <form action="/rejeitar-produto/<%= solicitacao.idSolicitacao %>" method="POST">
+                                <button class="removerBtn" type="submit">Rejeitar</button>
+                            </form>
+                          </div>
+                        </div>
+                      <% }) %>
+                    </div>
+             </section>
+            
+
+                <!-- Outras seções podem ser adicionadas aqui -->
+                <section id="contas" class="secaoPerfil">
+                    <h2>Contas de Empresas</h2>
+                    <div class="contas-container">
+                        <% empresas.forEach(empresa => { %>
+                        <div class="conta-card">
+                            <div class="info-conta">
+                                <h4>Nome: <%= empresa.nomeEmpresa %></h4>
+                                <p>Email: <%= empresa.emailEmpresa %></p>
+                                <p>CNPJ: <%= empresa.cnpjEmpresa %></p>
+                            </div>
+                            <div class="acoes-conta">
+                                <form action="/excluir-conta/empresa/<%= empresa.idEmpresas %>" method="POST">
+                                    <button class="removerBtn" type="submit">Excluir Empresa</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
+                
+                    <div class="contas-container">
+                        <% usuarios.forEach(usuario => { %> <!-- Alterado de clientes para usuarios -->
+                        <div class="conta-card">
+                            <div class="info-conta">
+                                <h4>Nome: <%= usuario.nomeCliente %></h4> <!-- Alterado de cliente para usuario -->
+                                <p>Email: <%= usuario.emailCliente %></p> <!-- Alterado de cliente para usuario -->
+                            </div>
+                            <div class="acoes-conta">
+                                <form action="/excluir-conta/usuario/<%= usuario.idClientes %>" method="POST">
+                                    <button class="removerBtn" type="submit">Excluir Usuário</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% }) %>
+                    </div>
+                </section>
+            </section>
+                
+    </main>
+
+    <%- include('../partial/scripts-essenciais'); %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    <script>
+
+        // ========================= Notify============================================
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('update') === 'sucesso'){
+            
+            new Notify({
+              status: 'success',
+              title: 'Informações salvas!',
+              text: 'Suas informações foram salvas com sucesso.',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+
+
+        // ================================================ Mascara =================================================== 
+        $('#cep').mask('00000-000');
+        $('#telefone').mask('(00)00000-0000');
+
+        function mostrarSecao(secao) {
+            document.querySelectorAll('.secaoPerfil').forEach(el => el.style.display = 'none');
+            document.getElementById(secao).style.display = 'block';
+        
+            document.querySelectorAll('.opcoesPerfil li').forEach(li => li.classList.remove('active'));
+            event.target.closest('li').classList.add('active');
+        }
+
+        // Exibir a seção de configurações da conta por padrão
+        mostrarSecao('configuracoes');
+
+        function toggleEdit() {
+            const inputs = document.querySelectorAll('#userForm input');
+            const spans = document.querySelectorAll('#userForm span');
+            const editarBtn = document.getElementById('editarBtn');
+            const atualizarBtn = document.getElementById('atualizarBtn');
+            const cancelarBtn = document.getElementById('cancelarBtn');
+            
+            const isEditing = inputs[0].style.display === 'none';
+
+            inputs.forEach(input => input.style.display = isEditing ? 'inline-block' : 'none');
+            spans.forEach(span => span.style.display = isEditing ? 'none' : 'inline-block');
+            editarBtn.style.display = isEditing ? 'none' : 'inline-block';
+            atualizarBtn.style.display = isEditing ? 'inline-block' : 'none';
+            cancelarBtn.style.display = isEditing ? 'inline-block' : 'none';
+        }
+
+        function cancelEdit(){
+            // recarrega a página para cancelar alteração 
+            window.location.reload();
+        }
+
+    </script>
+
+<script>
+    // Obter elementos do DOM
+    const modal = document.getElementById("editarProdutoModal");
+    const closeModal = document.getElementsByClassName("close")[0];
+    const editarProdutoForm = document.getElementById("editarProdutoForm");
+
+    // Função para abrir o modal com os dados do produto
+    function abrirModal(produto) {
+        modal.style.display = "block";
+        
+        // Preencher o formulário com os dados do produto
+        document.getElementById("produtoId").value = produto.idProd;
+        document.getElementById("titulo").value = produto.tituloProd;
+        document.getElementById("descricao").value = produto.descricaoProd; // Agora preenche o textarea
+        document.getElementById("valor").value = produto.valorProd;
+        document.getElementById("estoque").value = produto.qtdeEstoque;
+
+        editarProdutoForm.action = `/empresa/editar-produto/${produto.idProd}`;
+    }
+
+    // Função para fechar o modal
+    closeModal.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // Fechar o modal ao clicar fora dele
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+    
+</body>
+</html>

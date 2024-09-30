@@ -10,18 +10,18 @@
             <li>
                 <!-- Opções Menu -->
                 <ul class="opcoesMenu">
-                    <li><a href="catalogo?categoria=moda">Moda Eco</a></li>
-                    <li><a href="catalogo?categoria=bag">Eco Bags</a></li>
-                    <li><a href="catalogo?categoria=cosmetico">Cosmeticos</a></li>
+                    <li><a href="#">Moda Eco</a></li>
+                    <li><a href="#">Eco Bags</a></li>
+                    <li><a href="#">Cosmeticos</a></li>
                     <li class="btnCategorias">Mais <i onclick="abrirsubmenu()" class="fa-solid fa-chevron-down"></i>
                         <!--Dropdown-->
                         <ul class="dropdown">
                             <li><a href="/ecopremium">Assinatura Eco+</a></li>
                             <li><a href="/catalogo">Todos Produtos</a></li>
-                            <li><a href="catalogo?categoria=higiene">Higiene</a></li>
-                            <li><a href="catalogo?categoria=moda">Moda Eco</a></li>
-                            <li><a href="catalogo?categoria=bag">Eco Bags</a></li>
-                            <li><a href="catalogo?categoria=cosmetico">Cosméticos</a></li>
+                            <li><a href="#">Higiene</a></li>
+                            <li><a href="#">Moda Eco</a></li>
+                            <li><a href="#">Eco Bags</a></li>
+                            <li><a href="#">Cosméticos</a></li>
                         </ul>
                         <!-- Fim do Dropdown -->
                     </li>
@@ -64,7 +64,10 @@
         <% } else if (autenticado.tipo === 'empresa') { %>
           <li class="perfilOptions"><a href="/perfil-empresa">Meu Perfil</a></li>
           <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
-        <% } %>
+          <% } else if (autenticado.tipo === 'admin') { %>
+            <li class="perfilOptions"><a href="/perfil-adm">Meu Perfil</a></li>
+            <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
+          <% } %>
       </ul>
 </li>
     

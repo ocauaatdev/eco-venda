@@ -1,6 +1,7 @@
 const { validationResult } = require("express-validator");
 const usuario = require("./usuarioModel");
 const empresa = require("./empresaModel");
+const adm = require("./adminModel")
 const bcrypt = require("bcryptjs");
 
 const verificarUsuAutenticado = (req, res, next) => {
@@ -80,6 +81,39 @@ const gravarUsuAutenticado = async (req, res, next) => {
         } else {
             console.log("Empresa não encontrada");
         }
+
+        const dadosAdmin = {
+            nomeAdmin: req.body.adm || req.body.usuario, // Captura o nome ou usuário do administrador
+            senha: req.body.senha, // Captura a senha do formulário
+        };
+        
+        // Verifica se o administrador existe no banco de dados
+        let resultsAdmin = await adm.findAdmin(dadosAdmin.nomeAdmin);
+        if (resultsAdmin.length === 1) {
+            const adminLogado = resultsAdmin[0];
+        
+            // Verifica se a senha fornecida é válida
+            const senhaValidaAdmin = bcrypt.compareSync(dadosAdmin.senha, adminLogado.senhaAdmin);
+        
+            if (senhaValidaAdmin) {
+                // Cria a sessão para o administrador autenticado
+                autenticado = {
+                    autenticado: adminLogado.nomeAdmin,
+                    id: adminLogado.idAdmin,
+                    tipo: 'admin',
+                };
+                req.session.autenticado = autenticado;
+        
+                console.log("Login de admin feito com sucesso");
+                console.log(`Administrador atualmente logado(a): ${autenticado.autenticado} (${autenticado.tipo})`);
+        
+                return next(); // Interrompe a execução se o administrador foi autenticado
+            } else {
+                console.log("Senha de administrador inválida");
+            }
+        } else {
+            console.log("Administrador não encontrado");
+        }        
     } else {
         console.log("Erro de validação");
     }

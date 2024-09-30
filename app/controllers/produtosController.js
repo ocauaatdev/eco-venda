@@ -1,5 +1,6 @@
 const { body, validationResult } = require('express-validator');
 const produtosModel = require("../models/produtosModel");
+const solicitacoesProdutoModel = require('../models/solicitacoesProdutoModel');
 
 const produtosController = {
   regrasValidacaoFormProd: [
@@ -28,9 +29,9 @@ const produtosController = {
 
     try {
       // Insere o produto no banco de dados
-      let create = await produtosModel.create(dadosForm);
-      console.log('Cadastro bem-sucedido:', create);
-      res.redirect("/");
+      let create = await solicitacoesProdutoModel.create(dadosForm);
+        console.log('Solicitação de produto enviada para aprovação:', create);
+        res.redirect("/"); // Redireciona após o envio da solicitação
     } catch (e) {
       console.log('Erro no cadastro:', e.message);
       res.render("pages/cadastro-produto", { listaErros: [{ msg: e.message }], valores: req.body });

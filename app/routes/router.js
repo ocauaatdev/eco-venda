@@ -4,9 +4,11 @@ const usuarioController = require('../controllers/usuarioController');
 const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
 const assinaturaController = require("../controllers/assinaturaController");
+const adminController = require("../controllers/adminController");
 const Usuario = require('../models/usuarioModel');
 const empresa = require('../models/empresaModel');
-const produto = require('../models/produtosModel');
+const produtosModel = require('../models/produtosModel');
+const solicitacoesProdutoModel = require('../models/solicitacoesProdutoModel')
 const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAutorizado } = require("../models/autenticador");
 const uploadFile = require("../util/uploader")();
 const { carrinhoController } = require("../controllers/carrinhoController");
@@ -239,6 +241,21 @@ router.post('/login-empresa',
     empresaController.logar(req, res);
   });
 
+// ADM
+router.get('/login-adm', (req, res) => {
+  // Se o usuario estiver logado, não permite acessar a pagina de login da adm
+  if (req.session.autenticado && req.session.autenticado.id) {
+    return res.redirect('/?erro=logado');
+  }
+  res.render('pages/login-adm', { listaErros: [], query: req.query });
+});
+
+router.post('/login-adm',
+  adminController.regrasValidacaoFormLogin,gravarUsuAutenticado,
+  async (req, res) => {
+    adminController.logar(req, res);
+  });
+
 // ========== DESLOGAR USUARIO ATUAL ===========
 router.get('/logout', (req, res) => {
   req.session.destroy((err) => {
@@ -262,6 +279,8 @@ router.get('/redirecionamento', (req, res) => {
 
   // Visualizar perfil empresa 
   router.get('/perfil-empresa', empresaController.perfilEmpresa);
+  // Visualizar perfil adm
+  router.get('/perfil-adm', adminController.perfilAdm);
 
   // Adiciona a rota para pedidos vendidos
   router.get('/perfil-empresa/pedidos-vendidos', pedidoController.pedidosVendidosPorEmpresa);
@@ -274,9 +293,9 @@ router.get('/ocorrencias/:idPedido', pedidoController.buscarOcorrencias);
   // Atualizar perfil empresa
   router.post('/empresa/atualizar', empresaController.atualizarPerfilEmpresa);
   // Rota para remover produto
-  router.post('/empresa/remover-produto/:id', produto.removerProduto);
+  router.post('/empresa/remover-produto/:id', produtosModel.removerProduto);
   // Rota para editar produto
-  router.post('/empresa/editar-produto/:id', produto.editarProduto);
+  router.post('/empresa/editar-produto/:id', produtosModel.editarProduto);
 
 // ===========================
 
@@ -306,8 +325,17 @@ router.post('/cadastro-produto',
   });
 
   // Rota para exibir o produto individualmente
+router.post('/excluir-conta/usuario/:idClientes', adminController.excluirUsuario);
+
+// Rota para excluir conta de empresa
+router.post('/excluir-conta/empresa/:idEmpresas', adminController.excluirEmpresa);
+
+  // Rota para exibir o produto individualmente
 router.get('/produto/:idProd', produtosController.exibirProduto);
 
+router.post('/aprovar-produto/:idSolicitacao', solicitacoesProdutoModel.aprovar);
+
+router.post('/rejeitar-produto/:id', solicitacoesProdutoModel.delete);
 // CARRINHO
 router.get("/addItem", function (req, res) {
   carrinhoController.addItem(req, res);

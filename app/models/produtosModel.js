@@ -21,10 +21,11 @@ const produtosModel = {
     findById: async (idProd) => {
       try {
         const [linhas] = await pool.query(
-          `SELECT p.*, e.razaoSocial FROM produtos_das_empresas p
-           JOIN empresas e ON p.Empresas_idEmpresas = e.idEmpresas
-           WHERE p.idProd = ?`,
-          [idProd]
+          `SELECT p.*, e.razaoSocial 
+     FROM solicitacoes_produtos p
+     JOIN empresas e ON p.Empresas_idEmpresas = e.idEmpresas
+     WHERE p.idSolicitacao = ?`,  // ou p.idProd se o ID for do produto diretamente
+          [idProd] // Use idSolicitacao ou idProd, conforme necessário
         );
         return linhas;
       } catch (error) {
