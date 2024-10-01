@@ -20,20 +20,34 @@ const produtosModel = {
 
     findById: async (idProd) => {
       try {
-        const [linhas] = await pool.query(
-          `SELECT p.*, e.razaoSocial 
-     FROM solicitacoes_produtos p
-     JOIN empresas e ON p.Empresas_idEmpresas = e.idEmpresas
-     WHERE p.idSolicitacao = ?`,  // ou p.idProd se o ID for do produto diretamente
-          [idProd] // Use idSolicitacao ou idProd, conforme necessário
-        );
-        return linhas;
+       
+    
+        // 2. Caso contrário, tenta buscar o produto na tabela "produtos_das_empresas"
+        const queryProdutosEmpresas = `SELECT p.*, e.razaoSocial 
+                                       FROM produtos_das_empresas p
+                                       JOIN empresas e ON p.Empresas_idEmpresas = e.idEmpresas
+                                       WHERE p.idProd = ?`;
+        const [produtosEmpresasRows] = await pool.query(queryProdutosEmpresas, [idProd]);
+    
+        if (produtosEmpresasRows.length > 0) {
+          // Se o produto for encontrado na tabela "produtos_das_empresas", retorna o resultado
+          return produtosEmpresasRows;
+        }
+    
+        // 3. Caso contrário, busca nas "solicitacoes_produtos"
+        const querySolicitacoesProdutos = `SELECT p.*, e.razaoSocial 
+                                           FROM solicitacoes_produtos p
+                                           JOIN empresas e ON p.Empresas_idEmpresas = e.idEmpresas
+                                           WHERE p.idSolicitacao = ?`;
+        const [solicitacoesProdutosRows] = await pool.query(querySolicitacoesProdutos, [idProd]);
+    
+        return solicitacoesProdutosRows;
+    
       } catch (error) {
         return error;
       }
-    },
-
-    // Buscar produtos por categoria
+    },    
+    
  
     findByCategoria: async (categoria) => {
       try {
