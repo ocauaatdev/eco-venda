@@ -8,30 +8,34 @@ const pedidoController = {
     gravarPedido: async (req, res) => {
         try {
             const carrinhoSession = req.session.carrinho;
+            // console.log('Carrinho recebido:', carrinhoSession); 
+    
             const camposJsonPedido = {
                 data_pedido: moment().format("YYYY-MM-DD"),
                 clientes_idClientes: req.session.autenticado.id,
                 statusPedido: 1,
-                total_pedido: carrinhoSession.reduce((acc, item) => acc + (item.preco * item.qtde), 0).toFixed(2), // Calculando o total do pedido
+                total_pedido: carrinhoSession.reduce((acc, item) => acc + (item.preco * item.qtde), 0).toFixed(2), 
                 status_pagamento: req.query.status,
                 id_pagamento: req.query.payment_id
-            }
+            };
+    
             var create = await pedidoModel.createPedido(camposJsonPedido);
-            console.log(create);
-
+            console.log('Pedido no banco de dados:',create);
+    
             carrinhoSession.forEach(async element => {
                 const camposJsonItemPedido = {
                     pedidos_idPedidos: create.insertId,
                     produtos_das_empresas_idProd: element.codproduto,
                     qtde: element.qtde,
-                    subtotal: (element.preco * element.qtde).toFixed(2) // Subtotal para cada item
-                }
+                    subtotal: (element.preco * element.qtde).toFixed(2),
+                    tamanho_itemPedido: element.tamanho || 'Sem tamanho específico' // Pegando o tamanho da sessão
+                };
+    
+                console.log('Salvando item do pedido:', camposJsonItemPedido);
                 await pedidoModel.createItemPedido(camposJsonItemPedido);
             });
-
-            // Corrigir para chamar a função corretamente
+    
             carrinho.limparCarrinho(req);
-
             res.redirect("/");
         } catch (e) {
             console.log(e);

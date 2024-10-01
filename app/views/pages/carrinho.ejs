@@ -28,23 +28,25 @@
                                 <h3><%= item.nome_produto %></h3>
                                 <p>R$ <%= item.preco.toFixed(2) %></p>
                             </section>
-                            <select class="tamanhos" id="tamanho-select">
-                                <option value="" disabled selected>Selecione um tamanho</option>
-                                <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
-                                    <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
-                                <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
-                                    <option value="Pequeno">Pequeno</option>
-                                    <option value="Médio">Médio</option>
-                                    <option value="Grande">Grande</option>
-                                <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
-                                    <option value="P">P</option>
-                                    <option value="M">M</option>
-                                    <option value="G">G</option>
-                                    <option value="GG">GG</option>
-                                <% } else { %>
-                                    <option value="Sem tamanho específico">Sem tamanho específico</option>
-                                <% } %>
-                            </select>
+                            
+                            <select class="tamanhos" id="tamanho-select-<%= item.codproduto %>" onchange="updateTamanhoCarrinho('<%= item.codproduto %>')">
+    <option value="" disabled selected>Selecione um tamanho</option>
+    <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
+        <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
+    <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
+        <option value="Pequeno">Pequeno</option>
+        <option value="Médio">Médio</option>
+        <option value="Grande">Grande</option>
+    <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
+        <option value="P">P</option>
+        <option value="M">M</option>
+        <option value="G">G</option>
+        <option value="GG">GG</option>
+    <% } else { %>
+        <option value="Sem tamanho específico">Sem tamanho específico</option>
+    <% } %>
+</select>
+
                             <section class="quantidade">
                                 <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
                                 <i class="fa-solid fa-plus aumentar"></i></a>
@@ -142,5 +144,26 @@
     <%- include('../partial/footer'); %>
     <script src="/js/comprar-carrinho.js"></script>
     <%- include('../partial/scripts-essenciais'); %>
+
+    <script>
+    function updateTamanhoCarrinho(produtoId) {
+        const selectElement = document.getElementById(`tamanho-select-${produtoId}`);
+        const tamanhoSelecionado = selectElement.value;
+
+        // Fazer uma requisição AJAX para atualizar o tamanho no carrinho
+        fetch('/atualizar-tamanho-carrinho', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ produtoId, tamanhoSelecionado }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Tamanho atualizado no carrinho:', data);
+        })
+        .catch(error => console.error('Erro ao atualizar tamanho no carrinho:', error));
+    }
+</script>
 </body>
 </html>

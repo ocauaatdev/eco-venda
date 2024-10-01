@@ -356,6 +356,19 @@ router.get('/carrinho', verificarUsuAutenticado, carrinhoController.enderecoClie
   carrinhoController.listarcarrinho(req, res);
 });
 
+router.post('/atualizar-tamanho-carrinho', (req, res) => {
+  const { produtoId, tamanhoSelecionado } = req.body;
+
+  // Atualizar o tamanho no carrinho na sessão
+  const carrinho = req.session.carrinho;
+  const item = carrinho.find(item => item.codproduto === produtoId);
+  if (item) {
+      item.tamanho = tamanhoSelecionado;
+  }
+
+  res.json({ message: 'Tamanho atualizado com sucesso!' });
+});
+
 // ================================= Assinatura ==========================================
 // Rota para criar a preferência de pagamento da assinatura
 router.post("/create-preference-a", assinaturaController.criarPreferencia);

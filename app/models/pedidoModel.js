@@ -39,11 +39,13 @@ var pool = require("../../config/pool-conexoes");
         createItemPedido: async (camposJson) => {
             try {
                 const [resultados] = await pool.query(
-                    "insert into item_pedido set ?",
+                    "INSERT INTO item_pedido SET ?",
                     [camposJson]
-                )
+                );
+                console.log('Item do pedido inserido no banco:', resultados); // Log para verificar o sucesso da inserção
                 return resultados;
             } catch (error) {
+                console.log('Erro ao inserir item do pedido:', error); // Log de erro
                 return error;
             }
         },
