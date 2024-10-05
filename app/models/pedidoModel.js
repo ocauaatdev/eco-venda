@@ -72,48 +72,108 @@ var pool = require("../../config/pool-conexoes");
                 return error;
             }
         },
-        findPedidosPorEmpresa: async (idEmpresa) => {
+        findPedidosByEmpresa: async (empresaId) => {
             try {
                 const [resultados] = await pool.query(
                     `SELECT 
                         p.idPedidos, 
                         p.data_pedido, 
-                        p.total_pedido, 
                         c.nomeCliente, 
-                        p.codigorastreio, 
-                        r.dataocorrencia, 
-                        o.descricao AS ocorrenciaDescricao
-                    FROM pedidos p 
-                    INNER JOIN clientes c ON p.clientes_idClientes = c.idClientes 
-                    INNER JOIN item_pedido ip ON ip.pedidos_idPedidos = p.idPedidos 
-                    INNER JOIN produtos_das_empresas pe ON pe.idProd = ip.produtos_das_empresas_idProd 
-                    LEFT JOIN rastreio r ON p.rastreio_idrastreio = r.idrastreio
-                    LEFT JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
-                    WHERE pe.empresas_idEmpresas = ?`,
-                    [idEmpresa]
-                );
-                return resultados;
-            } catch (error) {
-                return error;
-            }
-        },
-        findPedidosPorUsuario: async (idUsuario) => {
-            try {
-                const [resultados] = await pool.query(
-                    `SELECT 
-                        p.idPedidos, 
-                        p.data_pedido, 
-                        p.total_pedido, 
-                        p.codigorastreio 
+                        (SELECT SUM(ip.subtotal) 
+                         FROM item_pedido ip 
+                         JOIN produtos_das_empresas prod 
+                         ON ip.produtos_das_empresas_idProd = prod.idProd 
+                         WHERE ip.pedidos_idPedidos = p.idPedidos 
+                         AND prod.empresas_idEmpresas = ?) AS total_pedido, 
+                        MAX(orast.descricao) AS ocorrenciaDescricao
                     FROM pedidos p
-                    WHERE p.clientes_idClientes = ?`,
-                    [idUsuario]
+                    JOIN clientes c ON p.Clientes_idClientes = c.idClientes
+                    LEFT JOIN rastreio r ON p.idPedidos = r.pedidos_idPedidos AND r.empresas_idEmpresas = ?
+                    LEFT JOIN ocorrencias_rastreio orast ON r.ocorrencias_rastreio_idocorrencias_rastreio = orast.idocorrencias_rastreio
+                    WHERE EXISTS (SELECT 1 FROM item_pedido ip 
+                                  JOIN produtos_das_empresas prod 
+                                  ON ip.produtos_das_empresas_idProd = prod.idProd 
+                                  WHERE ip.pedidos_idPedidos = p.idPedidos 
+                                  AND prod.empresas_idEmpresas = ?)
+                    GROUP BY p.idPedidos, c.nomeCliente`,
+                    [empresaId, empresaId, empresaId]
                 );
                 return resultados;
             } catch (error) {
+                console.error('Erro ao buscar pedidos por empresa:', error);
                 return error;
             }
         },
+
+    // Retorna todos os itens de um pedido que pertencem a uma empresa específica
+    findItensByPedidoAndEmpresa: async (pedidoId, empresaId) => {
+        try {
+            const [resultados] = await pool.query(`
+                SELECT 
+                    ip.iditem_pedido, 
+                    ip.qtde, 
+                    ip.subtotal, 
+                    ip.tamanho_itemPedido, 
+                    p.tituloProd
+                FROM item_pedido ip
+                JOIN produtos_das_empresas p ON ip.produtos_das_empresas_idProd = p.idProd
+                WHERE ip.pedidos_idPedidos = ? AND p.empresas_idEmpresas = ?
+            `, [pedidoId, empresaId]);
+            return resultados;
+        } catch (error) {
+            console.error('Erro ao buscar itens do pedido:', error);
+            return [];
+        }
+    },
+    findPedidosByCliente: async (clienteId) => {
+        try {
+            const [resultados] = await pool.query(`
+                SELECT 
+                    p.idPedidos, 
+                    p.data_pedido, 
+                    p.total_pedido, 
+                    MAX(r.codigo_rastreio) AS codigo_rastreio,
+                    MAX(o.descricao) AS andamento
+                FROM pedidos p
+                LEFT JOIN rastreio r ON p.idPedidos = r.pedidos_idPedidos
+                LEFT JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
+                WHERE p.clientes_idClientes = ?
+                GROUP BY p.idPedidos
+            `, [clienteId]);
+
+            return resultados;
+        } catch (error) {
+            console.error("Erro ao buscar pedidos do cliente:", error);
+            return [];
+        }
+    },
+    findPedidosWithRastreiosAndOcorrencias: async (clienteId) => {
+        try {
+            const [resultados] = await pool.query(`
+                SELECT 
+    p.idPedidos, 
+    p.data_pedido, 
+    p.total_pedido, 
+    e.idEmpresas,
+    e.razaoSocial,
+    GROUP_CONCAT(DISTINCT r.codigo_rastreio ORDER BY r.dataocorrencia ASC SEPARATOR ', ') AS codigos_rastreio, 
+    GROUP_CONCAT(DISTINCT o.descricao ORDER BY r.dataocorrencia ASC SEPARATOR ', ') AS ocorrencias
+FROM pedidos p
+LEFT JOIN rastreio r ON p.idPedidos = r.pedidos_idPedidos
+LEFT JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
+LEFT JOIN empresas e ON r.empresas_idEmpresas = e.idEmpresas
+WHERE p.clientes_idClientes = ?
+GROUP BY p.idPedidos, e.idEmpresas
+            `, [clienteId]);
+    
+            return resultados;
+        } catch (error) {
+            console.error("Erro ao buscar pedidos com rastreios e ocorrências:", error);
+            return [];
+        }
+    }
+     
     };
+    
 
 module.exports = PedidoModel

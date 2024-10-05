@@ -314,13 +314,8 @@ const usuarioController = {
             }
     
             // Busque os pedidos do usuário com suas ocorrências
-            const pedidos = await PedidoModel.findPedidosPorUsuario(req.session.user.id);
+            const pedidos = await PedidoModel.findPedidosWithRastreiosAndOcorrencias(req.session.user.id);
     
-            // Para cada pedido, busque suas ocorrências
-            for (let pedido of pedidos) {
-                const ocorrencias = await rastreioModel.buscarOcorrenciasPorPedido(pedido.idPedidos);
-                pedido.ocorrencias = ocorrencias.length > 0 ? ocorrencias : [{ descricao: 'Pendente' }];
-            }
 
             const usuarioId = req.session.autenticado.id;  // ID do usuário autenticado
             const assinatura = await assinaturaModel.getAssinatura(usuarioId)
@@ -330,7 +325,8 @@ const usuarioController = {
                 pedidos: pedidos,
                 autenticado: req.session.autenticado,
                 tipo: 'usuario',
-                assinatura: assinatura
+                assinatura: assinatura,
+                moment
             });
     
         } catch (err) {

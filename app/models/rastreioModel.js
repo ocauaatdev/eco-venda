@@ -1,65 +1,77 @@
 var pool = require("../../config/pool-conexoes");
 
 const rastreioModel = {
-    atualizarRastreio: async (idPedido, idOcorrencia, dataOcorrencia, codigoRastreio) => {
+    // Cria ou atualiza um rastreio para um pedido específico e empresa
+    updateRastreio: async (rastreioData) => {
         try {
-            // Atualizar o código de rastreio na tabela pedidos, se fornecido
-            if (codigoRastreio) {
-                await pool.query(
-                    "UPDATE pedidos SET codigorastreio = ? WHERE idPedidos = ?",
-                    [codigoRastreio, idPedido]
-                );
-            }
-
-            // Inserir a ocorrência na tabela rastreio e capturar o ID gerado
-            const [result] = await pool.query(
-                `INSERT INTO rastreio (dataocorrencia, ocorrencias_rastreio_idocorrencias_rastreio)
-                VALUES (?, ?)`,
-                [dataOcorrencia, idOcorrencia]
-            );
-
-            const idRastreioGerado = result.insertId;
-
-            // Atualizar a tabela pedidos com o idRastreio gerado
-            await pool.query(
-                "UPDATE pedidos SET rastreio_idrastreio = ? WHERE idPedidos = ?",
-                [idRastreioGerado, idPedido]
-            );
+            console.log("Dados de rastreio recebidos para atualização/inserção:", rastreioData); // Log dos dados
+    
+            const [resultados] = await pool.query(`
+                INSERT INTO rastreio (codigo_rastreio, dataocorrencia, ocorrencias_rastreio_idocorrencias_rastreio, pedidos_idPedidos, empresas_idEmpresas)
+                VALUES (?, ?, ?, ?, ?)
+                ON DUPLICATE KEY UPDATE
+                    codigo_rastreio = VALUES(codigo_rastreio),
+                    dataocorrencia = VALUES(dataocorrencia),
+                    ocorrencias_rastreio_idocorrencias_rastreio = VALUES(ocorrencias_rastreio_idocorrencias_rastreio)
+            `, [
+                rastreioData.codigo_rastreio,
+                rastreioData.dataocorrencia,
+                rastreioData.ocorrencias_rastreio_idocorrencias_rastreio,
+                rastreioData.pedidos_idPedidos,
+                rastreioData.empresas_idEmpresas
+            ]);
+    
+            console.log("Resultado da query:", resultados); // Log dos resultados da query
+            return resultados;
         } catch (error) {
-            console.error(error);
-            throw error;
+            console.error("Erro ao atualizar/inserir rastreio:", error); // Log do erro
+            return error;
         }
     },
-    // buscarOcorrenciasPorPedido: async (idPedido) => {
-    //     try {
-    //         const [ocorrencias] = await pool.query(
-    //             `SELECT r.dataocorrencia, o.descricao 
-    //              FROM rastreio r 
-    //              INNER JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
-    //              WHERE r.idrastreio IN (SELECT rastreio_idrastreio FROM pedidos WHERE idPedidos = ?)`,
-    //             [idPedido]
-    //         );
-    //         return ocorrencias;
-    //     } catch (error) {
-    //         console.error(error);
-    //         throw error;
-    //     }
-    // },
-    buscarOcorrenciasPorPedido: async (idPedido) => {
+    findRastreioByPedidoAndEmpresa: async (pedidoId, empresaId) => {
         try {
-            const [ocorrencias] = await pool.query(
-                `SELECT r.dataocorrencia, o.descricao 
-                 FROM rastreio r 
-                 INNER JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
-                 WHERE r.idrastreio IN (SELECT rastreio_idrastreio FROM pedidos WHERE idPedidos = ?)`,
-                [idPedido]
-            );
-            return ocorrencias;
+            const [resultados] = await pool.query(`
+                SELECT codigo_rastreio FROM rastreio WHERE pedidos_idPedidos = ? AND empresas_idEmpresas = ?
+            `, [pedidoId, empresaId]);
+    
+            return resultados.length > 0 ? resultados[0].codigo_rastreio : null;  // Retorna o código ou null
         } catch (error) {
-            console.error(error);
-            throw error;
+            console.error("Erro ao buscar código de rastreio:", error);
+            return null;
         }
     },
+    // Busca todos os rastreios relacionados a um pedido e empresa
+    findAllRastreiosByPedidoAndEmpresa: async (pedidoId, empresaId) => {
+        try {
+            const [resultados] = await pool.query(`
+                SELECT r.codigo_rastreio, r.dataocorrencia, o.descricao AS ocorrenciaDescricao
+                FROM rastreio r
+                INNER JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
+                WHERE r.pedidos_idPedidos = ? AND r.empresas_idEmpresas = ?
+                ORDER BY r.dataocorrencia ASC
+            `, [pedidoId, empresaId]);
+
+            return resultados; // Retorna todos os rastreios encontrados
+        } catch (error) {
+            console.error("Erro ao buscar histórico de rastreios:", error);
+            return [];
+        }
+    },
+        // Função para buscar todos os status de rastreio de um pedido e empresa
+findAllStatusByPedidoAndEmpresa: async (pedidoId, empresaId) => {
+    try {
+        const [resultados] = await pool.query(`
+            SELECT ocorrencias_rastreio_idocorrencias_rastreio 
+            FROM rastreio 
+            WHERE pedidos_idPedidos = ? AND empresas_idEmpresas = ?
+        `, [pedidoId, empresaId]);
+
+        return resultados; // Retorna todos os status
+    } catch (error) {
+        console.error("Erro ao buscar status dos rastreios:", error);
+        return [];
+    }
+}
 };
 
 module.exports = rastreioModel;

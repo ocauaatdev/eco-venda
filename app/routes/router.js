@@ -8,6 +8,7 @@ const adminController = require("../controllers/adminController");
 const Usuario = require('../models/usuarioModel');
 const empresa = require('../models/empresaModel');
 const produtosModel = require('../models/produtosModel');
+const pedidoModel = require('../models/pedidoModel');
 const solicitacoesProdutoModel = require('../models/solicitacoesProdutoModel')
 const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAutorizado } = require("../models/autenticador");
 const uploadFile = require("../util/uploader")();
@@ -51,21 +52,21 @@ router.use((req, res, next) => {
 
 
 // Rotas de páginas
-router.get('/', (req, res) => {
-  const categoria = req.query.categoria || null; // Obtém a categoria da query string
-  produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
-});
 // router.get('/', (req, res) => {
-//   res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
+//   const categoria = req.query.categoria || null; // Obtém a categoria da query string
+//   produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
 // });
-
-// router.get('/home-page', (req, res) => {
-//   res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
-// });
-router.get('/home-page', (req, res) => {
-  const categoria = req.query.categoria || null; // Obtém a categoria da query string
-  produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
+router.get('/', (req, res) => {
+  res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
 });
+
+router.get('/home-page', (req, res) => {
+  res.render('pages/home-page', { query: req.query, autenticado: req.session.autenticado });
+});
+// router.get('/home-page', (req, res) => {
+//   const categoria = req.query.categoria || null; // Obtém a categoria da query string
+//   produtosController.listarProdutos(req, res, { categoria, autenticado: req.session.autenticado });
+// });
 
 router.get('/ecopremium', (req, res) => {
   res.render('pages/ecopremium', { query: req.query, autenticado: req.session.autenticado });
@@ -274,6 +275,9 @@ router.get('/redirecionamento', (req, res) => {
 // ==========PERFIS=================
 
   router.get('/perfil-usuario', usuarioController.perfil);
+  // Rota para visualizar pedidos do usuário
+router.get('/perfil-usuario', pedidoController.listarPedidosUsuario);
+  // router.get('/perfil-usuario/pedidos', pedidoController.visualizarPedidosCliente);
 
   router.post('/usuario/atualizar', usuarioController.atualizarPerfil);
 
@@ -283,12 +287,30 @@ router.get('/redirecionamento', (req, res) => {
   router.get('/perfil-adm', adminController.perfilAdm);
 
   // Adiciona a rota para pedidos vendidos
-  router.get('/perfil-empresa/pedidos-vendidos', pedidoController.pedidosVendidosPorEmpresa);
+  // router.get('/perfil-empresa', pedidoController.visualizarPedidosVendidos);
 
   // Rota para enviar a notificação do pedido
 router.post('/atualizar-pedido', pedidoController.atualizarPedido);
 
-router.get('/ocorrencias/:idPedido', pedidoController.buscarOcorrencias);
+// Nova rota para buscar os itens do pedido
+router.get('/itens-pedido/:pedidoId', pedidoController.visualizarItensPedido);
+
+// Nova rota para fornecer os itens do pedido
+router.get('/api/pedido-entrega', async (req, res) => {
+  try {
+      const { pedidoId } = req.query;
+      const pedido = await pedidoModel.findId(pedidoId);  // Buscar detalhes do pedido, como local de entrega
+
+      res.json({
+          localEntrega: pedido[0].local_entrega
+      });
+  } catch (error) {
+      console.error("Erro ao carregar o local de entrega:", error);
+      res.status(500).json({ error: "Erro ao carregar o local de entrega" });
+  }
+});
+
+// router.get('/ocorrencias/:idPedido', pedidoController.buscarOcorrencias);
 
   // Atualizar perfil empresa
   router.post('/empresa/atualizar', empresaController.atualizarPerfilEmpresa);

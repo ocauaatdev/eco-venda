@@ -301,7 +301,7 @@ const empresaController = {
             const produtos = await produtosModel.findByEmpresaId(empresaId);
             
             // Busca os pedidos vendidos
-            const pedidosVendidos = await pedidoModel.findPedidosPorEmpresa(empresaId); // Correção aqui
+            const pedidosVendidos = await pedidoModel.findPedidosByEmpresa(empresaId); // Correção aqui
     
             produtos.forEach((produto) => {
                 if (produto.imagemProd) {

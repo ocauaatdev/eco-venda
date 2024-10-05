@@ -125,6 +125,9 @@ const carrinhoController = {
                     uf: cliente.ufCliente,
                 };
 
+                // Definindo o endereço na sessão
+                req.session.endereco = endereco;
+
                 res.render('pages/carrinho', {
                     autenticado: req.session.autenticado,
                     carrinho: req.session.carrinho,

@@ -113,42 +113,40 @@
                 <section id="notificacoes" class="secaoPerfil">
                     <h2>Notificações</h2>
                 </section>
+
                 <section id="acompanhamento" class="secaoPerfil">
                     <h2>Acompanhar pedidos</h2>
-                
-                    <table class="table-pedidos">
+                    
+                    <% if (pedidos.length > 0) { %>
+                    <table>
                         <thead>
                             <tr>
-                                <th>ID do Pedido</th>
-                                <th>Data</th>
+                                <th>ID Pedido</th>
+                                <th>Data do Pedido</th>
+                                <th>Total</th>
+                                <th>Empresa</th>
+                                <th>Códigos de Rastreamento</th>
                                 <th>Ocorrências</th>
-                                <th>Código de Rastreamento</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <% if (pedidos.length > 0) { %>
-                                <% pedidos.forEach(pedido => { %>
-                                    <tr>
-                                        <td><%= pedido.idPedidos %></td>
-                                        <td><%= new Date(pedido.data_pedido).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %></td>
-                                        <td>
-                                            <% pedido.ocorrencias.forEach(ocorrencia => { %>
-                                                <p><%= ocorrencia.descricao %> - <%= ocorrencia.dataocorrencia ? ocorrencia.dataocorrencia.toLocaleDateString('pt-BR') : 'Sem data' %></p>
-                                            <% }); %>
-                                        </td>
-                                        <td>
-                                            <%= pedido.codigorastreio ? pedido.codigorastreio : 'Código de rastreio indisponível no momento' %>
-                                        </td>
-                                    </tr>
-                                <% }); %>
-                            <% } else { %>
-                                <tr>
-                                    <td colspan="4">Nenhum pedido encontrado</td>
-                                </tr>
-                            <% } %>
+                            <% pedidos.forEach(pedido => { %>
+                            <tr>
+                                <td><%= pedido.idPedidos %></td>
+                                <td><%= moment(pedido.data_pedido).format("DD/MM/YYYY") %></td>
+                                <td>R$ <%= pedido.total_pedido %></td>
+                                <td><%= pedido.razaoSocial || "Empresa ainda não enviou ocorrências" %></td>
+                                <td><%= pedido.codigos_rastreio || "Código de rastreio indisponível no momento" %></td>
+                                <td><%= pedido.ocorrencias || "Aguardando ocorrências" %></td>
+                            </tr>
+                            <% }); %>
                         </tbody>
                     </table>
+                    <% } else { %>
+                    <p>Você ainda não fez nenhum pedido.</p>
+                    <% } %>
                 </section>
+                
                 
                 <section id="assinatura" class="secaoPerfil">
                     <h2>Assinatura</h2>

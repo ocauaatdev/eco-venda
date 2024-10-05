@@ -12,7 +12,7 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     
-    <title>Perfil Cliente</title>
+    <title>Perfil Empresa</title>
 </head>
 <body>
     <!-- Menu e menu lateral -->
@@ -217,35 +217,44 @@
                         <td>R$ <%= pedido.total_pedido %></td>
                         <td><%= pedido.nomeCliente %></td>
                         <td>
-                            <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %> <!-- Exibe a última ocorrência -->
+                            <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %>
                         </td>
                         <td>
-                            <button class="notificarBtn" data-id="<%= pedido.idPedidos %>" data-pedido='<%= JSON.stringify(pedido) %>'>Notificar</button>
+                            <button class="notificarBtn" data-id="<%= pedido.idPedidos %>">Detalhes</button>
                         </td>
                     </tr>
                 <% }) %>
             </tbody>
         </table>
 
-        <!-- Formulário de Notificação (fora da tabela) -->
+        <!-- Formulário de Notificação -->
         <div class="formNotificar" style="display: none;">
             <form id="formNotificar" action="/atualizar-pedido" method="post">
                 <input type="hidden" name="idPedido" id="idPedido">
-                
+
                 <article class="txtForm">
                     <h2>Andamento do Pedido</h2>
                     <span><i class="fa-solid fa-xmark fecharForm" onclick="fecharForm()"></i></span>
                 </article>
 
-                <div id="codigoRastreioContainer"></div> <!-- Código de rastreio será preenchido via JS -->
+                <h3>Código de rastreio:</h3>
+                <input type="text" name="codigo_rastreio" id="codigo_rastreio">
 
-                <div id="ocorrencias">
-                    
-                </div>
+                <h3>Histórico de Rastreios:</h3>
+                <div id="historicoRastreios"></div>
 
-                <p>O pedido foi:</p>
+                <!-- Itens do pedido serão listados aqui -->
+                <h3>Itens do pedido:</h3>
+                <div id="itensPedido"></div>
+
+                <h3>Data da ocorrência:</h3>
+                <input type="date" name="dataOcorrencia" id="dataOcorrencia">
+
+                <h3>Local de entrega:</h3>
+                <p id="localEntrega"><!--AQUI DEVE APARECER O local_entrega da tabela pedidos--></p>                
+
+                <h3>Status do Pedido:</h3>
                 <select name="andamentoPedido" id="andamentoPedido">
-                    <option value="" disabled selected>Andamento do Pedido</option>
                     <option value="1">Coletado</option>
                     <option value="2">Em andamento</option>
                     <option value="3">Pedido entregue</option>
@@ -254,68 +263,112 @@
                     <option value="6">Pedido cancelado</option>
                 </select>
 
-                <p>Data da ocorrência:</p>
-                <input type="date" name="dataOcorrencia" id="dataOcorrencia">
-
                 <button type="submit">Notificar</button>
             </form>
         </div>
-
     <% } else { %>
         <p>Nenhum pedido vendido ainda.</p>
     <% } %>
 </section>
-                
 
-            </section>
-        </section>
     </main>
 
     <%- include('../partial/scripts-essenciais'); %>
 
     <script>
         document.querySelectorAll('.notificarBtn').forEach(button => {
-    button.addEventListener('click', async function () {
-        const pedido = JSON.parse(this.getAttribute('data-pedido'));
-        document.getElementById('idPedido').value = pedido.idPedidos;
-
-        // Preencher o código de rastreio
-        const codigoRastreioContainer = document.getElementById('codigoRastreioContainer');
-        if (pedido.codigorastreio) {
-            codigoRastreioContainer.innerHTML = `<h3>Código de Rastreio: ${pedido.codigorastreio}</h3>`;
-        } else {
-            codigoRastreioContainer.innerHTML = `<p>Código de rastreio da transportadora (opcional)</p>
-                                                 <input type="text" id="codigoRastreio" name="codigoRastreio" placeholder="Digite o código de rastreio emitido pela transportadora">`;
-        }
-
-        // Buscar e exibir ocorrências anteriores
-        const ocorrenciasDiv = document.getElementById('ocorrencias');
-        try {
-            const response = await fetch(`/ocorrencias/${pedido.idPedidos}`);
-            const ocorrencias = await response.json();
-
-            if (ocorrencias.length === 0) {
-                ocorrenciasDiv.innerHTML = "<p>Sem ocorrências anteriores</p>";
-            } else {
-                ocorrenciasDiv.innerHTML = ocorrencias.map(ocorrencia => 
-                    `<p>${ocorrencia.descricao} - ${new Date(ocorrencia.dataocorrencia).toLocaleString()}</p>`
-                ).join('');
-            }
-        } catch (error) {
-            console.error('Erro ao buscar ocorrências:', error);
-            ocorrenciasDiv.innerHTML = "<p>Erro ao carregar ocorrências</p>";
-        }
-
-        // Exibir o formulário
-        document.querySelector('.formNotificar').style.display = 'block';      
-    });
-});
+            button.addEventListener('click', async (event) => {
+                const pedidoId = event.target.dataset.id;
     
-    // Fechar Form
-    function fecharForm(params) {
-        document.querySelector('.formNotificar').style.display = 'none';
-    }
+                // Atribuir o pedidoId no campo oculto para ambos os scripts
+                document.getElementById('idPedido').value = pedidoId;
+    
+                try {
+                    // Fazer as duas requisições AJAX em paralelo
+                    const [responseItens] = await Promise.all([
+                        fetch(`/itens-pedido/${pedidoId}`),
+                    ]);
+    
+                    // Processar a resposta dos itens do pedido e histórico de rastreio
+                    const { itensPedido, rastreio, historicoRastreios, pedidoEntregue } = await responseItens.json();
+                    // Atualizar os itens do pedido
+                    let itensHtml = '';
+                    itensPedido.forEach(item => {
+                        itensHtml += `<p>${item.tituloProd} - Quantidade: ${item.qtde}, Subtotal: R$ ${item.subtotal}, Tamanho: ${item.tamanho_itemPedido}</p>`;
+                    });
+                    document.getElementById('itensPedido').innerHTML = itensHtml;
+    
+                    // Atualizar o campo de rastreio
+                    const rastreioInput = document.getElementById('codigo_rastreio');
+                    if (rastreio) {
+                        rastreioInput.value = rastreio;
+                        rastreioInput.readOnly = true;
+                    } else {
+                        rastreioInput.value = '';
+                        rastreioInput.readOnly = false;
+                    }
+    
+                    // Exibir o histórico de rastreios
+                    let historicoHtml = '';
+                    historicoRastreios.forEach(historico => {
+                        historicoHtml += `<p>${new Date(historico.dataocorrencia).toLocaleDateString()} - ${historico.ocorrenciaDescricao} (Código: ${historico.codigo_rastreio})</p>`;
+                    });
+                    document.getElementById('historicoRastreios').innerHTML = historicoHtml;
+    
+                    // Desabilitar o formulário se algum rastreio tiver status "Pedido Entregue"
+                    const submitButton = document.querySelector('#formNotificar button[type="submit"]');
+                    if (pedidoEntregue) {
+                        document.getElementById('dataOcorrencia').setAttribute('disabled', 'disabled');
+                        document.getElementById('andamentoPedido').setAttribute('disabled', 'disabled');
+                        submitButton.style.display = 'none';
+                    } else {
+                        document.getElementById('dataOcorrencia').removeAttribute('disabled');
+                        document.getElementById('andamentoPedido').removeAttribute('disabled');
+                        submitButton.style.display = 'block';
+                    }
+    
+    
+                    // Exibir o formulário
+                    document.querySelector('.formNotificar').style.display = 'block';
+    
+                } catch (error) {
+                    console.error('Erro ao processar os dados:', error);
+                }
+            });
+        });
+    
+        function fecharForm() {
+            document.querySelector('.formNotificar').style.display = 'none';
+        }
+    </script>
+    
 
+    <script>
+        // Manipulação do botão de notificação
+        document.querySelectorAll('.notificarBtn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const pedidoId = this.getAttribute('data-id');
+    
+                // Atribuir o pedidoId no campo oculto
+                document.getElementById('idPedido').value = pedidoId;
+    
+                // Fazer a requisição AJAX para buscar o local de entrega
+                fetch(`/api/pedido-entrega?pedidoId=${pedidoId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Atualizar o local de entrega
+                        document.getElementById('localEntrega').innerText = data.localEntrega;
+    
+                        // Exibir o formulário
+                        document.querySelector('.formNotificar').style.display = 'block';
+                    })
+                    .catch(err => console.error('Erro ao carregar o local de entrega:', err));
+            });
+        });
+    
+        function fecharForm() {
+            document.querySelector('.formNotificar').style.display = 'none';
+        }
     </script>
     
 
