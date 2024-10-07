@@ -30,20 +30,22 @@
             </li>
             <li>
                 <!-- Barra de Pesquisa -->
-                <section class="buscar-box">
-                    <section class="lupa-buscar">
-                        <i class="fa-solid fa-magnifying-glass"></i>
-                    </section> <!--lupa buscar-->
+<section class="buscar-box">
+    <section class="lupa-buscar">
+        <i class="fa-solid fa-magnifying-glass"></i>
+    </section> <!--lupa buscar-->
 
-                    <section class="input-buscar">
-                        <input type="text" name="" id="" placeholder="Faça uma busca">
-                    </section>
+    <section class="input-buscar">
+        <input type="text" autocomplete="off" id="input-pesquisa" placeholder="Faça uma busca" onkeyup="pesquisarProdutos()">
+        <!-- Div para exibir os resultados da pesquisa -->
+        <div id="resultado-pesquisa" class="resultado-pesquisa"></div>
+    </section>
 
-                    <section class="btn-fechar">
-                        <i class="fa-regular fa-circle-xmark"></i> <!--Botao de fechar-->
-                    </section>
-                </section>
-                <!-- Fim Barra de Pesquisa -->
+    <section class="btn-fechar">
+        <i class="fa-regular fa-circle-xmark"></i> <!--Botao de fechar-->
+    </section>
+</section>
+<!-- Fim Barra de Pesquisa -->
             </li>
             <li>
                 <!-- Icones Menu -->

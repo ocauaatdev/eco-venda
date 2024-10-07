@@ -433,4 +433,25 @@ router.get('/checkout', verificarUsuAutenticado, carrinhoController.enderecoClie
   });
 });
 
+// ----------
+router.get('/buscar-produtos', async (req, res) => {
+  const query = req.query.q;
+  if (!query) {
+      return res.status(400).json([]);
+  }
+
+  try {
+      const produtos = await produtosModel.findByNome(query);
+      produtos.forEach(produto => {
+          if (produto.imagemProd) {
+              produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
+          }
+      });
+      res.json(produtos); // Incluindo as categorias nos produtos
+  } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
+      res.status(500).json({ erro: 'Erro ao buscar produtos' });
+  }
+});
+
 module.exports = router;

@@ -2,13 +2,18 @@
 let boxBuscar = document.querySelector('.buscar-box');
 let lupa = document.querySelector('.lupa-buscar');
 let btnFechar = document.querySelector('.btn-fechar');
+let resultadoDiv = document.getElementById('resultado-pesquisa');
 
-lupa.addEventListener('click', ()=>{
-    boxBuscar.classList.add('ativar')
-})
-btnFechar.addEventListener('click', ()=>{
-    boxBuscar.classList.remove('ativar')
-})
+lupa.addEventListener('click', () => {
+    boxBuscar.classList.add('ativar');
+    resultadoDiv.style.display = 'block';  // Certifique-se de exibir a div quando clicar na lupa
+});
+
+btnFechar.addEventListener('click', () => {
+    boxBuscar.classList.remove('ativar');
+    resultadoDiv.style.display = 'none';  // Esconder a div de resultados ao fechar
+});
+
 // ============Fim Barra de pesquisa============
 
 // ==========Dropdown "Mais"=============
@@ -88,3 +93,113 @@ btnSuporte.addEventListener('click',function(){
 document.addEventListener('DOMContentLoaded', (event) => {
     updateCartItemCount();
 });
+
+    // ----------- pesquisa.js ---------------
+function pesquisarProdutos() {
+    const query = document.getElementById('input-pesquisa').value;
+    
+    if (query.length >= 2) {
+        fetch(`/buscar-produtos?q=${query}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultadoDiv = document.getElementById('resultado-pesquisa');
+                resultadoDiv.innerHTML = '';
+
+                if (data.length > 0) {
+                    const categoriasCount = {};  // Para contar a recorrência de categorias
+    
+                    data.forEach(produto => {
+                        const produtoHTML = `
+                            <div class="resultado-item">
+                                <img src="${produto.imagemProd}" alt="${produto.tituloProd}">
+                                <a href="/produto/${produto.idProd}">
+                                    <span>${produto.tituloProd}</span>
+                                </a>
+                            </div>`;
+                        resultadoDiv.innerHTML += produtoHTML;
+
+                        // Incrementar o contador da categoria
+                        if (produto.Categorias_idCategorias) {
+                            if (!categoriasCount[produto.Categorias_idCategorias]) {
+                                categoriasCount[produto.Categorias_idCategorias] = 1;
+                            } else {
+                                categoriasCount[produto.Categorias_idCategorias]++;
+                            }
+                        }
+                    });
+                } else {
+                    resultadoDiv.innerHTML = '<p>Nenhum produto encontrado</p>';
+                }
+            })
+            .catch(error => console.error('Erro ao buscar produtos:', error));
+    } else {
+        document.getElementById('resultado-pesquisa').innerHTML = '';
+    }
+}
+
+// Captura o evento de pressionar "Enter"
+document.getElementById('input-pesquisa').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        pesquisarProdutos();
+
+        const categoriasCount = {};  // Para contar a recorrência de categorias
+        
+        fetch(`/buscar-produtos?q=${this.value}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    data.forEach(produto => {
+                        if (produto.Categorias_idCategorias) {
+                            if (!categoriasCount[produto.Categorias_idCategorias]) {
+                                categoriasCount[produto.Categorias_idCategorias] = 1;
+                            } else {
+                                categoriasCount[produto.Categorias_idCategorias]++;
+                            }
+                        }
+                    });
+                    
+                    const categoriasOrdenadas = Object.entries(categoriasCount).sort((a, b) => b[1] - a[1]);
+                    if (categoriasOrdenadas.length > 0) {
+                        const categoriaMaisFrequente = categoriasOrdenadas[0][0];
+
+                        // Mapear o ID da categoria para o nome
+                        const categoriasMapReverso = {
+                            1: 'moda',
+                            2: 'bag',
+                            3: 'cosmetico',
+                            4: 'higiene'
+                        };
+                        
+                        const nomeCategoria = categoriasMapReverso[categoriaMaisFrequente];
+                        if (nomeCategoria) {
+                            window.location.href = `/catalogo?categoria=${nomeCategoria}`;
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Categoria não encontrada',
+                                text: 'Não foi possível encontrar a categoria correspondente.'
+                            });
+                        }
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Nenhum produto encontrado',
+                            text: 'Tente outro termo de pesquisa.'
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Nenhum produto encontrado',
+                        text: 'Tente outro termo de pesquisa.'
+                    });
+                }
+            })
+            .catch(error => console.error('Erro ao buscar produtos:', error));
+    }
+});
+
+    
+// ============Barra de pesquisa==============
+

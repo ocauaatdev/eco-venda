@@ -121,6 +121,18 @@ const produtosModel = {
           res.status(500).send('Erro ao atualizar produto');
       }
     },
+    findByNome: async (nome) => {
+      try {
+          const [linhas] = await pool.query(
+              'SELECT * FROM produtos_das_empresas WHERE tituloProd LIKE ?', 
+              [`%${nome}%`]
+          );
+          return linhas; // A categoria já está nos resultados de "produtos_das_empresas"
+      } catch (error) {
+          console.error('Erro ao buscar produtos por nome:', error);
+          throw error;
+      }
+  },
 
 };
     
