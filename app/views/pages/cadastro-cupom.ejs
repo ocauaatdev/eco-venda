@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Produto</title>
+    <!-- FontAwesome -->
+    <script src="https://kit.fontawesome.com/4494a50fc2.js" crossorigin="anonymous"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/cadastro-produto.css">
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
+
+    <!-- Jquery Mascaras -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+    <!-- Simple Notify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+
+    <!-- Validação de Produto -->
+    <script src="/js/validacao-produto.js"></script>
+</head>
+<body>
+    <main>
+
+        <form action="/cadastro-cupom" method="POST" >
+                <div class="formHead">
+                    <a href="/home-page">
+                        <i class="fa-solid fa-house home"></i> <span>Inicio</span>
+                    </a>
+                    <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+                    <h1>Cadastro de Cupom</h1>
+                </div>
+
+            <!-- NOME PRODUTO -->
+            <h3 class="nomeProdutotxt">Nome do Cupom:</h3>
+            <input type="text" name="nomeCupom" id="nomeCupom" placeholder="Digite aqui o nome do Produto" value="<%= valores.nomeCupom || '' %>" required>
+            
+            
+            <!-- Preço -->
+            <h3 class="precoTxt">Desconto:</h3>
+            <input type="text" name="descontoCupons" id="descontoCupons" placeholder="Digite o preço do desconto" value="<%= valores.descontoCupons || '' %>" required>
+
+            <!-- Quantidade em estoque -->
+            <h3 class="qtdeEstoqueTxt">Validade:</h3>
+            <input type="date" name="prazoCupons" id="prazoCupons" value="<%= valores.prazoCupons || '' %>" required>
+
+            <!-- Adicione um campo de seleção para Categorias -->
+            <h3 class="categoriaTxt">Categoria:</h3>
+            <select name="categoriaCupom" id="categoriaCupom" required>
+                <option value="" disabled selected>Selecione a categoria</option>
+                <option value="1">Moda</option>
+                <option value="2">Bags</option>
+                <option value="3">Cosmeticos</option>
+                <option value="4">Higiene</option>
+            </select>
+
+            <h3 class="categoriaTxt">Assinatura:</h3>
+            <select name="planoCupom" id="planoCupom" required>
+                <option value="" disabled selected>Selecione o plano</option>
+                <option value="1">Basico</option>
+                <option value="2">Médio</option>
+                <option value="3">Pro</option>
+            </select>
+
+            <button type="submit">Cadastrar Cupom</button>
+        </form>
+    </main>
+
+    <script>
+        function loadImg(event) {
+            const output = document.getElementById('previewImg');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.style.display = 'block';
+        }
+    </script>
+    <script>
+        // Usando JavaScript puro para controle de exibição
+        const hoverElement = document.querySelector('.saibaMais');
+        const hiddenSpan = document.querySelector('.tamanhoInfo');
+      
+        hoverElement.addEventListener('mouseenter', () => {
+          hiddenSpan.style.display = 'inline-block';
+        });
+      
+        hoverElement.addEventListener('mouseleave', () => {
+          hiddenSpan.style.display = 'none';
+        });
+    </script>
+</body>
+</html>

@@ -5,6 +5,9 @@ const produtosModel = require("../models/produtosModel");
 const empresaModel = require("../models/empresaModel");
 const usuarioModel = require("../models/usuarioModel");
 const solicitacoesProdutoModel = require('../models/solicitacoesProdutoModel');
+const moment = require('moment');
+const { regrasValidacaoFormCad } = require("./usuarioController");
+const cuponsModel = require("../models/cuponsModel")
 
 const saltRounds = 12;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -17,6 +20,9 @@ const adminController = {
         body("senha")
             .isStrongPassword()
             .withMessage("A senha deve ter no mínimo 8 caracteres (mínimo 1 letra maiúscula, 1 caractere especial e 1 número)")
+    ],
+    regrasValidacaoFormCup:[
+
     ],
 
     logar: async (req, res) => {
@@ -90,6 +96,34 @@ excluirUsuario: async (req, res) => {
         res.status(500).send('Erro ao excluir o usuário');
     }
 },
+cadastrarCupom: async (req, res) => {
+    const erros = validationResult(req);
+    
+
+    var dadosForm = {
+      nomeCupom: req.body.nomeCupom,
+      descontoCupons: req.body.descontoCupons,
+      prazoCupons: moment(req.body.prazoCupons, "YYYY-MM-DD").format("YYYY-MM-DD"),
+      categoriaCupom: req.body.categoriaCupom,
+      planoCupom: req.body.planoCupom,
+    };
+    console.log('Dados recebidos:', req.body);  // Adicione este log
+
+    if (!erros.isEmpty()) {
+      return res.render("pages/cadastro-cupom", { listaErros: erros.array(), values: req.body });
+    }
+
+    try {
+      let create = await cuponsModel.create(dadosForm);
+      console.log('Cupom cadastrado com sucesso:', create);
+      res.redirect("/");
+    } catch (e) {
+      console.log('Erro no cadastro do cupom:', e.message);
+      res.render("pages/cadastro-cupom", { listaErros: [{ msg: e.message }], valores: req.body });
+    }
+}
+,
+
 
 excluirEmpresa: async (req, res) => {
     const { idEmpresas } = req.params;
@@ -126,12 +160,15 @@ perfilAdm: async (req, res) => {
         // Obter todas as empresas e usuários
         const empresas = await empresaModel.findAll();  // Armazena as empresas
         const usuarios = await usuarioModel.findAll();  // Armazena os usuários
+        const cupons = await cuponsModel.findAll()
 
         // Renderiza a página com os dados do administrador, empresas, usuários e produtos
         res.render('pages/perfil-adm', {
             admin: admin[0],
             empresas,  // Passa as empresas para a view
-            usuarios,  // Passa os usuários para a view
+            usuarios,
+            cupons,
+            moment,  // Passa os usuários para a view
             solicitacoes,  // Passa os produtos para a view
             autenticado: req.session.autenticado,
             tipo: 'admin'

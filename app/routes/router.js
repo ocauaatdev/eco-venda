@@ -30,6 +30,13 @@ function verificaEmpresa(req, res, next){
     res.redirect('/?acesso=negado')
   }
 }
+function verificaAdmin(req, res, next){
+  if(req.session && req.session.autenticado && req.session.autenticado.id && req.session.autenticado.tipo === 'admin'){
+    next();
+  }else{
+    res.redirect('/?acessoadm=negado')
+  }
+}
 
 // Middleware para inicializar o carrinho
 router.use((req, res, next) => {
@@ -320,6 +327,24 @@ router.get('/api/pedido-entrega', async (req, res) => {
   router.post('/empresa/editar-produto/:id', produtosModel.editarProduto);
 
 // ===========================
+router.get('/cadastro-cupom', verificarUsuAutenticado,verificaAdmin, (req, res) => {
+  const valores = {
+    nomeCupom: '',
+    descontoCupons: '',
+    prazoCupons: '',
+    planoCupom: '',
+    categoriaCupom: '',
+  };
+  
+  res.render('pages/cadastro-cupom', { listaErros: [], valores });
+});
+
+router.post('/cadastro-cupom',
+  adminController.regrasValidacaoFormCup, verificarUsuAutenticado,
+  async (req, res) => {
+    adminController.cadastrarCupom(req, res);
+  });
+
 
 router.get('/cadastro-produto', verificarUsuAutenticado,verificaEmpresa, (req, res) => {
   const valores = {

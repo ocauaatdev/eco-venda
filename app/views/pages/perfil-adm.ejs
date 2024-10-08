@@ -32,6 +32,17 @@
                         <i class="fa-solid fa-bag-shopping"></i>
                         <span>Contas</span>
                     </li>
+
+                    <li>
+                        <a href="/cadastro-cupom">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Cadastrar Cupons</span>
+                        </a>
+                    </li>
+                    <li onclick="mostrarSecao('cupons')">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                        <span>Cupons</span>
+                    </li>
                 </ul>
                 <section class="parteInferior">
                     <button class="sairBtn" onclick="window.location.href='/logout'">Sair</button>
@@ -39,7 +50,26 @@
             </section> <!--barra lateral-->
 
             <section class="conteudo">
-                <section id="meus-produtos" class="secaoPerfil"></section>
+                <section id="configuracoes" class="secaoPerfil">
+                    <h2>Configurações da Conta</h2>
+                    <form action="/admin/atualizar" method="POST" id="userForm">
+                        <div>
+                            <label for="nome">Nome:</label>
+                            <span id="nomeTexto"><%= admin.nomeAdmin %></span>
+                            <input type="text" id="nome" name="nomeAdmin" value="<%= admin.nomeAdmin %>" style="display: none;">
+                        </div>
+
+                        <div>
+                            <label for="email">Email:</label>
+                            <span id="emailTexto"><%= admin.emailAdmin %></span>
+                            <input type="email" id="email" name="emailAdmin" value="<%= admin.emailAdmin %>" style="display: none;">
+                        </div>
+
+                        
+                    </form>
+                </section>
+
+                <section id="meus-produtos" class="secaoPerfil">
                     <h2>Aprovar Produtos</h2>
                     <div class="produtos-container">
                       <% solicitacoes.forEach(solicitacao => { %>
@@ -75,9 +105,9 @@
                         <% empresas.forEach(empresa => { %>
                         <div class="conta-card">
                             <div class="info-conta">
-                                <h4>Nome: <%= empresa.nomeEmpresa %></h4>
+                                <h4>Nome: <%= empresa.razaoSocial %></h4>
                                 <p>Email: <%= empresa.emailEmpresa %></p>
-                                <p>CNPJ: <%= empresa.cnpjEmpresa %></p>
+                                <p>CNPJ: <%= empresa.cpnjempresa %></p>
                             </div>
                             <div class="acoes-conta">
                                 <form action="/excluir-conta/empresa/<%= empresa.idEmpresas %>" method="POST">
@@ -87,7 +117,9 @@
                         </div>
                         <% }) %>
                     </div>
-                
+
+                    <h2>Contas de Clientes</h2>
+
                     <div class="contas-container">
                         <% usuarios.forEach(usuario => { %> <!-- Alterado de clientes para usuarios -->
                         <div class="conta-card">
@@ -104,6 +136,27 @@
                         <% }) %>
                     </div>
                 </section>
+
+                <section id="cupons" class="secaoPerfil">
+                    <h2>Cupons</h2>
+                
+                    <div class="contas-container">
+                        <% cupons.forEach(cupom => { %> <!-- Aqui, usamos 'cupons' em vez de 'usuarios' -->
+                        <div class="conta-card">
+                            <div class="info-conta">
+                                <h4>Nome do Cupom: <%= cupom.nomeCupom %></h4> <!-- Mostra o nome do cupom -->
+                                <p>Desconto: <%= cupom.descontoCupons %></p> <!-- Mostra o desconto do cupom -->
+                                <p>Validade: <%= new Date(cupom.prazoCupons).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric'}) %></p> <!-- Formata a data de validade -->
+                                <p>Categoria: <%= moment(cupom.prazoCupons).format('DD-MM-YYYY') %></p> <!-- Mostra a categoria do cupom -->
+                                <p>Plano: <%= cupom.planoCupom %></p> <!-- Mostra o plano do cupom -->
+                            </div>
+                            
+                        </div>
+                        <% }) %>
+                    </div>
+                </section>
+                
+
             </section>
                 
     </main>
