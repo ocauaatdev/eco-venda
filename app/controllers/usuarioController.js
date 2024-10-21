@@ -12,6 +12,7 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const enviarEmail = require("../public/js/email")
 const assinaturaModel = require("../models/assinaturaModel")
+const notificacaoModel = require("../models/notificacaoModel")
 
 
 const saltRounds = 12; // Número de rounds para o bcrypt
@@ -316,9 +317,13 @@ const usuarioController = {
             // Busque os pedidos do usuário com suas ocorrências
             const pedidos = await PedidoModel.findPedidosWithRastreiosAndOcorrencias(req.session.user.id);
     
-
-            const usuarioId = req.session.autenticado.id;  // ID do usuário autenticado
-            const assinatura = await assinaturaModel.getAssinatura(usuarioId)
+            const usuarioId = req.session.autenticado.id; // ID do usuário autenticado
+            const assinatura = await assinaturaModel.getAssinatura(usuarioId);
+    
+            // Filtrar notificações com base na query string
+            const status = req.query.lidas === 'true' ? true : req.query.lidas === 'false' ? false : null;
+            const notificacoes = await notificacaoModel.buscarNotificacoes(usuarioId, status);
+    
 
             res.render('pages/perfil-usuario', {
                 user: user[0],
@@ -326,7 +331,9 @@ const usuarioController = {
                 autenticado: req.session.autenticado,
                 tipo: 'usuario',
                 assinatura: assinatura,
-                moment
+                moment,
+                notificacoes,
+                status
             });
     
         } catch (err) {

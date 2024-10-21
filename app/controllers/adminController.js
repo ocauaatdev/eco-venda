@@ -106,6 +106,7 @@ cadastrarCupom: async (req, res) => {
       prazoCupons: moment(req.body.prazoCupons, "YYYY-MM-DD").format("YYYY-MM-DD"),
       categoriaCupom: req.body.categoriaCupom,
       planoCupom: req.body.planoCupom,
+      tipoCupom: req.body.tipoCupom,
     };
     console.log('Dados recebidos:', req.body);  // Adicione este log
 

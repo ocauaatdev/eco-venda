@@ -6,11 +6,15 @@ let resultadoDiv = document.getElementById('resultado-pesquisa');
 
 lupa.addEventListener('click', () => {
     boxBuscar.classList.add('ativar');
-    resultadoDiv.style.display = 'block';  // Certifique-se de exibir a div quando clicar na lupa
+    boxBuscar.style.border = 'solid 1px';
+    boxBuscar.style.borderColor = '#28B67E';
+    resultadoDiv.style.display = 'block';  // Exibir a div de resultados ao clicar na lupa
 });
 
 btnFechar.addEventListener('click', () => {
     boxBuscar.classList.remove('ativar');
+    boxBuscar.style.border = 'none';  // Remover a borda
+    boxBuscar.style.borderColor = 'none';  // Remover a cor da borda
     resultadoDiv.style.display = 'none';  // Esconder a div de resultados ao fechar
 });
 

@@ -1,9 +1,37 @@
-<form action="/recuperar-senha-empresa" method="POST">
-    <label for="email">Digite seu e-mail para recuperação de senha:</label>
-    <input type="email" name="e_mail" id="email" required>
-    <button type="submit" onclick="recuperarSenha()">Enviar</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/4494a50fc2.js" crossorigin="anonymous"></script>
 
+    <!-- CSS -->
+    <link rel="stylesheet" href="/css/cadastro.css">
+
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
+
+    <!-- Jquery Mascaras -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.js"></script>
+
+    <!-- Simple Notify -->
+     <!-- CSS -->
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
+
+     <link rel="stylesheet" href="/css/rec-senha.css">
+    <!-- JS -->
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+  <title>Recuperar senha</title>
+</head>
+<body>
+  <form action="/recuperar-senha-empresa" method="POST">
+    <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+    <h1>Recuperação de senha</h1>
+    <p>Digite seu e-mail no campo abaixo e lhe <br> enviaremos um e-mail.</p>
+    <input placeholder="Email" type="email" name="e_mail" id="email" required>
+    <button  placetype="submit" onclick="recuperarSenha()">Enviar</button>
+    <span>Ja tem uma conta? <a href="/login">Faça seu login</a></span>
+</form>
 <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
@@ -28,3 +56,7 @@
             })
           }
     </script>
+</body>
+</html>
+
+

@@ -9,6 +9,7 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/cadastro.css">
+    <link rel="stylesheet" href="/css/resetar-senha.css">
 
     <!-- Jquery -->
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script> 
@@ -23,12 +24,14 @@
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
 
-    <title>Cadastro Usuário</title>
+    <title>Nova senha</title>
 </head>
 <body>
     <form action="/reset-senha" method="POST">
         <input type="hidden" name="idClientes" value="<%= idClientes %>">
-        <h3 id="senhaTxt">Senha:</h3> 
+        <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+        <h1>Nova senha</h1>
+        <h3 id="senhaTxt">Digite sua nova senha:</h3> 
                 <div class="senha-container">
                     <input type="password" name="senha" id="senha" placeholder="Digite sua nova senha"  required>
                     <span class="eye-icon">
@@ -37,13 +40,13 @@
                 </div>
     
                 <!-- ============ Confirmar senha =========== -->
-                <h3 id="confirmTxt">Confirmar Senha:</h3>
-                <div class="confirm-container">
-                    <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente"  required>
-                    <span class="eye-icon">
-                        <i class="fa-solid fa-eye-slash fa-eye" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
-                    </span>
-                </div>
+        <h3 id="confirmTxt">Confirmar senha:</h3>
+            <div class="confirm-container">
+                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente"  required>
+                <span class="eye-icon">
+                    <i class="fa-solid fa-eye-slash fa-eye" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
+                </span>
+            </div>
         <button type="submit" onclick="resetarSenha()">Enviar</button>
     </form>
 </body>

@@ -24,6 +24,12 @@ var pool = require("../../config/pool-conexoes");
             }
         },
 
+        findClienteId: async (idPedido) => {
+            const query = `SELECT Clientes_idClientes FROM pedidos WHERE idPedidos = ?`;
+            const [result] = await pool.query(query, [idPedido]);
+            return result[0];  // Certifique-se de que ele está retornando o objeto correto
+        },
+
         createPedido: async (camposJson) => {
             try {
                 const [resultados] = await pool.query(

@@ -36,28 +36,28 @@
 
             <!-- ============ Nome da Empresa =========== -->
             <h3 id="empresaTxt">Nome da Empresa:</h3>
-            <input type="text" name="empresa" id="empresa" placeholder="Digite o nome da sua Empresa" value="<%= valores.empresa || '' %>" required> 
+            <input type="text" name="empresa" id="empresa"  value="<%= valores.empresa || '' %>" required> 
 
             <!-- ============ Email =========== -->
             <h3 id="emailTxt">E-mail:</h3>
-            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" value="<%= valores.e_mail || '' %>" required>
+            <input type="email" name="e_mail" id="e_mail"  value="<%= valores.e_mail || '' %>" required>
 
             <!-- ============ Telefone =========== -->
             <h3 id="telTxt">Telefone:</h3>
-            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" value="<%= valores.telefone || '' %>" required>
+            <input type="text" name="telefone" id="telefone"  value="<%= valores.telefone || '' %>" required>
 
             <!-- ============ CNPJ =========== -->
             <h3 id="cnpjTxt">CNPJ:</h3>
-            <input type="text" name="cnpj" id="cnpj" placeholder="Digite o CNPJ" value="<%= valores.cnpj || '' %>" required>
+            <input type="text" name="cnpj" id="cnpj"  value="<%= valores.cnpj || '' %>" required>
 
             <!-- ============ CEP =========== -->
             <h3 id="cepTxt">CEP:</h3>
-            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" value="<%= valores.cep || '' %>" required>
+            <input type="text" name="cep" id="cep"  value="<%= valores.cep || '' %>" required>
 
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
-                <input type="password" name="senha_empresa" id="senha_empresa" placeholder="Digite sua senha" value="<%= valores.senha_empresa || '' %>" required>
+                <input type="password" name="senha_empresa" id="senha_empresa"  value="<%= valores.senha_empresa || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye fa-eye-slash eye-senha" id="btn-senha-empresa" onclick="mostrarSenhaEmpresa()"></i>
                 </span>
@@ -66,7 +66,7 @@
             <!-- ============ Confirmar senha =========== -->
             <h3 id="confirmTxt">Confirmar Senha:</h3>
             <div class="confirm-container">
-                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" value="<%= valores.confirm_senha || '' %>" required>
+                <input type="password" name="confirm_senha" id="confirmSenha"  value="<%= valores.confirm_senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye fa-eye-slash" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
                 </span>

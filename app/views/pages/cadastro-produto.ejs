@@ -54,9 +54,12 @@
 
             <!-- Tamanho -->
             <section class="tamanhoOption">
-                <h3 class="tamanhoTxt">Tamanho do Produto:</h3><i class="fa-solid fa-circle-exclamation saibaMais"></i>
+                <h3 class="tamanhoTxt">Tamanho ou Dimensões do Produto:</h3><i class="fa-solid fa-circle-exclamation saibaMais"></i>
             </section>
-            <p class="tamanhoInfo" style="display: none;">A forma que você deve preencher é: "Pequeno" ou "Médio" ou "Grande" ou "Pequeno, Médio, Grande" ou em caso de moda "P,M,G,GG" ou "Sem tamanho específico"</p>
+            <p class="tamanhoInfo" style="display: none;">
+                A forma que você deve preencher é: "Pequeno" ou "Médio" ou "Grande" ou "P,M,G,GG" ou "Sem tamanho específico".<br>
+                Para dimensões, use o formato "30x60" ou "30x60, 40x70" para múltiplas dimensões.
+            </p>
             <input type="text" name="tamanhoProduto" id="tamanhoProduto" placeholder="Preencha conforme o padrão especificado" value="<%= valores.tamanhoProduto || '' %>" required>
 
             <!-- Adicione um campo de seleção para Categorias -->
@@ -77,6 +80,22 @@
         </form>
     </main>
 
+    <!-- SweetAlert -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<% if (typeof errorMessage !== 'undefined') { %>
+<script>
+    
+        Swal.fire({
+            icon: 'error',
+            title: 'Erro no cadastro',
+            text: '<%= errorMessage %>',
+            confirmButtonText: 'Ok'
+        });
+    
+</script>
+<% } %>
+    
     <script>
         function loadImg(event) {
             const output = document.getElementById('previewImg');

@@ -1,57 +1,5 @@
-// document.addEventListener("DOMContentLoaded", function() {
-//     // Função para validar o campo de tamanho do produto
-//     function validarTamanhoProduto(tamanho) {
-//         // Expressões regulares para verificar formatos válidos
-//         const formatosValidos = [
-//             /^(Pequeno|Médio|Grande)$/i,
-//             /^(Pequeno, Médio, Grande)$/i,
-//             /^(P|M|G|GG)$/i,
-//             /^(P,M,G,GG)$/i,
-//             /^(Sem tamanho específico)$/i
-//         ];
-
-//         // Verifica se o tamanho corresponde a qualquer um dos formatos válidos
-//         return formatosValidos.some(formato => formato.test(tamanho.trim()));
-//     }
-
-//     // Função para exibir notificação de erro
-//     function exibirErro(mensagem) {
-//         new Notify({
-//             status: 'error',
-//             title: 'Erro',
-//             text: mensagem,
-//             effect: 'fade',
-//             speed: 300,
-//             customClass: '',
-//             customIcon: '',
-//             showIcon: true,
-//             showCloseButton: true,
-//             autoclose: true,
-//             autotimeout: 3000,
-//             gap: 10,
-//             distance: 10,
-//             type: 3,
-//             position: 'right top'
-//         });
-//     }
-
-//     // Função para validar o formulário
-//     function validarFormulario(event) {
-//         const tamanhoProduto = document.getElementById("tamanhoProduto").value;
-
-//         if (!validarTamanhoProduto(tamanhoProduto)) {
-//             event.preventDefault(); // Impede o envio do formulário
-//             exibirErro('Por favor, preencha o tamanho do produto corretamente conforme as instruções.');
-//         }
-//     }
-
-//     // Associa a função de validação ao evento de submissão do formulário
-//     const formulario = document.querySelector('form');
-//     formulario.addEventListener('submit', validarFormulario);
-// });
-
 document.addEventListener("DOMContentLoaded", function() {
-    // Função para validar o campo de tamanho do produto
+    // Função para validar o campo de tamanho ou dimensões do produto
     function validarTamanhoProduto(tamanho) {
         // Expressões regulares para verificar formatos válidos
         const formatosValidos = [
@@ -59,7 +7,8 @@ document.addEventListener("DOMContentLoaded", function() {
             /^(Pequeno, Médio, Grande)$/i,
             /^(P|M|G|GG)$/i,
             /^(P,M,G,GG)$/i,
-            /^(Sem tamanho específico)$/i
+            /^(Sem tamanho específico)$/i,
+            /^(\d+x\d+)(,\s*\d+x\d+)*$/ // Para dimensões como 30x60, 40x70
         ];
 
         // Verifica se o tamanho corresponde a qualquer um dos formatos válidos
@@ -97,10 +46,10 @@ document.addEventListener("DOMContentLoaded", function() {
     function validarFormulario(event) {
         const tamanhoProduto = document.getElementById("tamanhoProduto").value;
 
-        // Valida o campo de tamanho do produto
+        // Valida o campo de tamanho ou dimensões do produto
         if (!validarTamanhoProduto(tamanhoProduto)) {
             event.preventDefault(); // Impede o envio do formulário
-            exibirErro('Por favor, preencha o tamanho do produto corretamente conforme as instruções.');
+            exibirErro('Por favor, preencha o tamanho ou as dimensões do produto corretamente conforme as instruções.');
             return;
         }
 

@@ -37,32 +37,32 @@
             </div>
             <!-- ============ Nome de Usuario =========== -->
             <h3 id="usuarioTxt">Nome de Usuário:</h3>
-            <input type="text" name="usuario" id="usuario" placeholder="Digite o seu nome de usuário" value="<%= valores.usuario || '' %>" required> 
+            <input type="text" name="usuario" id="usuario"  value="<%= valores.usuario || '' %>" required> 
 
             <!-- ============ Email =========== -->
             <h3 id="emailTxt">E-mail:</h3>
-            <input type="email" name="e_mail" id="e_mail" placeholder="Digite seu e-mail" value="<%= valores.e_mail || '' %>" required>
+            <input type="email" name="e_mail" id="e_mail"  value="<%= valores.e_mail || '' %>" required>
 
             <!-- ============ Telefone =========== -->
             <h3 id="telTxt">Telefone:</h3>
-            <input type="text" name="telefone" id="telefone" placeholder="Digite seu telefone" value="<%= valores.telefone || '' %>" required>
+            <input type="text" name="telefone" id="telefone"  value="<%= valores.telefone || '' %>" required>
 
             <!-- ============ CPF =========== -->
             <h3 id="cpfTxt">CPF:</h3>
-            <input type="text" name="cpf" id="cpf" placeholder="Digite seu CPF" value="<%= valores.cpf || '' %>" required>
+            <input type="text" name="cpf" id="cpf"  value="<%= valores.cpf || '' %>" required>
 
              <!-- ============ Data de Nascimento =========== -->
              <h3 id="nascTxt">Data de Nascimento:</h3>
-             <input type="date" name="nascimento" id="nascimento" placeholder="Digite sua data de nascimento" value="<%= valores.nascimento|| '' %>" required>
+             <input type="date" name="nascimento" id="nascimento"  value="<%= valores.nascimento|| '' %>" required>
 
             <!-- ============ CEP =========== -->
             <h3 id="cepTxt">CEP:</h3>
-            <input type="text" name="cep" id="cep" placeholder="Digite seu CEP" value="<%= valores.cep || '' %>" required>
+            <input type="text" name="cep" id="cep"  value="<%= valores.cep || '' %>" required>
 
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
-                <input type="password" name="senha" id="senha" placeholder="Digite sua senha" value="<%= valores.senha || '' %>" required>
+                <input type="password" name="senha" id="senha"  value="<%= valores.senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye-slash fa-eye eye-senha" id="btn-senha" onclick="mostrarSenha()"></i>
                 </span>
@@ -71,7 +71,7 @@
             <!-- ============ Confirmar senha =========== -->
             <h3 id="confirmTxt">Confirmar Senha:</h3>
             <div class="confirm-container">
-                <input type="password" name="confirm_senha" id="confirmSenha" placeholder="Digite sua senha novamente" value="<%= valores.confirm_senha || '' %>" required>
+                <input type="password" name="confirm_senha" id="confirmSenha"  value="<%= valores.confirm_senha || '' %>" required>
                 <span class="eye-icon">
                     <i class="fa-solid fa-eye-slash fa-eye" id="btn-confirm-senha" onclick="mostrarConfirmSenha()"></i>
                 </span>

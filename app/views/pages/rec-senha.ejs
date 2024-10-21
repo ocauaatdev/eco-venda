@@ -18,15 +18,19 @@
      <!-- CSS -->
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.css" />
 
+     <link rel="stylesheet" href="/css/rec-senha.css">
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
   <title>Recuperar senha</title>
 </head>
 <body>
   <form action="/recuperar-senha" method="POST">
-    <label for="email">Digite seu e-mail para recuperação de senha:</label>
-    <input type="email" name="e_mail" id="email" required>
-    <button type="submit" onclick="recuperarSenha()">Enviar</button>
+    <img class="logo" src="/imagem/Logo/LogoLado Branco.png" alt="">
+    <h1>Recuperação de senha</h1>
+    <p>Digite seu e-mail no campo abaixo e lhe <br> enviaremos um e-mail.</p>
+    <input placeholder="Email" type="email" name="e_mail" id="email" required>
+    <button  placetype="submit" onclick="recuperarSenha()">Enviar</button>
+    <span>Ja tem uma conta? <a href="/login">Faça seu login</a></span>
 </form>
 <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
     <script>

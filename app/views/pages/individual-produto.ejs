@@ -19,41 +19,64 @@
             </section>
             <section class="produtoInfo">
                 <h3 class="nomeProduto"><%= produto.tituloProd %></h3>
-                <h2>R$<%= produto.valorProd %></h2>
-                <h1>6 x de R$<%= (produto.valorProd / 6).toFixed(2) %> + juros no cartão</h1>
 
-                <h3>Tamanhos disponíveis:</h3>
-                
-                <% 
-                const tamanhos = produto.tamanhoProd ? produto.tamanhoProd.split(',') : [];
-                const tamanhosDisponiveis = ['Pequeno', 'Médio', 'Grande', 'P', 'M', 'G', 'GG'];
-                let tamanhosExibidos = [];
+                <p class="descPequena"><%= produto.descricaoProd %></p>
+                <span class="mais-detalhes" onclick="rolarParaDescricao()">(Mais detalhes)</span>
 
-                if (tamanhos.length > 0) {
-                    tamanhos.forEach(tamanho => {
-                        const tamanhoFormatado = tamanho.trim();
-                        if (tamanhosDisponiveis.includes(tamanhoFormatado)) {
-                            tamanhosExibidos.push(tamanhoFormatado);
-                        }
-                    });
-                    
-                    if (tamanhosExibidos.length > 0) { %>
-                        <% tamanhosExibidos.forEach(tamanho => { %>
-                            <h3><%= tamanho %></h3>
-                        <% }); %>
-                    <% } else { %>
-                        <h3>Sem tamanho específico</h3>
-                    <% } 
-                } else { %>
-                    <h3>Sem tamanho específico</h3>
-                <% } %>
+                <h3>Tamanhos:</h3>
+<section class="tamanhosContainer">
+<%
+const tamanhos = produto.tamanhoProd ? produto.tamanhoProd.split(',') : [];
+const tamanhosDisponiveis = ['Pequeno', 'Médio', 'Grande', 'P', 'M', 'G', 'GG'];
+let tamanhosExibidos = [];
+let dimensoesExibidas = [];
 
+// Verifica se o tamanho é "Sem tamanho específico"
+if (tamanhos.includes("Sem tamanho específico")) {
+    tamanhosExibidos.push("Sem tamanho específico");
+}
+
+// Verifica os tamanhos e dimensões
+if (tamanhos.length > 0) {
+    tamanhos.forEach(tamanho => {
+        const tamanhoFormatado = tamanho.trim();
+
+        // Verifica se é um dos tamanhos convencionais
+        if (tamanhosDisponiveis.includes(tamanhoFormatado)) {
+            tamanhosExibidos.push(tamanhoFormatado);
+        }
+        // Verifica se o tamanho segue o formato de dimensões (ex: 30x60)
+        else if (/^\d+x\d+$/.test(tamanhoFormatado)) {
+            dimensoesExibidas.push(tamanhoFormatado);
+        }
+    });
+
+    // Exibe os tamanhos convencionais, se houver
+    if (tamanhosExibidos.length > 0) { %>
+        <% tamanhosExibidos.forEach(tamanho => { %>
+            <h3><%= tamanho %></h3>
+        <% }); %>
+    <% }
+
+    // Exibe as dimensões, se houver
+    if (dimensoesExibidas.length > 0) { %>
+        <% dimensoesExibidas.forEach(dimensao => { %>
+            <h3><%= dimensao %></h3>
+        <% }); %>
+    <% } %>
+<% } else { %>
+    <h3>Sem tamanho específico</h3>
+<% } %>
+</section>
+
+                <h1><small>6 x de R$</small><%= (produto.valorProd / 6).toFixed(2) %></h1>
+                <h2>à vista R$<%= produto.valorProd %></h2>       
 
                 <section class="buttons">
-                <a class="adicionarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>">
-                <button class="adicionarBtn">Comprar</button>
-                </a>
-                </section>
+    <a class="comprarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>&redirect=true"><button class="comprarBtn">Comprar</button></a>
+    
+    <a class="adicionarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>"><button class="adicionarBtn">Adicionar ao carrinho</button></a>
+</section>
                 
             </section>
         </section>
@@ -68,27 +91,37 @@
     </main>
 
     <script>
-    document.querySelector('.adicionarCarrinho').addEventListener('click', function(event) {
-        event.preventDefault(); // Previne o redirecionamento imediato
+    // Adiciona comportamento apenas para o botão de "Adicionar ao carrinho" com notificação
+    document.querySelectorAll('.adicionarCarrinho').forEach(function(element) {
+        element.addEventListener('click', function(event) {
+            event.preventDefault(); // Previne o redirecionamento imediato
 
-        // Exibe a notificação de sucesso
-        new Notify({
-            status: 'success',
-            title: 'Adicionado ao carrinho!',
-            text: 'Agora você pode ir até seu carrinho e realizar a compra do seu produto.',
-            effect: 'fade',
-            speed: 300,
-            autoclose: true,
-            autotimeout: 1800,
-            position: 'right top',
-            gap: 10
+            // Exibe a notificação de sucesso
+            new Notify({
+                status: 'success',
+                title: 'Adicionado ao carrinho!',
+                text: 'Agora você pode ir até seu carrinho e realizar a compra do seu produto.',
+                effect: 'fade',
+                speed: 300,
+                autoclose: true,
+                autotimeout: 1800,
+                position: 'right top',
+                gap: 10
+            });
+
+            // Aguarda um tempo antes de redirecionar o usuário
+            setTimeout(function() {
+                window.location.href = event.target.closest('a').href;
+            }, 1000); // Espera 1 segundo antes de redirecionar
         });
-
-        // Aguarda um tempo antes de redirecionar o usuário
-        setTimeout(function() {
-            window.location.href = event.target.closest('a').href;
-        }, 1000); // Espera 1 segundo antes de redirecionar
     });
+</script>
+
+<script>
+function rolarParaDescricao() {
+    const descricaoCompleta = document.querySelector('.infoContainer'); // Seção onde está a descrição completa
+    descricaoCompleta.scrollIntoView({ behavior: 'smooth' }); // Rola suavemente até a seção
+}
 </script>
     <%- include('../partial/footer'); %>
     <%- include('../partial/scripts-essenciais'); %>

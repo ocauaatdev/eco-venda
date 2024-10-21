@@ -2,26 +2,55 @@ const pedidoModel  = require("../models/pedidoModel");
 const { carrinho } = require("../util/carrinho");
 const rastreioModel = require('../models/rastreioModel');  // Importando o modelo de rastreio
 const moment = require("moment");
+const cuponsModel = require('../models/cuponsModel')
+const notificacaoModel = require("../models/notificacaoModel");
 
 const pedidoController = {
 
     gravarPedido: async (req, res) => {
         try {
             const carrinhoSession = req.session.carrinho;
+            console.log('Sessão do carrinho:', carrinhoSession);
     
+            // Verifica se o carrinho está vazio
+            if (!carrinhoSession || carrinhoSession.length === 0) {
+                return res.redirect("/carrinho"); // Redireciona o usuário para o carrinho se não houver itens
+            }
+    
+            // Verifica se há um cupom aplicado na sessão
+            const cupomAplicado = req.session.cupomAplicado;
+            let desconto = 0;
+    
+            // Se houver um cupom, define o valor do desconto
+            if (cupomAplicado && typeof cupomAplicado.desconto === 'number') {
+                desconto = cupomAplicado.desconto;
+                console.log(`Desconto aplicado: ${desconto}`);
+            }
+    
+            // Calcula o total do pedido somando os produtos no carrinho
+            const totalSemDesconto = carrinhoSession.reduce((acc, item) => acc + (item.preco * item.qtde), 0);
+            console.log(`Total sem desconto: ${totalSemDesconto}`);
+    
+            // Calcula o total com desconto (se houver)
+            const totalComDesconto = Math.max(totalSemDesconto - desconto, 0);
+            console.log(`Total com desconto: ${totalComDesconto}`);
+    
+            // Prepara os dados do pedido
             const camposJsonPedido = {
                 data_pedido: moment().format("YYYY-MM-DD"),
                 clientes_idClientes: req.session.autenticado.id,
-                statusPedido: 1,
-                total_pedido: carrinhoSession.reduce((acc, item) => acc + (item.preco * item.qtde), 0).toFixed(2),
+                statusPedido: 1, // Status inicial do pedido
+                total_pedido: totalComDesconto.toFixed(2), // Total com desconto aplicado
                 status_pagamento: req.query.status,
                 id_pagamento: req.query.payment_id,
-                local_entrega: req.session.endereco ? req.session.endereco.cep : null // Verifica se o endereço existe
+                local_entrega: req.session.endereco ? req.session.endereco.cep : null // Verifica se o endereço foi inserido
             };
     
-            var create = await pedidoModel.createPedido(camposJsonPedido);
-            console.log('Pedido no banco de dados:', create);
+            // Cria o pedido no banco de dados
+            const create = await pedidoModel.createPedido(camposJsonPedido);
+            console.log('Pedido salvo no banco de dados:', create);
     
+            // Salva os itens do pedido
             carrinhoSession.forEach(async element => {
                 const camposJsonItemPedido = {
                     pedidos_idPedidos: create.insertId,
@@ -34,8 +63,13 @@ const pedidoController = {
                 console.log('Salvando item do pedido:', camposJsonItemPedido);
                 await pedidoModel.createItemPedido(camposJsonItemPedido);
             });
+
+            // Adicionar notificação ao banco de dados
+            const mensagemNotificacao = "Sua compra foi realizada com sucesso! Aguarde que a empresa responsável pelo produto irá enviar as ocorrências e informações de rastreio.";
+            const clienteId = req.session.autenticado.id;
+            await notificacaoModel.criarNotificacaoCompra(clienteId, mensagemNotificacao);
     
-            carrinho.limparCarrinho(req);
+            // Redirecionar após o sucesso
             res.redirect("/");
         } catch (e) {
             console.log(e);
@@ -70,12 +104,14 @@ visualizarItensPedido: async (req, res) => {
     // Método para atualizar o rastreio e ocorrências do pedido
 atualizarPedido: async (req, res) => {
     try {
-        const { idPedido, codigo_rastreio, andamentoPedido, dataOcorrencia } = req.body;
-        console.log("Dados recebidos no formulário:", req.body); // Log para verificar os dados
+        const { idPedido, codigo_rastreio, andamentoPedido } = req.body;
+        console.log("Dados recebidos no formulário:", req.body);
 
-        const empresaId = req.session.autenticado.id; // ID da empresa logada
+        const empresaId = req.session.autenticado.id;
 
-        // Apenas atualize o rastreio e o andamento do pedido, sem tocar no total_pedido
+        // Captura a data e horário atual no momento da notificação
+        const dataOcorrencia = moment().format('YYYY-MM-DD HH:mm:ss');
+
         const rastreioData = {
             codigo_rastreio,
             dataocorrencia: dataOcorrencia,
@@ -85,7 +121,24 @@ atualizarPedido: async (req, res) => {
         };
 
         await rastreioModel.updateRastreio(rastreioData);
-        res.redirect('/perfil-empresa');  // Redireciona após atualizar
+        
+        // Buscar o ID do cliente associado ao pedido
+        const pedido = await pedidoModel.findClienteId(idPedido);
+        const clienteId = pedido.Clientes_idClientes;
+
+        // Criar a mensagem de notificação
+        const mensagem = `A empresa (ID ${empresaId}) atualizou o pedido ${idPedido}.`;
+
+        // Inserir notificação no banco de dados
+        await notificacaoModel.criarNotificacaoPedido({
+            pedidos_idPedidos: idPedido,
+            empresas_idEmpresas: empresaId,
+            Clientes_idClientes: clienteId,
+            mensagem
+        });
+
+        // Redireciona após atualizar
+        res.redirect('/perfil-empresa');
     } catch (error) {
         console.error("Erro ao atualizar o pedido:", error);
         res.status(500).send("Erro ao atualizar o pedido");

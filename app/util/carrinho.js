@@ -50,7 +50,8 @@ const carrinho = {
                         "preco": parseFloat(produtos[0].valorProd),
                         "nome_produto": produtos[0].tituloProd,
                         "imagemProduto": produtos[0].imagemProd.toString('base64'), // Converte o buffer para base64
-                        "tamanhoProd": produtos[0].tamanhoProd // Adicionando tamanho ao item
+                        "tamanhoProd": produtos[0].tamanhoProd,// Adicionando tamanho ao item
+                        "categoriaProd": produtos[0].Categorias_idCategorias
                     });
                 }
             } else {
@@ -65,7 +66,8 @@ const carrinho = {
                             "preco": parseFloat(produtos[0].valorProd),
                             "nome_produto": produtos[0].tituloProd,
                             "imagemProduto": produtos[0].imagemProd.toString('base64'), // Converte o buffer para base64
-                            "tamanhoProd": produtos[0].tamanhoProd // Adicionando tamanho ao item
+                            "tamanhoProd": produtos[0].tamanhoProd, // Adicionando tamanho ao item
+                            "categoriaProd": produtos[0].Categorias_idCategorias
                         });
                     }
                 } else {

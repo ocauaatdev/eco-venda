@@ -111,21 +111,30 @@ body {
     display: block;
 }
 
-h2 {
-    color: #063C46;
-    font-size: 35px;
-    font-weight: 600;
-    margin-bottom: 20px;
-}
-
 form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
+.dadosPessoais h2, .enderecoInfo h2{
+    font-size: 25px;
+    width: 100%;
+    border-bottom: 1px solid;
+    color: #555;
+    border-color: #555;
+}
+.dadosPessoais label, .enderecoInfo label{
+    color: #555;
+}
+h2 {
+    color: #063C46;
+    font-size: 35px;
+    font-weight: 400;
+    margin-bottom: 20px;
+}
 
 label {
-    font-weight: 500;
+    font-weight: 400;
     color: #063C46;
     margin-bottom: 5px;
     font-size: 20px;
@@ -201,6 +210,146 @@ button {
     background-color: #999;
 }
 
+/* ============================== Seção de notificações do cliente ========================================= */
+
+#notificacoes {
+    margin-top: 20px;
+}
+
+#notificacoes ul {
+    list-style: none;
+    padding: 0;
+}
+
+#notificacoes ul li {
+    background-color: #f8f9fa; /* Fundo suave */
+    border: 1px solid #ddd; /* Borda leve */
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#notificacoes ul li:hover {
+    background-color: #f1f1f1;
+    transform: translateY(-3px);
+}
+
+#notificacoes ul li .icone-notificacao {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #fc7f2d; /* Cor do ícone */
+}
+
+#notificacoes ul li .mensagem-notificacao {
+    font-size: 16px;
+    color: #333;
+    flex-grow: 1; /* Permite que a mensagem ocupe mais espaço */
+}
+
+#notificacoes ul li .data-notificacao {
+    font-size: 14px;
+    color: #888;
+}
+
+/* Estilo para quando não há notificações */
+#notificacoes p {
+    text-align: center;
+    font-size: 16px;
+    color: #555;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+.truncate{
+    white-space: nowrap;       /* Evita a quebra de linha */
+    overflow: hidden;          /* Esconde o texto que ultrapassa o limite do container */
+    text-overflow: ellipsis;   /* Adiciona os três pontinhos (...) no final do texto */
+    width: 200px;  
+}
+/* Estilo para notificação não lida */
+.notificacao-nao-lida {
+    font-weight: bold;
+    background-color: #f5f5f5; /* Fundo claro */
+}
+
+.notificacao-lida {
+    font-weight: normal;
+    background-color: white;
+}
+
+.filtros-notificacoes{
+    margin-bottom: 10px;
+}
+
+.filtros-notificacoes button:hover{
+    background-color: #d2d2d2;
+}
+
+/* Modal para exibir o conteúdo da notificação */
+.modal {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.notificacao-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px solid;
+    cursor: pointer;
+}
+.notificacao-item.nao-lida {
+    border-color: #FC7F2D; /* Laranja para não lidas */
+}
+.notificacao-item.lida {
+    border-color: #CCCCCC; /* Cinza para lidas */
+}
+/* Modal */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    width: 50%;
+    max-width: 500px;
+}
+.fechar-modal {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* ============================ Fim Estilo das Notificações ============================ */
 
 /* =========================== Seção de produtos cadastrados empresa ======================================= */
 
@@ -325,36 +474,26 @@ button {
     text-overflow: ellipsis; 
     width: 200px; 
 }
-.tabelaPedidos{
-    width: 100%;
-    table-layout: fixed; /* Faz a tabela usar um layout fixo */
-    border-collapse: collapse; /* Remove espaços entre as células */
-    padding: 10px;
-    border: 1px solid #888;
-}
-.tabelaPedidos th{
-    background-color: #07565e;
-    color: #fff;
-}
-.tabelaPedidos td{
-    background-color: #ffffff;
-}
-.tabelaPedidos th, td {
-    padding: 10px; /* Espaçamento interno */
-    text-align: left; /* Alinhamento do texto */
-    border: 1px solid #ddd; /* Borda das células */
-}
+
+/* FORM NOTIFICAR */
+/* Centralizando o .formNotificar */
 .formNotificar{
-    width: 60%;
-    position: absolute; /* Faz com que o formulário seja posicionado em relação ao .conteudo */
-    top: 50%; /* Centraliza verticalmente */
-    left: 50%; /* Centraliza horizontalmente */
-    transform: translate(-50%, -50%); /* Ajusta o deslocamento para que o centro do elemento esteja no centro da tela */
+    display: none; /* Escondido por padrão */
+    position: fixed; 
+    z-index: 1; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); /* Fundo com transparência */
+}
+.formContainer{
     background-color: #fff;
+    margin: 10% auto;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    z-index: 10; /* Garante que o formulário fique por cima */
+    border: 1px solid #888;
+    width: 40%;
 }
 .formNotificar input{
     width: 100%;
@@ -373,20 +512,219 @@ button {
 .formNotificar input::placeholder{
     font-size: 13px;
 }
+
+
+.ordenacao select{
+    -webkit-appearance: none; 
+    -moz-appearance: none; 
+    appearance: none; 
+    border: none; 
+    background-color: #F0F0F0; 
+    padding: 10px; 
+    outline: none; 
+}
+
+/* ACOMPANHAR PEDIDOS CLIENTE */
+.cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pedido-card {
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: calc(33.333% - 20px); /* 3 cards por linha */
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    transition: 0.5s;
+}
+.pedido-card:hover{
+    transform: scale(1.1);
+}
+
+.pedido-card .card-header {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+
+.pedido-card .card-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.pedido-card .card-body {
+    padding: 10px;
+}
+
+.pedido-card .card-body p {
+    margin: 10px 0;
+    font-size: 0.95rem;
+}
+
+.pedido-card .card-body p strong {
+    color: #555;
+}
+
+/* PRODUTOS VENDIDOS EMPRESA */
+.empresa-cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.pedido-card-empresa {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    width: calc(50% - 20px); /* Dois cards por linha */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.pedido-card-empresa .card-header {
+    background-color: #ececec;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    border-radius: 8px 8px 0 0;
+}
+
+.pedido-card-empresa .card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+}
+
+.pedido-card-empresa .card-body {
+    padding: 10px;
+}
+
+.pedido-card-empresa .card-body p {
+    margin: 10px 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.pedido-card-empresa .card-body p strong {
+    color: #000;
+}
+
+.pedido-card-empresa .card-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.pedido-card-empresa .notificarBtn {
+    background-color: #E86C1B;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pedido-card-empresa .notificarBtn:hover {
+    background-color: #cc580b;
+}
+
+/* Estilização da seção de assinatura */
+#assinatura {
+    margin: 20px 0;
+    padding: 20px;
+    border: 1px solid #CCCCCC;
+    border-radius: 8px;
+    background-color: #FFFFFF;
+}
+
+#assinatura h2 {
+    color: #063C46;
+    margin-bottom: 15px;
+}
+
+#assinatura div {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.botoesAcao {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.botoesAcao button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+#cancelarAssinaturaBtn {
+    background-color: #FC7F2D; /* Cor do botão de cancelar */
+    color: white;
+    transition: background-color 0.3s;
+}
+
+#cancelarAssinaturaBtn:hover {
+    background-color: #e67300; /* Cor ao passar o mouse */
+}
+
+button a {
+    text-decoration: none;
+    color: white;
+}
+
+button a:hover {
+    text-decoration: underline; /* Sublinhar ao passar o mouse */
+}
+
+#assinatura p {
+    font-size: 1.1em;
+    margin: 0;
+}
+
+#assinatura strong {
+    font-weight: bold;
+}
+
+/* Estilização para mensagens e botões em caso de falta de assinatura */
+#assinatura div p {
+    color: #FC7F2D; /* Cor da mensagem */
+    font-size: 1.2em;
+}
+
 /* Responsividade */
 @media(max-width: 1440px) {
-    .barraLateral {
+    /* .barraLateral {
         width: 40%;
-    }
+    } */
 }
 
 @media(max-width: 768px) {
-    .barraLateral {
-        width: 100%;
-        height: auto;
+    .barraLateral span{
+        display: none;
     }
+    .pedido-card {
+        width: calc(50% - 20px); /* 2 cards por linha no tablet */
+    }
+}
 
-    .conteudo {
-        margin: 10px;
+@media (max-width: 576px) {
+    .pedido-card {
+        width: 100%; /* 1 card por linha no mobile */
     }
 }

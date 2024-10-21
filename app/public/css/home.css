@@ -29,7 +29,7 @@
 }
 .info-home h2{
     text-transform: uppercase;
-    font-weight: 900;
+    font-weight: 600;
     font-size: 55px;
 }
 .home-button{
@@ -56,7 +56,8 @@
     text-align: center;
     text-transform: uppercase;
     color: #092930;
-    margin-top: 2%;
+    margin-top: 5%;
+    font-weight: 500;
 }
 .anuncioCategorias{
     width: 100%;
@@ -126,11 +127,11 @@
 }
 .quemSomostxt h1{
     color: #FF802B;
-    font-weight: 800;
+    font-weight: 500;
 }
 .quemSomosImg img{
     border-radius: 20px;
-    margin-left: 5%;
+    margin-left: 100px;
 }
 .produtosDestaques{
     font-size: 30px;
@@ -138,6 +139,7 @@
     text-transform: uppercase;
     color: #092930;
     margin-top: 2%;
+    font-weight: 500;
 }
 /*=========Produtos============*/
 

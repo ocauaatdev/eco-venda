@@ -48,59 +48,71 @@
                 <section id="configuracoes" class="secaoPerfil">
                     <h2>Configurações da Conta</h2>
                     <form action="/usuario/atualizar" method="POST" id="userForm">
-                        <div>
-                            <label for="nome">Nome:</label>
-                            <span id="nomeTexto"><%= user.nomeCliente %></span>
-                            <input type="text" id="nome" name="nomeCliente" value="<%= user.nomeCliente %>" style="display: none;">
-                        </div>
 
-                        <div>
-                            <label for="email">Email:</label>
-                            <span id="emailTexto"><%= user.emailCliente %></span>
-                            <input type="email" id="email" name="emailCliente" value="<%= user.emailCliente %>" style="display: none;">
-                        </div>
+                        <section class="dadosPessoais">
+                            <h2>Dados Pessoais</h2>
 
-                        <div>
-                            <label for="telefone">Telefone:</label>
-                            <span id="telefoneTexto"><%= user.celularCliente %></span>
-                            <input type="tel" id="telefone" name="celularCliente" value="<%= user.celularCliente %>" style="display: none;">
-                        </div>
+                            <div>
+                                <label for="nome">Nome:</label>
+                                <span id="nomeTexto"><%= user.nomeCliente %></span>
+                                <input type="text" id="nome" name="nomeCliente" value="<%= user.nomeCliente %>" style="display: none;">
+                            </div>
+    
+                            <div>
+                                <label for="email">Email:</label>
+                                <span id="emailTexto"><%= user.emailCliente %></span>
+                                <input type="email" id="email" name="emailCliente" value="<%= user.emailCliente %>" style="display: none;">
+                            </div>
+    
+                            <div>
+                                <label for="telefone">Telefone:</label>
+                                <span id="telefoneTexto"><%= user.celularCliente %></span>
+                                <input type="tel" id="telefone" name="celularCliente" value="<%= user.celularCliente %>" style="display: none;">
+                            </div>
+    
+                            <div>
+                                <label for="cpf">CPF:</label>
+                                <span id="cpfTexto"><%= user.cpfCliente %></span>
+                                <input type="text" id="cpf" name="cpfCliente" value="<%= user.cpfCliente %>" style="display: none; border: none;" readonly>
+                            </div>
 
-                        <div>
-                            <label for="cpf">CPF:</label>
-                            <span id="cpfTexto"><%= user.cpfCliente %></span>
-                            <input type="text" id="cpf" name="cpfCliente" value="<%= user.cpfCliente %>" style="display: none; border: none;" readonly>
-                        </div>
+                        </section>
+                        
+                        <section class="enderecoInfo">
+                            <h2>Endereço</h2>
 
-                        <div>
-                            <label for="cep">CEP:</label>
-                            <span id="cepTexto"><%= user.cepCliente %></span>
-                            <input type="text" id="cep" name="cepCliente" value="<%= user.cepCliente %>" style="display: none;">
-                        </div>   
+                            <div>
+                                <label for="cep">CEP:</label>
+                                <span id="cepTexto"><%= user.cepCliente %></span>
+                                <input type="text" id="cep" name="cepCliente" value="<%= user.cepCliente %>" style="display: none;">
+                            </div>   
+    
+                            <div>
+                                <label for="logradouro">Logradouro:</label>
+                                <span id="logradouroTexto"><%= user.logradouroCliente %></span>
+                                <input type="text" id="logradouro" name="logradouroCliente" value="<%= user.logradouroCliente %>" style="display: none; border: none;" readonly>
+                            </div>
+    
+                            <div>
+                                <label for="bairro">Bairro:</label>
+                                <span id="bairroTexto"><%= user.bairroCliente %></span>
+                                <input type="text" id="bairro" name="bairroCliente" value="<%= user.bairroCliente %>" style="display: none; border: none;" readonly>
+                            </div>
+    
+                            <div>
+                                <label for="cidade">Cidade:</label>
+                                <span id="cidadeTexto"><%= user.cidadeCliente %></span>
+                                <input type="text" id="cidade" name="cidadeCliente" value="<%= user.cidadeCliente %>" style="display: none; border: none;" readonly>
+                            </div>
+    
+                            <div>
+                                <label for="uf">Uf:</label>
+                                <span id="ufTexto"><%= user.ufCliente %></span>
+                                <input type="text" id="uf" name="ufCliente" value="<%= user.ufCliente %>" style="display: none; border: none;" readonly>
+                            </div>
 
-                        <div>
-                            <label for="logradouro">Logradouro:</label>
-                            <span id="logradouroTexto"><%= user.logradouroCliente %></span>
-                            <input type="text" id="logradouro" name="logradouroCliente" value="<%= user.logradouroCliente %>" style="display: none; border: none;" readonly>
-                        </div>
-
-                        <div>
-                            <label for="bairro">Bairro:</label>
-                            <span id="bairroTexto"><%= user.bairroCliente %></span>
-                            <input type="text" id="bairro" name="bairroCliente" value="<%= user.bairroCliente %>" style="display: none; border: none;" readonly>
-                        </div>
-
-                        <div>
-                            <label for="cidade">Cidade:</label>
-                            <span id="cidadeTexto"><%= user.cidadeCliente %></span>
-                            <input type="text" id="cidade" name="cidadeCliente" value="<%= user.cidadeCliente %>" style="display: none; border: none;" readonly>
-                        </div>
-
-                        <div>
-                            <label for="uf">Uf:</label>
-                            <span id="ufTexto"><%= user.ufCliente %></span>
-                            <input type="text" id="uf" name="ufCliente" value="<%= user.ufCliente %>" style="display: none; border: none;" readonly>
-                        </div>
+                        </section>
+                        
                         <div class="botoesAcao">
                             <button type="button" id="editarBtn" onclick="toggleEdit()">Editar informações</button>
                             <button type="submit" id="atualizarBtn" style="display: none;">Salvar</button>
@@ -112,36 +124,64 @@
                 <!-- Outras seções podem ser adicionadas aqui -->
                 <section id="notificacoes" class="secaoPerfil">
                     <h2>Notificações</h2>
+                    <div class="filtros-notificacoes">
+                        <button onclick="filtrarNotificacoes('todas')">Todas</button>
+                        <button onclick="filtrarNotificacoes(true)">Lidas</button>
+                        <button onclick="filtrarNotificacoes(false)">Não Lidas</button>
+                    </div>
+                    <ul>
+                        <% if (notificacoes && notificacoes.length > 0) { %>
+                            <% notificacoes.forEach(notificacao => { %>
+                                <li 
+                                    class="notificacao-item <% if (!notificacao.lida) { %> nao-lida <% } %>" 
+                                    onclick="abrirModalNotificacao('<%= notificacao.mensagem %>', <%= notificacao.idNotificacoes %>)"
+                                    style="border-color: <% if (!notificacao.lida) { %>#FC7F2D<% } else { %>#CCCCCC<% } %>;">
+                                    <i class="fa-solid fa-bell icone-notificacao" style="color: <% if (!notificacao.lida) { %>#FC7F2D<% } else { %>#CCCCCC<% } %>;"></i>
+                                    <span class="mensagem-notificacao truncate"><%= notificacao.mensagem %></span>
+                                    <span class="data-notificacao">
+                                        <%= new Date(notificacao.dataNotificacao).toLocaleString('pt-BR', { 
+                                            day: '2-digit', month: '2-digit', year: 'numeric', 
+                                            hour: '2-digit', minute: '2-digit' 
+                                        }) %>
+                                    </span>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <p>Sem notificações no momento.</p>
+                        <% } %> 
+                    </ul>                    
                 </section>
+                
+                <!-- Modal para exibir a notificação -->
+                <div id="modalNotificacao" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="fechar-modal" onclick="fecharModal()">&times;</span>
+                        <p id="conteudoNotificacao"></p>
+                        <button id="btnExcluir" onclick="excluirNotificacao()" style="display: none;">Excluir Notificação</button>
+                    </div>
+                </div>
 
+                <!-- ACOMPANHAR PEDIDOS -->
                 <section id="acompanhamento" class="secaoPerfil">
                     <h2>Acompanhar pedidos</h2>
                     
                     <% if (pedidos.length > 0) { %>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>ID Pedido</th>
-                                <th>Data do Pedido</th>
-                                <th>Total</th>
-                                <th>Empresa</th>
-                                <th>Códigos de Rastreamento</th>
-                                <th>Ocorrências</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% pedidos.forEach(pedido => { %>
-                            <tr>
-                                <td><%= pedido.idPedidos %></td>
-                                <td><%= moment(pedido.data_pedido).format("DD/MM/YYYY") %></td>
-                                <td>R$ <%= pedido.total_pedido %></td>
-                                <td><%= pedido.razaoSocial || "Empresa ainda não enviou ocorrências" %></td>
-                                <td><%= pedido.codigos_rastreio || "Código de rastreio indisponível no momento" %></td>
-                                <td><%= pedido.ocorrencias || "Aguardando ocorrências" %></td>
-                            </tr>
-                            <% }); %>
-                        </tbody>
-                    </table>
+                    <div class="cards-container">
+                        <% pedidos.forEach(pedido => { %>
+                        <div class="pedido-card">
+                            <div class="card-header">
+                                <h3>Pedido ID: <%= pedido.idPedidos %></h3>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Data do Pedido:</strong> <%= moment(pedido.data_pedido).format("DD/MM/YYYY") %></p>
+                                <p><strong>Total:</strong> R$ <%= pedido.total_pedido %></p>
+                                <p><strong>Empresa:</strong> <%= pedido.razaoSocial || "Empresa ainda não enviou ocorrências" %></p>
+                                <p><strong>Códigos de Rastreamento:</strong> <%= pedido.codigos_rastreio || "Código de rastreio indisponível no momento" %></p>
+                                <p><strong>Ocorrências:</strong> <%= pedido.ocorrencias || "Aguardando ocorrências" %></p>
+                            </div>
+                        </div>
+                        <% }); %>
+                    </div>
                     <% } else { %>
                     <p>Você ainda não fez nenhum pedido.</p>
                     <% } %>
@@ -156,8 +196,9 @@
                             <strong>Dias restantes:</strong> <%= assinatura.diasRestantes >= 0 ? assinatura.diasRestantes + ' dias' : 'Assinatura expirada' %>
                         </div>
                         <div class="botoesAcao">
-                            <button onclick="mudarPlano()">Mudar Plano</button>
-                            <button onclick="cancelarAssinatura()">Cancelar Assinatura</button>
+                            <form id="cancelarAssinaturaForm" action="/cancelar-assinatura" method="post">
+                                <button type="button" id="cancelarAssinaturaBtn">Cancelar Assinatura</button>
+                            </form>
                         </div>
                     <% } else { %>
                         <div>
@@ -173,6 +214,132 @@
     <%- include('../partial/scripts-essenciais'); %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+     
+    <script>
+        document.getElementById('cancelarAssinaturaBtn').addEventListener('click', function(e) {
+            e.preventDefault(); // Impede o envio imediato do formulário
+    
+            Swal.fire({
+                title: 'Tem certeza que deseja cancelar sua assinatura?',
+                text: "Você não poderá reverter essa ação!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, cancelar!',
+                cancelButtonText: 'Não, manter assinatura'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Se o cliente confirmar, submete o formulário
+                    document.getElementById('cancelarAssinaturaForm').submit();
+                }
+            });
+        });
+    </script>
+
+    <script>
+        function filtrarNotificacoes(lidas) {
+            let url;
+            if (lidas === 'todas') {
+                url = '/notificacoes'; // Ponto de extremidade para todas as notificações
+            } else {
+                url = `/notificacoes?lidas=${lidas}`;
+            }
+
+
+            fetch(`/notificacoes?lidas=${lidas}`)
+                .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar notificações');
+                }
+            return response.json();
+            })
+            .then(data => {
+            atualizarListaNotificacoes(data.notificacoes);
+            })
+            .catch(error => {
+            console.error('Erro:', error);
+            });
+        }
+
+
+        function atualizarListaNotificacoes(notificacoes) {
+    const listaNotificacoes = document.querySelector('#notificacoes ul');
+    listaNotificacoes.innerHTML = ''; // Limpa a lista atual
+
+    if (notificacoes && notificacoes.length > 0) {
+        notificacoes.forEach(notificacao => {
+            const li = document.createElement('li');
+            li.className = `notificacao-item ${!notificacao.lida ? 'nao-lida' : ''}`;
+            li.style.borderColor = !notificacao.lida ? '#FC7F2D' : '#CCCCCC';
+            li.onclick = () => abrirModalNotificacao(notificacao.mensagem, notificacao.idNotificacoes);
+
+            li.innerHTML = `
+                <i class="fa-solid fa-bell icone-notificacao" style="color: ${!notificacao.lida ? '#FC7F2D' : '#CCCCCC'};"></i>
+                <span class="mensagem-notificacao truncate">${notificacao.mensagem}</span>
+                <span class="data-notificacao">${new Date(notificacao.dataNotificacao).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+            `;
+            listaNotificacoes.appendChild(li);
+        });
+    } else {
+        listaNotificacoes.innerHTML = '<p>Sem notificações no momento.</p>';
+    }
+}
+
+
+        function abrirModalNotificacao(mensagem, idNotificacoes) {
+            // Exibir a mensagem no modal
+            document.getElementById('conteudoNotificacao').textContent = mensagem;
+            document.getElementById('modalNotificacao').style.display = 'flex';
+    
+            const btnExcluir = document.getElementById('btnExcluir');
+            btnExcluir.style.display = 'block';
+            btnExcluir.setAttribute('data-id', idNotificacoes);
+
+            // Marcar a notificação como lida (enviar ao servidor)
+            fetch(`/notificacao/marcar-como-lida/${idNotificacoes}`, {
+                method: 'POST',
+            }).then(response => {
+                if (response.ok) {
+                    // Atualizar a interface para indicar que a notificação foi lida
+                    const notificacaoItem = document.querySelector(`li[onclick*='${idNotificacoes}']`);
+                    const notificacaoIcon = document.querySelector(`i[onclick*='${idNotificacoes}']`);
+                    notificacaoItem.classList.remove('nao-lida');
+                    notificacaoItem.classList.add('lida');
+                    notificacaoItem.style.borderColor = '#CCCCCC'; // Mudar a borda para cinza
+                    notificacaoIcon.style.color= '#CCCCCC';
+                }
+            });
+        }
+    
+        function fecharModal() {
+            document.getElementById('modalNotificacao').style.display = 'none';
+        }
+
+        function excluirNotificacao() {
+            const idNotificacoes = document.getElementById('btnExcluir').getAttribute('data-id');
+
+            fetch(`/notificacao/excluir/${idNotificacoes}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao excluir notificação');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Fechar o modal
+                fecharModal();
+                
+                // Atualizar a lista de notificações após a exclusão
+                filtrarNotificacoes(); // Atualiza e mostra todas as notificações
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+            });
+        }
+    </script>
     <script>
 
         // ========================= Notify============================================

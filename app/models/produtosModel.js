@@ -133,6 +133,47 @@ const produtosModel = {
           throw error;
       }
   },
+   // Buscar por categoria e empresa
+   findByCategoriaAndEmpresa: async (categoria, empresaId) => {
+    try {
+        const categoriaId = categoriasMap[categoria];
+        if (categoriaId === undefined) {
+            throw new Error('Categoria inválida');
+        }
+        const [linhas] = await pool.query('SELECT * FROM produtos_das_empresas WHERE Categorias_idCategorias = ? AND Empresas_idEmpresas = ?', [categoriaId, empresaId]);
+        return linhas;
+    } catch (error) {
+        throw error;
+    }
+},
+
+// Ordenar produtos de uma empresa
+ordenarProdutosPorEmpresa: async (criterio, empresaId) => {
+    let query;
+    switch (criterio) {
+        case 'alfabetica':
+            query = 'SELECT * FROM produtos_das_empresas WHERE Empresas_idEmpresas = ? ORDER BY tituloProd ASC';
+            break;
+        case 'menorEstoque':
+            query = 'SELECT * FROM produtos_das_empresas WHERE Empresas_idEmpresas = ? ORDER BY qtdeEstoque ASC';
+            break;
+        case 'maiorEstoque':
+            query = 'SELECT * FROM produtos_das_empresas WHERE Empresas_idEmpresas = ? ORDER BY qtdeEstoque DESC';
+            break;
+        case 'recentes':
+            query = 'SELECT * FROM produtos_das_empresas WHERE Empresas_idEmpresas = ? ORDER BY idProd DESC';
+            break;
+        default:
+            throw new Error('Critério de ordenação inválido');
+    }
+
+    try {
+        const [produtos] = await pool.query(query, [empresaId]);
+        return produtos;
+    } catch (error) {
+        throw error;
+    }
+}
 
 };
     

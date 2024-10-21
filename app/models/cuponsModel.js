@@ -20,6 +20,17 @@ const cuponsModel = {
         }
     },
 
+    findByCodigo: async (codigoCupom) => {
+        try {
+            const query = 'SELECT * FROM cupons WHERE nomeCupom = ? AND prazoCupons >= NOW()';
+            const [result] = await pool.query(query, [codigoCupom]);
+            return result.length > 0 ? result[0] : null;
+        } catch (error) {
+            console.error("Erro ao buscar cupom:", error);
+            return null;
+        }
+    },
+
     create: async (dadosForm) => {
         const query = 'INSERT INTO cupons SET ?';
         const valores = {
@@ -28,6 +39,7 @@ const cuponsModel = {
         prazoCupons: dadosForm.prazoCupons,
         categoriaCupom: dadosForm.categoriaCupom,
         planoCupom: dadosForm.planoCupom,
+        tipoCupom: dadosForm.tipoCupom
     };
 
     return pool.query(query, valores);

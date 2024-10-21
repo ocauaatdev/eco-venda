@@ -1,12 +1,16 @@
 var express = require("express");
 var router = express.Router();
+const pool = require("../../config/pool-conexoes");
 const usuarioController = require('../controllers/usuarioController');
 const empresaController = require("../controllers/empresaController");
 const produtosController = require("../controllers/produtosController");
+const notificacaoController = require("../controllers/notificacaoController");
 const assinaturaController = require("../controllers/assinaturaController");
 const adminController = require("../controllers/adminController");
 const Usuario = require('../models/usuarioModel');
 const empresa = require('../models/empresaModel');
+const assinaturaModel = require('../models/assinaturaModel')
+const notificacaoModel = require("../models/notificacaoModel");
 const produtosModel = require('../models/produtosModel');
 const pedidoModel = require('../models/pedidoModel');
 const solicitacoesProdutoModel = require('../models/solicitacoesProdutoModel')
@@ -14,6 +18,11 @@ const { verificarUsuAutenticado,gravarUsuAutenticado,limparSessao,verificarUsuAu
 const uploadFile = require("../util/uploader")();
 const { carrinhoController } = require("../controllers/carrinhoController");
 const jwt = require('jsonwebtoken');
+const cron = require('node-cron');
+
+cron.schedule('0 0 * * *', () => {
+  assinaturaController.criarNotificacao();
+});
 
 // SDK do Mercado Pago
 const { MercadoPagoConfig, Preference } = require('mercadopago');
@@ -37,6 +46,8 @@ function verificaAdmin(req, res, next){
     res.redirect('/?acessoadm=negado')
   }
 }
+
+router.post('/aplicar-cupom', carrinhoController.aplicarCupom);
 
 // Middleware para inicializar o carrinho
 router.use((req, res, next) => {
@@ -279,6 +290,61 @@ router.get('/redirecionamento', (req, res) => {
   res.render('pages/redirecionamento');
 });
 
+
+// ==============Notificação=============
+router.post("/notificacao/marcar-como-lida/:id", async (req, res) => {
+  const idNotificacoes = req.params.id;
+  console.log(idNotificacoes)
+  try {
+      await pool.query('UPDATE notificacoes SET lida = true WHERE idNotificacoes = ?', [idNotificacoes]);
+      console.log("lida2")
+      res.json({ sucesso: true });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ sucesso: false, mensagem: 'Erro ao atualizar notificação' });
+  }
+});
+
+router.post('/notificacao/excluir/:idNotificacoes', notificacaoModel.excluirNotificacao);
+
+router.get("/notificacoes", async (req, res) => {
+  const usuarioId = req.session.user.id; // Captura o ID do usuário logado
+  const lidas = req.query.lidas;
+
+  try {
+      let query;
+      let params = [usuarioId];
+
+      if (lidas === 'true' || lidas === 'false') {
+          query = 'SELECT * FROM notificacoes WHERE Clientes_idClientes = ? AND lida = ? ORDER BY lida ASC, dataNotificacao DESC';
+          params.push(lidas === 'true');
+      } else {
+          query = 'SELECT * FROM notificacoes WHERE Clientes_idClientes = ? ORDER BY lida ASC, dataNotificacao DESC'; // Pega todas as notificações do usuário
+      }
+
+      const [notificacoes] = await pool.query(query, params);
+      res.json({ notificacoes });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ sucesso: false, mensagem: 'Erro ao buscar notificações' });
+  }
+});
+
+router.get("/notifica", notificacaoController.exibirNotificacoes);
+
+router.delete("/notificacao/excluir/:id", async (req, res) => {
+  const idNotificacoes = req.params.id;
+  console.log(idNotificacoes)
+  try {
+      await pool.query('DELETE FROM notificacoes WHERE idNotificacoes = ?', [idNotificacoes]);
+      console.log("excluida")
+      res.json({ sucesso: true });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ sucesso: false, mensagem: 'Erro ao excluir notificação' });
+  }
+})
+
 // ==========PERFIS=================
 
   router.get('/perfil-usuario', usuarioController.perfil);
@@ -326,6 +392,10 @@ router.get('/api/pedido-entrega', async (req, res) => {
   // Rota para editar produto
   router.post('/empresa/editar-produto/:id', produtosModel.editarProduto);
 
+  router.get('/empresa/:empresaId/produtos/categoria/:categoria', empresaController.filtrarPorCategoria);
+  router.get('/empresa/:empresaId/produtos/ordenar/:criterio', empresaController.ordenarProdutos);
+
+
 // ===========================
 router.get('/cadastro-cupom', verificarUsuAutenticado,verificaAdmin, (req, res) => {
   const valores = {
@@ -334,6 +404,7 @@ router.get('/cadastro-cupom', verificarUsuAutenticado,verificaAdmin, (req, res) 
     prazoCupons: '',
     planoCupom: '',
     categoriaCupom: '',
+    tipoCupom: '',
   };
   
   res.render('pages/cadastro-cupom', { listaErros: [], valores });
@@ -417,10 +488,53 @@ router.post('/atualizar-tamanho-carrinho', (req, res) => {
 });
 
 // ================================= Assinatura ==========================================
-// Rota para criar a preferência de pagamento da assinatura
-router.post("/create-preference-a", assinaturaController.criarPreferencia);
+router.post("/create-preference-a", async function (req, res) {
+  if (!req.session.autenticado || !req.session.autenticado.id) {
+    return res.redirect('/login'); // Redireciona se não estiver autenticado
+  }
+
+  const userId = req.session.autenticado.id;
+
+    // Verifica se já há uma assinatura ativa
+    const assinatura = await assinaturaModel.getAssinatura(userId);
+
+    if (assinatura) {
+      return res.redirect("/ecopremium?assinante=true"); // Usuário já é assinante
+    }
+
+    const { planoId, items } = req.body;
+    const preference = new Preference(client);
+
+    console.log("Os itens escolhidos são:", items)
+
+    // Cria a preferência de pagamento
+    preference.create({
+      body: {
+        items: items,
+        external_reference: planoId,
+        back_urls: {
+          success: process.env.URL_BASE + "/feedback-a",
+          failure: process.env.URL_BASE + "/feedback-a",
+          pending: process.env.URL_BASE + "/feedback-a"
+        },
+        auto_return: "approved",
+      }
+    })
+    .then((value) => {
+      res.json(value)
+    })
+    .catch(console.log)
+});
+
 // Rota para o feedback de pagamento da assinatura
-router.get("/feedback-a", assinaturaController.feedbackPagamento);
+router.get("/feedback-a", function (req, res) {
+  assinaturaController.feedbackPagamento(req, res);
+});
+
+router.post("/cancelar-assinatura", function (req, res) {
+  assinaturaController.cancelarAssinatura(req, res);
+});
+
 
 
 // =================================== Produtos ==========================================
@@ -450,10 +564,21 @@ router.get("/feedback", function (req, res) {
 
 router.get('/checkout', verificarUsuAutenticado, carrinhoController.enderecoCliente, function(req, res) {
   // Carregar os dados do carrinho e endereço
+  const carrinho = req.session.carrinho;
+
+  // Calcular o total do carrinho
+  const totalCarrinho = carrinho.reduce((total, item) => total + (item.qtde * item.preco), 0);
+
+  // Calcular o total com desconto
+  const totalComDesconto = req.session.totalComDesconto || totalCarrinho; // Usa o total sem desconto caso não tenha desconto
+
+  // Renderizar a página e passar os valores calculados
   res.render('pages/checkout', {
       autenticado: req.session.autenticado,
-      carrinho: req.session.carrinho,
-      endereco: req.session.endereco, // Passar o endereço para o EJS
+      carrinho: carrinho,
+      totalCarrinho: totalCarrinho.toFixed(2), // Envia o total do carrinho
+      totalComDesconto: totalComDesconto.toFixed(2), // Envia o total com desconto
+      endereco: req.session.endereco, // Passa o endereço para o EJS
       listaErros: null
   });
 });

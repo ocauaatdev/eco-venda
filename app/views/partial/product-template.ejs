@@ -10,9 +10,9 @@
       </a>
       <section class="infoProduct">
          <h3 id="nomeProduct"><%= item.tituloProd %></h3>
-         <h1 id="precoParcelado">6 x de <%= parcelado.toFixed(2) %> + juros no cartão</h1>
+         <h1 id="precoParcelado"><small>6 x de R$ </small><strong><%= parcelado.toFixed(2) %></strong></h1>
          <section class="precoAvista">
-           <h2>À vista</h2>
+           <h2>à vista </h2>
            <h2 id="precoReal">R$<%= item.valorProd %></h2>
          </section>
 

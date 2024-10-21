@@ -30,22 +30,22 @@
                             </section>
                             
                             <select class="tamanhos" id="tamanho-select-<%= item.codproduto %>" onchange="updateTamanhoCarrinho('<%= item.codproduto %>')">
-    <option value="" disabled selected>Selecione um tamanho</option>
-    <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
-        <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
-    <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
-        <option value="Pequeno">Pequeno</option>
-        <option value="Médio">Médio</option>
-        <option value="Grande">Grande</option>
-    <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
-        <option value="P">P</option>
-        <option value="M">M</option>
-        <option value="G">G</option>
-        <option value="GG">GG</option>
-    <% } else { %>
-        <option value="Sem tamanho específico">Sem tamanho específico</option>
-    <% } %>
-</select>
+                                <option value="" disabled selected>Selecione um tamanho</option>
+                                <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
+                                    <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
+                                <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
+                                    <option value="Pequeno">Pequeno</option>
+                                    <option value="Médio">Médio</option>
+                                    <option value="Grande">Grande</option>
+                                <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
+                                    <option value="P">P</option>
+                                    <option value="M">M</option>
+                                    <option value="G">G</option>
+                                    <option value="GG">GG</option>
+                                <% } else { %>
+                                    <option value="Sem tamanho específico">Sem tamanho específico</option>
+                                <% } %>
+                            </select>
 
                             <section class="quantidade">
                                 <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
@@ -72,22 +72,25 @@
                     <h3>Meu Carrinho</h3>
                 </section>
                 <section class="txtCarrinho">
-                    <h1>Local de Envio:</h1>
-                    <% if (autenticado && endereco) { %>
-                        <p><strong>CEP:</strong> <%= endereco.cep %></p>
-                        <p><strong>Logradouro:</strong> <%= endereco.logradouro %></p>
-                        <p><strong>Bairro:</strong> <%= endereco.bairro %></p>
-                        <p><strong>Cidade:</strong> <%= endereco.cidade %> - <%= endereco.uf %></p>
-                    <% } else { %>
-                        <p>Você precisa estar logado para ver as informações de endereço.</p>
-                    <% } %>
+                    
+                    
                     <h1>Cupons:</h1>
-                    <input type="text" name="" id="cupons" placeholder="Digite o código do cupom para receber benefícios.">
-                    <h2 class="totalTxt">Total:</h2>
-                    <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
+                    <form action="/aplicar-cupom" method="POST">
+                        <input type="text" name="cupom" id="cupons" placeholder="Digite o código do cupom">
+                        <button type="submit">Aplicar Cupom</button>
+                    </form>
+                    
+                    <!-- Mostre o total com desconto, se aplicável -->
+                    <% if (typeof totalComDesconto !== 'undefined') { %>
+                        <h2 class="totalTxt">Total com Desconto:</h2>
+                        <h2 class="precoTotal">R$ <%= totalComDesconto %> </h2>
+                    <% } else { %>
+                        <h2 class="totalTxt">Total:</h2>
+                        <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
+                    <% } %>
                     
                     <% if(autenticado && autenticado.autenticado){%>
-                        <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Comprar</button>
+                        <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Finalizar Compra</button>
                     <% } else { %>
                         <p class="btn btn-warning btn-lg btn-block"><a href="/login">Para comprar faça Login</a></p>
                     <% } %>
@@ -101,29 +104,30 @@
                     <h2 class="title">Resumo do pedido</h2>
                     <% carrinho.forEach(function(item){ %>
                         <div class="item">
-                            <span class="price hidden" id="summary-price">R$ <%= item.preco.toFixed(2) %> </span>
-                            <span class="price" id="subtot-price">R$ <%= (item.qtde * item.preco).toFixed(2) %> </span>
+                            <% 
+                                // Calcula o subtotal do item
+                                const subtotal = item.qtde * item.preco;
+                                const descontoAplicado = (typeof totalComDesconto !== 'undefined') 
+                                                         ? subtotal * (totalComDesconto / totalCarrinho)
+                                                         : subtotal;
+                            %>
+                            <span class="price hidden" id="summary-price">R$ <%= descontoAplicado.toFixed(2) %> </span>
+                            <span class="price" id="subtot-price">R$ <%= descontoAplicado.toFixed(2) %> </span>
                             <p class="item-name"><%= item.nome_produto %> 
                                 (<span id="summary-quantity"><%= item.qtde %></span>x R$ <%= item.preco.toFixed(2) %>) 
                             </p>
                         </div>
-                    <% }); %>
+                    <% }) %>
 
-                    <div class="address-info">
-                        <h1>Local de Envio:</h1>
-                        <% if (autenticado && endereco) { %>
-                            <p><strong>CEP:</strong> <%= endereco.cep %></p>
-                            <p><strong>Logradouro:</strong> <%= endereco.logradouro %></p>
-                            <p><strong>Bairro:</strong> <%= endereco.bairro %></p>
-                            <p><strong>Cidade:</strong> <%= endereco.cidade %> - <%= endereco.uf %></p>
-                        <% } else { %>
-                            <p>Você precisa estar logado para ver as informações de endereço.</p>
-                        <% } %>
-                    </div>
+                    
 
-                    <div class="total">
-                        <span class="price" id="summary-total">Total R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </span>
-                    </div>
+                    <% if (typeof totalComDesconto !== 'undefined') { %>
+                        <h2 class="totalTxt">Total com Desconto:</h2>
+                        <h2 class="precoTotal">R$ <%= totalComDesconto %> </h2>
+                    <% } else { %>
+                        <h2 class="totalTxt">Total:</h2>
+                        <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
+                    <% } %>
                 </div>
                 <div class="payment-details">
                     <div class="form-group col-sm-12">

@@ -18,19 +18,21 @@ h3{
     text-align: center;
     font-size: 30px;
     color: #fff;
+    margin-left: 50px;
+    margin-right: 50px;
 }
 .opcoes{
     width: 100%;
     display: flex;
     padding: 30px;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 }
 .opcoes a{
     text-decoration: none;
 }
 .cliente{
-    background-color: #085950;
+    background-color: #F38336;
 }
 .empresa{
     background-color: #38985F;
@@ -47,7 +49,12 @@ h3{
     transition: 0.5s;
     color: #fff;
 }
-.cliente:hover,.empresa:hover{
+.cliente:hover{
+    background-color: #ff7316;
+    transform: scale(1.1);
+}
+.empresa:hover{
+    background-color: #24c966;
     transform: scale(1.1);
 }
 .cliente i,.empresa i{
@@ -57,4 +64,41 @@ h3{
     font-size: 40px;
     font-weight: 700;
     text-transform: uppercase;
+}
+@media(max-width:992px){
+    body{
+        background-image: none;
+        background: rgb(77,181,134);
+    background: linear-gradient(90deg, rgba(77,181,134,1) 0%, rgba(2,93,68,1) 100%);
+    }
+}
+@media(max-width:768px){
+    .cliente,.empresa{
+        width: 250px;
+        height: 250px;
+    }
+    .cliente i,.empresa i{
+        font-size: 70px;
+    }
+    .cliente p,.empresa p{
+        font-size: 25px;
+        
+    }
+    .txtPrincipal{
+        margin-top: 20%;
+
+    }
+}
+@media(max-width:576px){
+    .cliente,.empresa{
+        width: 170px;
+        height: 170px;
+    }
+    .cliente i,.empresa i{
+        font-size: 70px;
+    }
+    .cliente p,.empresa p{
+        font-size: 25px;
+        
+    }
 }

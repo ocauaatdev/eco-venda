@@ -10,18 +10,18 @@
             <li>
                 <!-- Opções Menu -->
                 <ul class="opcoesMenu">
-                    <li><a href="catalogo?categoria=moda">Moda Eco</a></li>
-                    <li><a href="catalogo?categoria=bag">Eco Bags</a></li>
-                    <li><a href="catalogo?categoria=cosmetico">Cosmeticos</a></li>
+                    <li><a href="/catalogo?categoria=moda">Moda Eco</a></li>
+                    <li><a href="/catalogo?categoria=bag">Eco Bags</a></li>
+                    <li><a href="/catalogo?categoria=cosmetico">Cosméticos</a></li>
                     <li class="btnCategorias">Mais <i onclick="abrirsubmenu()" class="fa-solid fa-chevron-down"></i>
                         <!--Dropdown-->
                         <ul class="dropdown">
                             <li><a href="/ecopremium">Assinatura Eco+</a></li>
                             <li><a href="/catalogo">Todos Produtos</a></li>
-                            <li><a href="catalogo?categoria=higiene">Higiene</a></li>
-                            <li><a href="catalogo?categoria=moda">Moda Eco</a></li>
-                            <li><a href="catalogo?categoria=bag">Eco Bags</a></li>
-                            <li><a href="catalogo?categoria=cosmetico">Cosméticos</a></li>
+                            <li><a href="/catalogo?categoria=higiene">Higiene</a></li>
+                            <li><a href="/catalogo?categoria=moda">Moda Eco</a></li>
+                            <li><a href="/catalogo?categoria=bag">Eco Bags</a></li>
+                            <li><a href="/catalogo?categoria=cosmetico">Cosméticos</a></li>
                         </ul>
                         <!-- Fim do Dropdown -->
                     </li>
@@ -37,14 +37,14 @@
 
     <section class="input-buscar">
         <input type="text" autocomplete="off" id="input-pesquisa" placeholder="Faça uma busca" onkeyup="pesquisarProdutos()">
-        <!-- Div para exibir os resultados da pesquisa -->
-        <div id="resultado-pesquisa" class="resultado-pesquisa"></div>
     </section>
 
     <section class="btn-fechar">
         <i class="fa-regular fa-circle-xmark"></i> <!--Botao de fechar-->
     </section>
 </section>
+<!-- Div para exibir os resultados da pesquisa -->
+<div id="resultado-pesquisa" class="resultado-pesquisa"></div>
 <!-- Fim Barra de Pesquisa -->
             </li>
             <li>
@@ -52,26 +52,32 @@
                 <ul class="iconesMenu">
 
                     <li class="iconPerfil">
-    <a class="menuicon" href="#">
-        <span class="icon"><i class="fa-solid fa-user"></i></span>     
-        <span class="text">Perfil</span>
-    </a>
-    
-    <ul class="dropdownPerfil">
-                 <% if (!autenticado || !autenticado.id) { %>
-                   <li id="login-button"><a class="perfilOptions" href="/redirecionamento">Login e Cadastro</a></li>
-                 <% } else if (autenticado.tipo === 'usuario') { %>
-                   <li class="perfilOptions"><a href="/perfil-usuario">Meu Perfil</a></li>
-                   <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
-                 <% } else if (autenticado.tipo === 'empresa') { %>
-                   <li class="perfilOptions"><a href="/perfil-empresa">Meu Perfil</a></li>
-                   <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
-                   <% } else if (autenticado.tipo === 'admin') { %>
-                     <li class="perfilOptions"><a href="/perfil-adm">Meu Perfil</a></li>
-                     <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
-                   <% } %>
-               </ul>
-</li>
+                        <a class="menuicon" href="#">
+                            <% if (!autenticado || !autenticado.id) { %>
+                                <span class="icon"><i class="fa-solid fa-right-to-bracket"></i></span>
+                                <span class="text">Entrar</span>
+                            <% } else { %>
+                                <span class="icon"><i class="fa-solid fa-user"></i></span>
+                                <span class="text">Perfil</span>
+                            <% } %>
+                        </a>
+                    
+                        <ul class="dropdownPerfil">
+                            <% if (!autenticado || !autenticado.id) { %>
+                                <li id="login-button"><a class="perfilOptions" href="/redirecionamento">Login e Cadastro</a></li>
+                            <% } else if (autenticado.tipo === 'usuario') { %>
+                                <li class="perfilOptions"><a href="/perfil-usuario">Meu Perfil</a></li>
+                                <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
+                            <% } else if (autenticado.tipo === 'empresa') { %>
+                                <li class="perfilOptions"><a href="/perfil-empresa">Meu Perfil</a></li>
+                                <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
+                            <% } else if (autenticado.tipo === 'admin') { %>
+                                <li class="perfilOptions"><a href="/perfil-adm">Meu Perfil</a></li>
+                                <li class="perfilOptions" id="sairOption"><a href="/logout">Sair</a></li>
+                            <% } %>
+                        </ul>
+                    </li>
+                    
     
                     <!-- Icone Carrinho -->
 <li><a class="menuicon" href="/carrinho"> <!--link para entrar na pagina do carrinho-->
@@ -99,10 +105,10 @@
             <li><a href="#" class="categorias">Categorias
                 <i class="fa-solid fa-caret-down"></i></a></li>
             <ul class="firstOption">
-                <li><a href="#">Camisas</a></li>
-                <li><a href="#">Eco Bags</a></li>
-                <li><a href="#">Cosméticos</a></li>
-                <li><a href="#">Higiene</a></li>
+                <li><a href="/catalogo?categoria=moda">Moda</a></li>
+                <li><a href="/catalogo?categoria=bag">Eco Bags</a></li>
+                <li><a href="/catalogo?categoria=cosmetico">Cosméticos</a></li>
+                <li><a href="/catalogo?categoria=higiene">Higiene</a></li>
             </ul>
 
             <li><a href="/ecopremium">Assine Eco+</a></li>
@@ -112,11 +118,20 @@
                 <i class="fa-solid fa-caret-down"></i></a></li>
                 <ul class="secondOption">
                     <li><a class="btnSuporte" href="#suporte">Suporte</a></li>
-                    <li><a href="#">Meu Perfil</a></li>
-                    <li class="loginBtn"><a href="/login">Login</a></li>
-                    <li class="cadastrarBtn"><a href="/cadastro">Cadastrar</a></li>
-                    <li class="acesso-parceiros"><a href="/login-empresa">Acesso para parceiros</a></li>
-                    <li class="sairbtn"><a id="sairbtn" href="" onclick="deslogar()">Sair</a></li>
+                    <% if (!autenticado || !autenticado.id) { %>
+                        <li class="loginBtn">
+                            <a href="/redirecionamento">Login e Cadastro</a>
+                        </li>
+                    <% } else if (autenticado.tipo === 'usuario') { %>
+                        <li><a href="/perfil-usuario">Meu Perfil</a></li>
+                        <li class="sairbtn"><a id="sairbtn" href="/logout">Sair</a></li>
+                    <% } else if (autenticado.tipo === 'empresa') { %>
+                        <li><a href="/perfil-empresa">Meu Perfil</a></li>
+                        <li class="sairbtn"><a id="sairbtn" href="/logout">Sair</a></li>
+                    <% } else if (autenticado.tipo === 'admin') { %>
+                        <li><a href="/perfil-adm">Meu Perfil</a></li>
+                        <li class="sairbtn"><a id="sairbtn" href="/logout">Sair</a></li>
+                    <% } %>
                 </ul>
         </ul>
     </section>

@@ -285,6 +285,7 @@ const empresaController = {
         
     },
     perfilEmpresa: async (req, res) => {
+        res.locals.moment = moment;
         if (!req.session.autenticado) {
             return res.redirect('/login-empresa');
         }
@@ -352,7 +353,43 @@ const empresaController = {
             console.error('Erro ao atualizar perfil da empresa:', error);
             res.status(500).send('Erro ao atualizar perfil');
         }
+    },
+    // Filtro por categoria com empresaId
+filtrarPorCategoria: async (req, res) => {
+    const { empresaId, categoria } = req.params;  // Incluí o empresaId nos parâmetros
+    try {
+        const produtos = await produtosModel.findByCategoriaAndEmpresa(categoria, empresaId);  // Novo método para buscar por categoria e empresa
+        
+        // Processar as imagens para base64
+        produtos.forEach((produto) => {
+            if (produto.imagemProd) {
+                produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
+            }
+        });
+        res.json(produtos);
+    } catch (error) {
+        res.status(500).send('Erro ao filtrar produtos');
     }
+},
+
+// Ordenar produtos por empresaId
+ordenarProdutos: async (req, res) => {
+    const { empresaId, criterio } = req.params;  // Incluí o empresaId nos parâmetros
+    try {
+        const produtos = await produtosModel.ordenarProdutosPorEmpresa(criterio, empresaId);  // Novo método para ordenar por empresa
+        
+        // Processar as imagens para base64
+        produtos.forEach((produto) => {
+            if (produto.imagemProd) {
+                produto.imagemProd = `data:image/png;base64,${produto.imagemProd.toString('base64')}`;
+            }
+        });
+        
+        res.json(produtos);
+    } catch (error) {
+        res.status(500).send('Erro ao ordenar produtos');
+    }
+},
 }
 
 module.exports = empresaController;

@@ -9,34 +9,37 @@ const produtosController = {
 
   cadastrarProduto: async (req, res) => {
     const erros = validationResult(req);
-    
-    // Prepara os dados do formulário para o banco de dados
+
     var dadosForm = {
-      tituloProd: req.body.produtoNome,
-      descricaoProd: req.body.descricaoProduto,
-      valorProd: req.body.precoProduto,
-      qtdeEstoque: req.body.qtdeEstoque,
-      tamanhoProd: req.body.tamanhoProduto,
-      Categorias_idCategorias: req.body.Categorias_idCategorias,
-      Empresas_idEmpresas: req.session.autenticado.id,
-      imagemProd: req.file ? req.file.buffer : null, // A imagem é capturada do req.file
+        tituloProd: req.body.produtoNome,
+        descricaoProd: req.body.descricaoProduto,
+        valorProd: req.body.precoProduto,
+        qtdeEstoque: req.body.qtdeEstoque,
+        tamanhoProd: req.body.tamanhoProduto,
+        Categorias_idCategorias: req.body.Categorias_idCategorias,
+        Empresas_idEmpresas: req.session.autenticado.id,
+        imagemProd: req.file ? req.file.buffer : null
     };
 
-    // Se houver erros de validação, renderiza novamente o formulário com erros
     if (!erros.isEmpty()) {
-      return res.render("pages/cadastro-produto", { listaErros: erros.array(), valores: req.body });
+        return res.render("pages/cadastro-produto", { listaErros: erros.array(), valores: req.body });
     }
 
     try {
-      // Insere o produto no banco de dados
-      let create = await solicitacoesProdutoModel.create(dadosForm);
+        let create = await solicitacoesProdutoModel.create(dadosForm);
         console.log('Solicitação de produto enviada para aprovação:', create);
-        res.redirect("/"); // Redireciona após o envio da solicitação
+        res.redirect("/");
     } catch (e) {
-      console.log('Erro no cadastro:', e.message);
-      res.render("pages/cadastro-produto", { listaErros: [{ msg: e.message }], valores: req.body });
+        console.log('Erro no cadastro:', e.message);
+
+        // Se o erro for relacionado ao tamanho da imagem, renderize com uma mensagem apropriada
+        let errorMessage = e.message.includes("Data too long for column 'imagemProd'") 
+            ? 'A imagem enviada é muito grande. Tente enviar uma imagem menor.' 
+            : e.message;
+
+        res.render("pages/cadastro-produto", { listaErros: [{ msg: errorMessage }], valores: req.body, errorMessage });
     }
-  },
+},
 
   listarProdutos: async (req, res) => {
     try {

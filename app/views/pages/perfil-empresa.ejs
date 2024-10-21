@@ -59,6 +59,9 @@
                 <section id="configuracoes" class="secaoPerfil">
                     <h2>Configurações da Conta da Empresa</h2>
                     <form action="/empresa/atualizar" method="POST" id="empresaForm">
+
+                        <section class="dadosPessoais">
+                            <h2>Dados Pessoais</h2>
                         <div>
                             <label for="razaoSocial">Razão Social:</label>
                             <span id="razaoSocialTexto"><%= Empresa.razaoSocial %></span>
@@ -82,7 +85,10 @@
                             <span id="cnpjTexto"><%= Empresa.cpnjempresa %></span>
                             <input type="text" id="cnpj" name="cnpjEmpresa" value="<%= Empresa.cpnjempresa %>" style="display: none;" readonly>
                         </div>
+                    </section>
                 
+                    <section class="enderecoInfo">
+                        <h2>Endereço</h2>
                         <div>
                             <label for="cep">CEP:</label>
                             <span id="cepTexto"><%= Empresa.cepEmpresa %></span>
@@ -112,6 +118,7 @@
                             <span id="ufTexto"><%= Empresa.ufEmpresa %></span>
                             <input type="text" id="uf" name="ufEmpresa" value="<%= Empresa.ufEmpresa %>" style="display: none;" readonly>
                         </div>
+                    </section>
                         
                         <div class="botoesAcao">
                             <button type="button" id="editarBtn" onclick="toggleEdit()">Editar informações</button>
@@ -121,10 +128,30 @@
                     </form>
                 </section>
                 
-
                 <!-- Sessão meus produtos -->
                 <section id="meus-produtos" class="secaoPerfil">
                     <h2>Meus Produtos</h2>
+
+                    <!-- Filtros de Categoria -->
+                    <div class="filtros">
+                        <button onclick="filtrarCategoria('moda')">Moda</button>
+                        <button onclick="filtrarCategoria('cosmetico')">Cosméticos</button>
+                        <button onclick="filtrarCategoria('higiene')">Higiene</button>
+                        <button onclick="filtrarCategoria('bag')">Eco Bags</button>
+                    </div>
+                
+                    <!-- Ordenação -->
+                    <div class="ordenacao">
+                        <label for="ordenar">Ordenar por:</label>
+                        <select id="ordenar" onchange="ordenarProdutos()">
+                            <option disabled selected>Selecione o metodo</option>
+                            <option value="alfabetica">Ordem Alfabética</option>
+                            <option value="menorEstoque">Menor Estoque</option>
+                            <option value="maiorEstoque">Maior Estoque</option>
+                            <option value="recentes">Mais Recentes</option>
+                        </select>
+                    </div>
+
                     <div class="produtos-container">
                       <% produtos.forEach(produto => { %>
                         <div class="produto-card">
@@ -188,6 +215,7 @@
 
                 </section>
                   
+                <!-- SESSÃO DO NOVO PRODUTO -->
                 <section id="novo-produto" class="secaoPerfil">
                     <!-- Sessão novo produto -->
                 </section>
@@ -198,77 +226,69 @@
     <h2>Produtos Vendidos</h2>
 
     <% if (pedidos && pedidos.length > 0) { %>
-        <table class="tabelaPedidos">
-            <thead>
-                <tr>
-                    <th>ID do Pedido</th>
-                    <th>Data do Pedido</th>
-                    <th>Valor Total</th>
-                    <th>Nome do Cliente</th>
-                    <th>Status Pedido</th>
-                    <th>Ocorrências</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% pedidos.forEach(pedido => { %>
-                    <tr>
-                        <td><%= pedido.idPedidos %></td>
-                        <td><%= new Date(pedido.data_pedido).toLocaleDateString() %></td>
-                        <td>R$ <%= pedido.total_pedido %></td>
-                        <td><%= pedido.nomeCliente %></td>
-                        <td>
-                            <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %>
-                        </td>
-                        <td>
-                            <button class="notificarBtn" data-id="<%= pedido.idPedidos %>">Detalhes</button>
-                        </td>
-                    </tr>
-                <% }) %>
-            </tbody>
-        </table>
-
-        <!-- Formulário de Notificação -->
-        <div class="formNotificar" style="display: none;">
-            <form id="formNotificar" action="/atualizar-pedido" method="post">
-                <input type="hidden" name="idPedido" id="idPedido">
-
-                <article class="txtForm">
-                    <h2>Andamento do Pedido</h2>
-                    <span><i class="fa-solid fa-xmark fecharForm" onclick="fecharForm()"></i></span>
-                </article>
-
-                <h3>Código de rastreio:</h3>
-                <input type="text" name="codigo_rastreio" id="codigo_rastreio">
-
-                <h3>Histórico de Rastreios:</h3>
-                <div id="historicoRastreios"></div>
-
-                <!-- Itens do pedido serão listados aqui -->
-                <h3>Itens do pedido:</h3>
-                <div id="itensPedido"></div>
-
-                <h3>Data da ocorrência:</h3>
-                <input type="date" name="dataOcorrencia" id="dataOcorrencia">
-
-                <h3>Local de entrega:</h3>
-                <p id="localEntrega"><!--AQUI DEVE APARECER O local_entrega da tabela pedidos--></p>                
-
-                <h3>Status do Pedido:</h3>
-                <select name="andamentoPedido" id="andamentoPedido">
-                    <option value="1">Coletado</option>
-                    <option value="2">Em andamento</option>
-                    <option value="3">Pedido entregue</option>
-                    <option value="4">Falha ao entregar</option>
-                    <option value="5">Nova tentativa de entrega</option>
-                    <option value="6">Pedido cancelado</option>
-                </select>
-
-                <button type="submit">Notificar</button>
-            </form>
+        <div class="empresa-cards-container">
+            <% pedidos.forEach(pedido => { %>
+            <div class="pedido-card-empresa">
+                <div class="card-header">
+                    <h3>ID Pedido: <%= pedido.idPedidos %></h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Data do Pedido:</strong> <%= moment(pedido.data_pedido).format('DD/MM/YYYY') %></p>
+                    <p><strong>Valor Total:</strong> R$ <%= pedido.total_pedido %></p>
+                    <p><strong>Cliente:</strong> <%= pedido.nomeCliente %></p>
+                    <p><strong>Status Pedido:</strong> <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %></p>
+                </div>
+                <div class="card-footer">
+                    <button class="notificarBtn" data-id="<%= pedido.idPedidos %>">Detalhes</button>
+                </div>
+            </div>
+            <% }) %>
         </div>
-    <% } else { %>
+        <% } else { %>
         <p>Nenhum pedido vendido ainda.</p>
-    <% } %>
+        <% } %>
+
+    <!-- Formulário de Notificação -->
+    <div class="formNotificar" style="display: none;">
+        <div class="formContainer">
+        <form id="formNotificar" action="/atualizar-pedido" method="post">
+            <input type="hidden" name="idPedido" id="idPedido">
+
+            <article class="txtForm">
+                <h2>Andamento do Pedido</h2>
+                <span><i class="fa-solid fa-xmark fecharForm" onclick="fecharForm()"></i></span>
+            </article>
+
+            <h3>Código de rastreio:</h3>
+            <input type="text" name="codigo_rastreio" id="codigo_rastreio">
+
+            <h3>Histórico de Rastreios:</h3>
+            <div id="historicoRastreios"></div>
+
+            <!-- Itens do pedido serão listados aqui -->
+            <h3>Itens do pedido:</h3>
+            <div id="itensPedido"></div>
+
+            <!-- <h3>Data da ocorrência:</h3>
+            <input type="date" name="dataOcorrencia" id="dataOcorrencia"> -->
+
+            <h3>Local de entrega:</h3>
+            <p id="localEntrega"><!--AQUI DEVE APARECER O local_entrega da tabela pedidos--></p>                
+
+            <h3>Status do Pedido:</h3>
+            <select name="andamentoPedido" id="andamentoPedido">
+                <option value="1">Coletado</option>
+                <option value="2">Em andamento</option>
+                <option value="3">Pedido entregue</option>
+                <option value="4">Falha ao entregar</option>
+                <option value="5">Nova tentativa de entrega</option>
+                <option value="6">Pedido cancelado</option>
+            </select>
+
+            <button type="submit">Notificar</button>
+        </form>
+    </div>
+    </div>
 </section>
 
     </main>
@@ -311,9 +331,19 @@
                     // Exibir o histórico de rastreios
                     let historicoHtml = '';
                     historicoRastreios.forEach(historico => {
-                        historicoHtml += `<p>${new Date(historico.dataocorrencia).toLocaleDateString()} - ${historico.ocorrenciaDescricao} (Código: ${historico.codigo_rastreio})</p>`;
-                    });
-                    document.getElementById('historicoRastreios').innerHTML = historicoHtml;
+    const dataOcorrencia = new Date(historico.dataocorrencia);
+    const dataFormatada = dataOcorrencia.toLocaleString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+
+    historicoHtml += `<p>${dataFormatada} - ${historico.ocorrenciaDescricao} (Código: ${historico.codigo_rastreio})</p>`;
+});
+document.getElementById('historicoRastreios').innerHTML = historicoHtml;
     
                     // Desabilitar o formulário se algum rastreio tiver status "Pedido Entregue"
                     const submitButton = document.querySelector('#formNotificar button[type="submit"]');
@@ -512,6 +542,77 @@ Swal.fire({
         });
     }
 </script>
+
+<script>
+    // Função para filtrar produtos por categoria
+function filtrarCategoria(categoria) {
+    const empresaId = "<%= autenticado.id %>"; // Inclua o id da empresa autenticada
+    fetch(`/empresa/${empresaId}/produtos/categoria/${categoria}`)
+        .then(response => response.json())
+        .then(produtos => {
+            console.log(produtos); // Verifique os produtos retornados
+            atualizarProdutosNaTela(produtos);
+        })
+        .catch(error => console.error('Erro ao filtrar produtos:', error));
+}
+
+// Função para ordenar produtos
+function ordenarProdutos() {
+    const empresaId = "<%= autenticado.id %>"; // Inclua o id da empresa autenticada
+    const criterio = document.getElementById("ordenar").value;
+    fetch(`/empresa/${empresaId}/produtos/ordenar/${criterio}`)
+        .then(response => response.json())
+        .then(produtos => {
+            console.log(produtos); // Verifique os produtos retornados
+            atualizarProdutosNaTela(produtos);
+        })
+        .catch(error => console.error('Erro ao ordenar produtos:', error));
+}
+
+// Função para atualizar produtos na tela
+// Função para atualizar produtos na tela
+function atualizarProdutosNaTela(produtos) {
+    const container = document.querySelector(".produtos-container");
+    container.innerHTML = ''; // Limpa o container
+
+    produtos.forEach(produto => {
+        const produtoCard = document.createElement('div');
+        produtoCard.classList.add('produto-card');
+
+        produtoCard.innerHTML = `
+            ${produto.imagemProd ? `<img src="${produto.imagemProd}" alt="${produto.tituloProd}" class="imagem-produto" />` : ''}
+            <div class="info-produto">
+                <h4>${produto.tituloProd}</h4>
+                <p class="descProduto">Descrição: ${produto.descricaoProd}</p>
+                <p>Preço: R$ ${produto.valorProd}</p>
+                <p>Estoque: ${produto.qtdeEstoque}</p>
+            </div>
+            <div class="acoes-produto">
+                <button class="editarBtn" type="button">Editar</button>
+                <form action="/empresa/remover-produto/${produto.idProd}" method="POST" class="remover-produto-form">
+                    <button class="removerBtn" type="button">Remover</button>
+                </form>
+            </div>
+        `;
+
+        // Adicionar o evento de clique para o botão de editar, que abre o modal
+        const editarBtn = produtoCard.querySelector('.editarBtn');
+        editarBtn.addEventListener('click', () => {
+            abrirModal({
+                idProd: produto.idProd,
+                tituloProd: produto.tituloProd,
+                descricaoProd: produto.descricaoProd,
+                valorProd: produto.valorProd,
+                qtdeEstoque: produto.qtdeEstoque
+            });
+        });
+
+        container.appendChild(produtoCard);
+    });
+}
+    </script>
+    
+    
 
 
 </body>

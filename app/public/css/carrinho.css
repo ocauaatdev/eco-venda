@@ -32,6 +32,9 @@
     top: 0; /* Fica fixo no topo da viewport */
     z-index: 1; /* Garante que a barra lateral fique sobre outros elementos, se necessário */
 }
+.infoCarrinho button{
+    width: 100%;
+}
 .head{
     display: flex;
     background-color: #05414B;
@@ -44,6 +47,9 @@
 }
 .txtCarrinho{
     padding: 20px;
+}
+.cuponsTxt{
+    margin-top: 25px;
 }
 .txtCarrinho h1{
     font-size: 20px;
@@ -58,9 +64,11 @@
 .totalTxt{
     margin-top: 10%;
     margin-bottom: 0px;
+    font-size: 20px;
 }
 .precoTotal{
     color: #df8621;
+    font-size: 30px;
 }
 .btn-primary{
     border: none;
@@ -103,6 +111,8 @@
 .imagemContainer .produtoImg{
     width: 100%;
     height: 100%;
+    
+    object-fit: contain; /* Redimensiona a imagem sem deformá-la */
 }
 .produtoInfo{
     width: 85%;
@@ -186,4 +196,165 @@
 }
 .highlight {
     border: 2px solid red;
+  }
+
+  .container_payment {
+    margin-top: 30px;
+    background-color: #f5f5f5; /* Fundo claro para o checkout */
+    padding: 20px;
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+}
+
+.block-heading h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #0A242A; /* Cor do texto principal */
+    margin-bottom: 15px;
+    border-bottom: 2px solid #df8621; /* Linha abaixo do título */
+    padding-bottom: 10px;
+}
+
+.form-payment {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.products {
+    flex: 1; /* Ocupa o espaço restante */
+    margin-right: 20px; /* Espaço entre as colunas */
+    background-color: #fff; /* Fundo branco para a lista de produtos */
+    padding: 15px;
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 500;
+    color: #0A242A; /* Cor do título */
+    margin-bottom: 15px;
+}
+
+.item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0; /* Espaçamento vertical */
+    border-bottom: 1px solid #eaeaea; /* Linha entre os itens */
+}
+
+.item:last-child {
+    border-bottom: none; /* Remove a linha do último item */
+}
+
+.item-name {
+    font-size: 16px;
+    color: #0A242A; /* Cor do nome do item */
+}
+
+.subtot-price {
+    font-weight: 600; /* Destaca o preço subtotal */
+    color: #df8621; /* Cor do preço */
+}
+
+.payment-details {
+    flex: 1; /* Ocupa o espaço restante */
+    margin-left: 20px; /* Espaço entre as colunas */
+    background-color: #fff; /* Fundo branco para detalhes de pagamento */
+    padding: 15px;
+    border-radius: 8px; /* Bordas arredondadas */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-top: 20px; /* Espaço entre os elementos */
+}
+
+#button-checkout {
+    width: 100%;
+
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#go-back {
+    display: flex;
+    align-items: center;
+    color: #009EE3; /* Cor do texto de voltar */
+    text-decoration: none; /* Remove sublinhado */
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.chevron-left {
+    margin-right: 5px; /* Espaço entre ícone e texto */
+}
+
+#go-back:hover {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+
+  @media(max-width:992px){
+    .carrinho{
+        flex-direction: column;
+    }
+    .infoCarrinho{
+        width: 100%;
+    }
+    .produtoItem{
+        width: 930px;
+    }
+  }
+  @media(max-width:768px){
+    .produtoItem{
+        width: 700px;
+    }
+    .produtoInfo{
+        width: 0;
+    }
+    .preco_e_nome{
+        width: 160px;
+    min-width: 170px;
+    max-width: 160px;
+    }
+    
+  }
+  @media(max-width:576px){
+    .produtoItem{
+        width: 500px;
+    }
+    .produtoInfo{
+        width: 0;
+    }
+    .preco_e_nome{
+        width: 100px;
+    min-width: 100px;
+    max-width: 100px;
+    }
+    .tamanhos{
+        width: 100px;
+        max-width: 100px;
+        min-width: 100px;
+    }
+    .produtoInfo h3{
+        font-size: 15px;
+        font-weight: 600;
+    white-space: nowrap;         /* Impede que o texto quebre em várias linhas */
+    overflow: hidden;            /* Esconde o texto que ultrapassar o tamanho do contêiner */
+    text-overflow: ellipsis;     /* Adiciona reticências (...) no final do texto truncado */
+    max-width: 100px;
+    }
+    .produtoInfo p{
+        font-size: 20px;
+    }
   }

@@ -113,17 +113,13 @@
             
             Swal.fire({
                 title: 'Você já é um assinante!',
-                text: 'Deseja mudar ou cancelar seu plano?',
+                text: 'Deseja cancelar seu plano?',
                 icon: 'info',
                 showCancelButton: true,
-                confirmButtonText: 'Mudar plano',
                 cancelButtonText: 'Cancelar plano',
                 footer: '<button id="fechar-btn">Fechar</button>',
                 }).then((result) => {
-                if (result.isConfirmed) {
-                    // Lógica para mudar o plano
-                    console.log('Mudando o plano...');
-                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                 if (result.dismiss === Swal.DismissReason.cancel) {
                     // Lógica para cancelar o plano
                     console.log('Cancelando o plano...');
                 }

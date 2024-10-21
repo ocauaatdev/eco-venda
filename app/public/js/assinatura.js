@@ -26,7 +26,7 @@ function assinatura() {
   
   function redirecionarCompra() {
     const selectedPlan = document.querySelector('select').value;
-    let item = {};
+    let item = [];
     let planoId = '';
 
     if (selectedPlan === "opção1") {
@@ -40,7 +40,7 @@ function assinatura() {
         planoId = 3; // ID do plano Pro
     }
 
-    fetch('/create-preference-az', {
+    fetch('/create-preference-a', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
