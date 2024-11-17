@@ -11,6 +11,7 @@ var nascimento = document.querySelector('#nascimento');
 var cep = document.querySelector('#cep');
 var senha = document.querySelector('#senha');
 var confirmSenha = document.querySelector('#confirmSenha');
+var infosCep = document.querySelector('.infosCep');
 
 // =====Texts=====
 var usuarioTxt = document.querySelector('#usuarioTxt');
@@ -113,6 +114,35 @@ cpf.addEventListener('keyup', ()=>{
     //     }
     //     });
 
+    // Função para buscar informações do CEP
+    function buscarCEP(cep) {
+        $.ajax({
+            url: `https://viacep.com.br/ws/${cep}/json/`,
+            method: "GET",
+            dataType: "json",
+            success: function(data) {
+                if (!data.erro) {
+                    infosCep.innerHTML = `
+                        <p>Informações do CEP digitado:</p>
+                        <p>Endereço: ${data.logradouro}</p>
+                        <p>Bairro: ${data.bairro}</p>
+                        <p>Cidade: ${data.localidade}</p>
+                        <p>Estado: ${data.uf}</p>
+                    `;
+                    infosCep.style.display = 'block'; // Exibe a div
+                } else {
+                    infosCep.innerHTML = `<p style="color:red;">CEP não encontrado.</p>`;
+                    infosCep.style.display = 'block'; // Exibe a div
+                }
+            },
+            error: function() {
+                infosCep.innerHTML = `<p style="color:red;">Erro ao buscar o CEP.</p>`;
+                infosCep.style.display = 'block'; // Exibe a div
+            }
+        });
+    }
+
+
 // CEP
 cep.addEventListener('keyup', ()=>{
     if (cep.value.length <= 8) {
@@ -124,6 +154,18 @@ cep.addEventListener('keyup', ()=>{
         cepTxt.innerHTML = 'CEP'
         validCEP = true;
     }
+    });
+
+    // Evento ao terminar de digitar o CEP (blur)
+    cep.addEventListener('keyup', function() {
+        
+        var cepValue = cep.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+        if (cepValue.length === 8) {
+            buscarCEP(cepValue);
+        } else {
+            infosCep.innerHTML = ''; // Limpa as informações se o CEP for apagado
+            infosCep.style.display = 'none'; // Oculta a div
+        }
     });
 
 // Senha

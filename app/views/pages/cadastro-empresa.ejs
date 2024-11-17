@@ -54,6 +54,18 @@
             <h3 id="cepTxt">CEP:</h3>
             <input type="text" name="cep" id="cep"  value="<%= valores.cep || '' %>" required>
 
+            <div class="infosCep" style="display: none;">
+              <!-- Aqui informações do CEP -->
+            </div>
+
+            <!-- ============ NUMERO EMPRESA =========== -->
+            <h3 id="numeroEmpresaTxt">Número:</h3>
+            <input type="text" name="numeroEmpresa" id="numeroEmpresa"  value="<%= valores.numeroEmpresa || '' %>" required>
+
+            <!-- ============ COMPLEMENTO =========== -->
+            <h3 id="complementoTxt">Complemento:</h3>
+            <input type="text" name="complementoEmpresa" id="complementoEmpresa"  value="<%= valores.complementoEmpresa || '' %>" >
+
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">

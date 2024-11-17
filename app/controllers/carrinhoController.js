@@ -2,11 +2,13 @@ const { carrinho } = require("../util/carrinho");
 const clientesModel = require("../models/usuarioModel");  // Certifique-se de usar o caminho correto
 const cuponsModel = require('../models/cuponsModel')
 const produtosModel = require("../models/produtosModel");
+const produtosController = require("../controllers/produtosController");
 
 const carrinhoController = {
     aplicarCupom: async (req, res) => {
         try {
-            let carrinho = req.session.carrinho; 
+            let carrinho = req.session.carrinho;
+            const userId = req.session.autenticado ? req.session.autenticado.id : null; 
             // Garante que o carrinho é um array, mesmo se não estiver definido
             if (!carrinho) {
                 carrinho = [];
@@ -14,19 +16,26 @@ const carrinhoController = {
             }
     
             // Salva o código do cupom na sessão
-            const codigoCupom = req.body.cupom;
-    
-            if (carrinho.length === 0) {
-                return res.render("pages/carrinho", {
-                    autenticado: req.session.autenticado,
-                    carrinho: req.session.carrinho,
-                    listaErros: ["Carrinho está vazio"],
-                    qtdItensCarrinho: 0
-                });
+            const cuponsExpirados = await cuponsModel.getCuponsExpirados();
+
+        if (cuponsExpirados.length > 0) {
+            // Para cada cupom expirado, atualiza o status para "expirado"
+            for (const cupom of cuponsExpirados) {
+                await cuponsModel.updateStatus(cupom.idCupons, 'expirado');
+                console.log(`Cupom com ID ${cupom.idCupons} foi marcado como expirado.`);
             }
-    
-            // Busca o cupom no banco de dados
-            const cupom = await cuponsModel.findByCodigo(codigoCupom);
+        }
+
+        // Lógica para aplicar o cupom no carrinho
+        const codigoCupom = req.body.cupom;
+
+        const cupom = await cuponsModel.findByCodigo(codigoCupom);
+        if (cupom && cupom.statusCupom === 'expirado') {
+            return res.redirect('/aplicar-cupom?erro=expirado');
+        } else if (!cupom) {
+            // Redireciona ou retorna uma resposta caso o cupom não seja encontrado
+            return res.redirect('/aplicar-cupom?erro=invalido');
+        }
     
             if (!cupom) {
                 return res.render("pages/carrinho", {
@@ -37,30 +46,36 @@ const carrinhoController = {
                     qtdItensCarrinho: carrinho.length
                 });
             }
-            carrinho.forEach(item => {
-                console.log(`categoria: ${item.categoriaProd}`)
-            });
-            
-            // Verifica se há produtos no carrinho com a mesma categoria do cupom
-            const categoriaCupom = cupom.categoriaCupom;
-            const temProdutoDaMesmaCategoria = carrinho.some(item => {
-                console.log(`Categoria do produto: ${item.categoriaProd}, Categoria do cupom: ${categoriaCupom}`);
-                return item.categoriaProd === categoriaCupom; // Verifica se a categoria do produto no carrinho é igual à do cupom
-            });
-    
-            if (!temProdutoDaMesmaCategoria) {
+
+            const cupomUsado = await cuponsModel.verificarCupomUsado(userId, codigoCupom);
+            if (cupomUsado) {
                 return res.render("pages/carrinho", {
                     autenticado: req.session.autenticado,
                     endereco: req.session.endereco,
                     carrinho: req.session.carrinho,
-                    listaErros: ["Não há produtos da mesma categoria do cupom."],
+                    listaErros: ["Cupom já utilizado anteriormente"],
                     qtdItensCarrinho: carrinho.length
                 });
+            }
+            
+
+            // Verifica se há produtos no carrinho com a mesma categoria do cupom
+            const categoriaCupom = cupom.categoriaCupom;
+            const temProdutoDaMesmaCategoria = carrinho.some(item => {
+                
+                return item.categoriaProd === categoriaCupom; // Verifica se a categoria do produto no carrinho é igual à do cupom
+            });
+    
+            if (!temProdutoDaMesmaCategoria) {
+                console.log("Não há produtos da mesma categoria do cupom.")
+                return res.redirect('/aplicar-cupom?erro=categoria')
             }
     
             // Calcula o total do carrinho
             const totalCarrinho = carrinho.reduce((total, item) => total + (item.qtde * item.preco), 0);
             let desconto = 0;
+            req.session.carrinho.total = totalCarrinho 
+            req.session.carrinho.totalComDesconto = 0;
     
             if (cupom && typeof cupom.tipoCupom === "number" && typeof cupom.descontoCupons === "string") {
                 const valorDesconto = parseFloat(cupom.descontoCupons);
@@ -70,27 +85,30 @@ const carrinhoController = {
                 } else if (cupom.tipoCupom === 2) {
                     desconto = valorDesconto;
                 }
+
+                req.session.carrinho.totalComDesconto = Math.max(totalCarrinho - desconto, 0);
             }
     
-            const totalComDesconto = Math.max(totalCarrinho - desconto, 0);
+            console.log("Valor total salvo na sessão:", req.session.carrinho.totalComDesconto);
+            console.log(req.session.carrinho)
+
+            
     
-            req.session.totalComDesconto = totalComDesconto;
+            
             req.session.cupomAplicado = {
                 codigo: cupom.nomeCupom,
                 desconto: desconto,
                 categoria: cupom.categoriaCupom
             };
             console.log("Cupom salvo na sessão:", req.session.cupomAplicado);
-    
             res.render("pages/carrinho", {
                 autenticado: req.session.autenticado,
                 carrinho: req.session.carrinho,
                 listaErros: null,
+                desconto: desconto,
                 endereco: req.session.endereco,
                 qtdItensCarrinho: carrinho.length,
-                totalCarrinho: totalCarrinho,
-                totalComDesconto: req.session.totalComDesconto ? req.session.totalComDesconto.toFixed(2) : '0.00',
-                cupom: cupom.nomeCupom
+                cupom: cupom.nomeCupom,
             });
     
         } catch (error) {
@@ -111,9 +129,23 @@ const carrinhoController = {
             let preco = req.query.preco;
             let redirectToCart = req.query.redirect === 'true'; // Verifica se o redirecionamento foi solicitado
     
+            // Obtém a quantidade atual do item no carrinho
+            const quantidadeAtual = req.session.carrinho.find(item => item.codproduto === id)?.qtde || 0;
+            const novaQuantidade = quantidadeAtual + 1;
+    
+            // Verifica o estoque disponível antes de adicionar ao carrinho
+            const estoqueDisponivel = await produtosController.verificarEstoque(id, novaQuantidade);
+            if (!estoqueDisponivel) {
+                // Retorna uma mensagem de erro se o estoque for insuficiente
+                return res.status(400).json({ error: "Estoque insuficiente." });
+            }
+    
+            // Adiciona o item ao carrinho somente se houver estoque
             await carrinho.addItem(id, 1, preco);
+    
+            // Atualiza o carrinho e a quantidade total de itens na sessão
             carrinho.atualizarCarrinho(req);
-            res.locals.qtdItensCarrinho = carrinho.getQtdeItens();  // Atualiza a quantidade de itens
+            res.locals.qtdItensCarrinho = carrinho.getQtdeItens();
     
             // Redireciona para a página do carrinho se 'redirect=true', caso contrário, redireciona para a página anterior
             if (redirectToCart) {
@@ -125,7 +157,7 @@ const carrinhoController = {
         } catch (e) {
             console.log(e);
             res.render("pages/home-page", {
-                listaErros: erros, 
+                listaErros: erros,
                 dadosNotificacao: {
                     titulo: "Erro ao adicionar o item!",
                     mensagem: "Tente novamente mais tarde!",
@@ -133,7 +165,7 @@ const carrinhoController = {
                 }
             });
         }
-    },
+    },    
 
     removeItem: (req, res) => {
         try {
@@ -180,13 +212,21 @@ const carrinhoController = {
 
     listarcarrinho: (req, res) => {
         try {
-            // console.log(req.session); // Adicione isso para verificar o conteúdo da sessão
             carrinho.atualizarCarrinho(req);
+            
+            const totalCarrinho = req.session.carrinho.reduce((total, item) => {
+                return total + (item.qtde * item.preco);
+            }, 0);
+            
+            req.session.carrinho.total = totalCarrinho;
+    
             res.render("pages/carrinho", {
                 autenticado: req.session.autenticado,
                 carrinho: req.session.carrinho,
                 listaErros: null,
-                qtdItensCarrinho: carrinho.getQtdeItens() // Passa a quantidade de itens para a view
+                qtdItensCarrinho: carrinho.getQtdeItens(),
+                total: totalCarrinho,
+                totalComDesconto: req.session.carrinho.totalComDesconto || null,
             });
         } catch (e) {
             console.log(e);
@@ -199,7 +239,7 @@ const carrinhoController = {
                     mensagem: "Tente novamente mais tarde!",
                     tipo: "error"
                 }
-            })
+            });
         }
     },
     enderecoCliente: async (req, res) => {
@@ -225,6 +265,8 @@ const carrinhoController = {
                     bairro: cliente.bairroCliente,
                     cidade: cliente.cidadeCliente,
                     uf: cliente.ufCliente,
+                    numeroCliente: cliente.numeroCliente,
+                    complementoCliente: cliente.complementoCliente
                 };
 
                 // Definindo o endereço na sessão

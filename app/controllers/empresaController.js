@@ -142,6 +142,8 @@ const empresaController = {
                     bairroEmpresa: cepValido.bairro,
                     cidadeEmpresa: cepValido.localidade,
                     ufEmpresa: cepValido.uf,
+                    numeroEmpresa: req.body.numeroEmpresa,
+                    complementoEmpresa: req.body.complementoEmpresa
                 };
     
                 // Verifica se o nome de usuário, e-mail ou CPF já existem
@@ -328,7 +330,7 @@ const empresaController = {
         }
    
         try {
-            const { razaoSocial, emailEmpresa, celularEmpresa, cpnjempresa, cepEmpresa } = req.body;
+            const { razaoSocial, emailEmpresa, celularEmpresa, cpnjempresa, cepEmpresa,numeroEmpresa,complementoEmpresa  } = req.body;
             const endereco = await validarCEP(cepEmpresa.replace('-', ''));
             if (!endereco) {
                 return res.status(400).send('CEP inválido.');
@@ -345,6 +347,8 @@ const empresaController = {
                 bairroEmpresa: endereco.bairro,
                 cidadeEmpresa: endereco.localidade,
                 ufEmpresa: endereco.uf,
+                numeroEmpresa,
+                complementoEmpresa,
             });
    
             console.log('Resultado da atualização no controller:', result); // Adicione isso para depuração

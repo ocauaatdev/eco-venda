@@ -20,25 +20,34 @@ criarNotificacaoCompra: async (clienteId, mensagem) => {
   }
 },
 
-criarNotificacaoCupom: async (dados) => {
-  const query = 'INSERT INTO notificacoes (mensagem, plano_id) VALUES (?, ?)';
+criarNotificacaoCupom: async (clienteId, planoId, mensagem) => {
   try {
-      await pool.query(query, [dados.mensagem, dados.plano_id]);
+    const query = 'INSERT INTO notificacoes (Clientes_idClientes, plano_id, mensagem, lida, dataNotificacao) VALUES (?, ?, ?, false, NOW())';
+    await pool.query(query, [clienteId, planoId, mensagem]);
+    console.log('Notificação criada com sucesso');
   } catch (error) {
-      console.error("Erro ao criar notificação:", error);
-      throw error;
+    console.error('Erro ao criar notificação:', error);
   }
 },
 
   // Busca todas as notificações do usuário, podendo filtrar por lidas ou não lidas
   buscarNotificacoes: async (usuarioId, status) => {
-    const query = 'SELECT * FROM notificacoes WHERE Clientes_idClientes = ? ORDER BY lida ASC, dataNotificacao DESC' + (status !== null ? ' AND lida = ?' : '');
-    const params = [usuarioId];
-    if (status !== null) params.push(status);
+    let query = `
+        SELECT * FROM notificacoes 
+        WHERE (Clientes_idClientes = ? OR plano_id = (SELECT Plano_idPlano FROM assinatura WHERE Clientes_idClientes = ?)) 
+    `;
+    const params = [usuarioId, usuarioId];
     
+    if (status !== null) {
+        query += ' AND lida = ?';
+        params.push(status);
+    }
+    
+    query += ' ORDER BY lida ASC, dataNotificacao DESC';
+  
     const [notificacoes] = await pool.query(query, params);
     return notificacoes;
-},
+  },  
 
   // Envia uma nova notificação
   enviarNotificacao: async (usuarioId, mensagem) => {

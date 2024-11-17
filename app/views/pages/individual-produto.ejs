@@ -16,6 +16,9 @@
         <section class="container">
             <section class="imgContainer">
                 <img src="<%= produto.imagemProd %>" alt="<%= produto.tituloProd %>">
+                <% if (produto.qtdeEstoque <= 0) { %>
+                    <div class="faixa-esgotado">Esgotado</div>
+                <% } %>
             </section>
             <section class="produtoInfo">
                 <h3 class="nomeProduto"><%= produto.tituloProd %></h3>
@@ -73,10 +76,17 @@ if (tamanhos.length > 0) {
                 <h2>à vista R$<%= produto.valorProd %></h2>       
 
                 <section class="buttons">
-    <a class="comprarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>&redirect=true"><button class="comprarBtn">Comprar</button></a>
-    
-    <a class="adicionarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>"><button class="adicionarBtn">Adicionar ao carrinho</button></a>
-</section>
+                    <% if (produto.qtdeEstoque > 0) { %>
+                        <a class="comprarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>&redirect=true">
+                            <button class="comprarBtn">Comprar</button>
+                        </a>
+                        <a class="adicionarCarrinho" href="/addItem?id=<%= produto.idProd %>&preco=<%= parseFloat(produto.valorProd).toFixed(2) %>">
+                            <button class="adicionarBtn">Adicionar ao carrinho</button>
+                        </a>
+                    <% } else { %>
+                        <button class="comprarBtn btnEsgotado" disabled>Produto Esgotado</button>
+                    <% } %>
+                </section>
                 
             </section>
         </section>

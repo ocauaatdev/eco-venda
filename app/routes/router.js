@@ -48,6 +48,22 @@ function verificaAdmin(req, res, next){
 }
 
 router.post('/aplicar-cupom', carrinhoController.aplicarCupom);
+router.get('/aplicar-cupom', (req, res) => {
+  const erro = req.query.erro;
+
+  // Verifique o tipo de erro e redirecione ou exiba mensagens específicas
+  if (erro === 'expirado') {
+    return res.redirect('/carrinho?cupom=expirado'); // Exemplo: Cupom expirado
+  } else if (erro === 'invalido') {
+    return res.redirect('/carrinho?cupom=invalido'); // Exemplo: Cupom não encontrado
+  } else if (erro === 'categoria') {
+    return res.redirect('/carrinho?cupom=categoria'); // Exemplo: Cupom inválido
+  } else {
+    // Caso não seja nenhum erro específico, redirecione para o carrinho normalmente
+    return res.redirect('/carrinho');
+  }
+});
+
 
 // Middleware para inicializar o carrinho
 router.use((req, res, next) => {
@@ -312,20 +328,19 @@ router.get("/notificacoes", async (req, res) => {
   const lidas = req.query.lidas;
 
   try {
-      let query;
-      let params = [usuarioId];
-
-      if (lidas === 'true' || lidas === 'false') {
-          query = 'SELECT * FROM notificacoes WHERE Clientes_idClientes = ? AND lida = ? ORDER BY lida ASC, dataNotificacao DESC';
-          params.push(lidas === 'true');
-      } else {
-          query = 'SELECT * FROM notificacoes WHERE Clientes_idClientes = ? ORDER BY lida ASC, dataNotificacao DESC'; // Pega todas as notificações do usuário
+      let status = null;
+      if (lidas === 'true') {
+          status = true;
+      } else if (lidas === 'false') {
+          status = false;
       }
 
-      const [notificacoes] = await pool.query(query, params);
+      // Busca as notificações considerando Clientes_idClientes ou plano_id
+      const notificacoes = await notificacaoModel.buscarNotificacoes(usuarioId, status);
+
       res.json({ notificacoes });
   } catch (error) {
-      console.error(error);
+      console.error('Erro ao buscar notificações:', error);
       res.status(500).json({ sucesso: false, mensagem: 'Erro ao buscar notificações' });
   }
 });
@@ -535,27 +550,33 @@ router.post("/cancelar-assinatura", function (req, res) {
   assinaturaController.cancelarAssinatura(req, res);
 });
 
-
+router.post('/finalizar-compra', produtosController.finalizarCompra);
 
 // =================================== Produtos ==========================================
 router.post("/create-preference", function (req, res) {
   const preference = new Preference(client);
-  console.log(req.body.items);
+
+  // Cria a preferência no Mercado Pago
   preference.create({
     body: {
-      items: req.body.items,
+      items: req.body.items.map(item => ({
+        title: item.description,
+        unit_price: parseFloat(item.unit_price), // Usar o preço com desconto aqui
+        quantity: item.quantity,
+        currency_id: item.currency_id
+      })),
       back_urls: {
-        "success": process.env.URL_BASE + "/feedback",
-        "failure": process.env.URL_BASE + "/feedback",
-        "pending": process.env.URL_BASE + "/feedback"
+        success: process.env.URL_BASE + "/feedback",
+        failure: process.env.URL_BASE + "/feedback",
+        pending: process.env.URL_BASE + "/feedback"
       },
-      auto_return: "approved",
+      auto_return: "approved"
     }
   })
     .then((value) => {
-      res.json(value)
+      res.json(value);
     })
-    .catch(console.log)
+    .catch(console.log);
 });
 
 router.get("/feedback", function (req, res) {

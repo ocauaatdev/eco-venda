@@ -38,7 +38,7 @@ const assinaturaModel = {
 
       getAssinatura: async (usuarioId) => {
         const query = `
-            SELECT p.nome AS planoNome, a.fim_vigencia, DATEDIFF(a.fim_vigencia, NOW()) AS diasRestantes
+            SELECT p.nome AS planoNome, a.fim_vigencia, DATEDIFF(a.fim_vigencia, NOW()) AS diasRestantes, a.Plano_idPlano
             FROM assinatura a
             JOIN plano p ON a.Plano_idPlano = p.idPlano
             WHERE a.Clientes_idClientes = ?

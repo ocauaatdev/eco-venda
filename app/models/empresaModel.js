@@ -64,7 +64,7 @@ const empresaModel = {
 
     update: async (id, dadosForm) => {
         try {
-            const [linhas] = await pool.query('UPDATE empresas SET razaoSocial = ?, emailEmpresa = ?, celularEmpresa = ?, cepEmpresa = ?, logradouroEmpresa = ?, bairroEmpresa = ?, cidadeEmpresa = ?, ufEmpresa = ? WHERE idEmpresas = ?', [
+            const [linhas] = await pool.query('UPDATE empresas SET razaoSocial = ?, emailEmpresa = ?, celularEmpresa = ?, cepEmpresa = ?, logradouroEmpresa = ?, bairroEmpresa = ?, cidadeEmpresa = ?, ufEmpresa = ?, numeroEmpresa = ?, complementoEmpresa = ? WHERE idEmpresas = ?', [
                 dadosForm.razaoSocial,
                 dadosForm.emailEmpresa,
                 dadosForm.celularEmpresa,
@@ -73,6 +73,8 @@ const empresaModel = {
                 dadosForm.bairroEmpresa,
                 dadosForm.cidadeEmpresa,
                 dadosForm.ufEmpresa,
+                dadosForm.numeroEmpresa,
+                dadosForm.complementoEmpresa,
                 id
             ]);
             return linhas;

@@ -59,6 +59,18 @@
             <h3 id="cepTxt">CEP:</h3>
             <input type="text" name="cep" id="cep"  value="<%= valores.cep || '' %>" required>
 
+            <div class="infosCep" style="display: none;">
+              <!-- Aqui informações do CEP -->
+            </div>
+            
+            <!-- ============ NUMERO DA RESIDENCIA =========== -->
+            <h3 id="numeroResidTxt">Numero da residência:</h3>
+            <input type="text" name="numeroResid" id="numeroResid"  value="<%= valores.numeroResid || '' %>" required>
+
+            <!-- ============ COMPLEMENTO =========== -->
+            <h3 id="complemento">Complemento:</h3>
+            <input type="text" name="complemento" id="complemento"  value="<%= valores.complemento || '' %>">
+
             <!-- ============ Senha =========== -->
             <h3 id="senhaTxt">Senha:</h3> 
             <div class="senha-container">
@@ -81,6 +93,7 @@
         </form>
     </section>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         if(urlParams.get('cadastro') === 'sucesso'){

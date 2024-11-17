@@ -118,6 +118,20 @@
                             <span id="ufTexto"><%= Empresa.ufEmpresa %></span>
                             <input type="text" id="uf" name="ufEmpresa" value="<%= Empresa.ufEmpresa %>" style="display: none;" readonly>
                         </div>
+
+                        <div>
+                            <label for="numeroEmpresa">Número:</label>
+                            <span id="numeroEmpresaTxt"><%= Empresa.numeroEmpresa %></span>
+                            <input type="text" id="uf" name="numeroEmpresa" value="<%= Empresa.numeroEmpresa %>" style="display: none; border: none;">
+                        </div>
+
+                        <div>
+                            <label for="complemento">Complemento:</label>
+                            <span id="complementoTxt"><%= Empresa.complementoEmpresa %></span>
+                            <input type="text" id="uf" name="complementoEmpresa" value="<%= Empresa.complementoEmpresa %>" style="display: none; border: none;">
+                        </div>
+
+
                     </section>
                         
                         <div class="botoesAcao">
@@ -225,24 +239,36 @@
 <section id="vendidos" class="secaoPerfil">
     <h2>Produtos Vendidos</h2>
 
+     <!-- Filtro de Ordenação -->
+    <div>
+        <label for="filtroOrdenacao">Ordenar por:</label>
+        <select id="filtroOrdenacao" onchange="filtrarPedidos()">
+            <option value="" selected disabled>Selecione</option>
+            <option value="recente">Mais Recentes</option>
+            <option value="antigo">Mais Antigos</option>
+        </select>
+    </div>
+
     <% if (pedidos && pedidos.length > 0) { %>
         <div class="empresa-cards-container">
-            <% pedidos.forEach(pedido => { %>
-            <div class="pedido-card-empresa">
-                <div class="card-header">
-                    <h3>ID Pedido: <%= pedido.idPedidos %></h3>
+            <div id="pedidoCardsContainer" class="empresa-cards-container">
+                <% pedidos.forEach(pedido => { %>
+                <div class="pedido-card-empresa" data-data-pedido="<%= pedido.data_pedido %>">
+                    <div class="card-header">
+                        <h3>ID Pedido: <%= pedido.idPedidos %></h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Data do Pedido:</strong> <%= moment(pedido.data_pedido).format('DD/MM/YYYY') %></p>
+                        <p><strong>Valor Total:</strong> R$ <%= pedido.total_pedido %></p>
+                        <p><strong>Cliente:</strong> <%= pedido.nomeCliente %></p>
+                        <p><strong>Status Pedido:</strong> <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %></p>
+                    </div>
+                    <div class="card-footer">
+                        <button class="notificarBtn" data-id="<%= pedido.idPedidos %>">Detalhes</button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p><strong>Data do Pedido:</strong> <%= moment(pedido.data_pedido).format('DD/MM/YYYY') %></p>
-                    <p><strong>Valor Total:</strong> R$ <%= pedido.total_pedido %></p>
-                    <p><strong>Cliente:</strong> <%= pedido.nomeCliente %></p>
-                    <p><strong>Status Pedido:</strong> <%= pedido.ocorrenciaDescricao ? pedido.ocorrenciaDescricao : 'Pendente' %></p>
-                </div>
-                <div class="card-footer">
-                    <button class="notificarBtn" data-id="<%= pedido.idPedidos %>">Detalhes</button>
-                </div>
+                <% }) %>
             </div>
-            <% }) %>
         </div>
         <% } else { %>
         <p>Nenhum pedido vendido ainda.</p>
@@ -294,6 +320,30 @@
     </main>
 
     <%- include('../partial/scripts-essenciais'); %>
+
+    <!-- Script para o filtro dinâmico -->
+    <script>
+        function filtrarPedidos() {
+            const filtro = document.getElementById('filtroOrdenacao').value;
+            const container = document.getElementById('pedidoCardsContainer');
+            
+            // Verifica se o container existe
+            if (!container) return;
+    
+            // Obter os elementos de pedido
+            const pedidos = Array.from(container.getElementsByClassName('pedido-card-empresa'));
+    
+            pedidos.sort((a, b) => {
+                const dataA = new Date(a.getAttribute('data-data-pedido'));
+                const dataB = new Date(b.getAttribute('data-data-pedido'));
+                return filtro === 'recente' ? dataB - dataA : dataA - dataB;
+            });
+            
+            // Limpar o container e adicionar os pedidos na nova ordem
+            container.innerHTML = '';
+            pedidos.forEach(pedido => container.appendChild(pedido));
+        }
+    </script>
 
     <script>
         document.querySelectorAll('.notificarBtn').forEach(button => {
@@ -386,8 +436,17 @@ document.getElementById('historicoRastreios').innerHTML = historicoHtml;
                 fetch(`/api/pedido-entrega?pedidoId=${pedidoId}`)
                     .then(response => response.json())
                     .then(data => {
-                        // Atualizar o local de entrega
-                        document.getElementById('localEntrega').innerText = data.localEntrega;
+    const localEntrega = JSON.parse(data.localEntrega);  // Caso esteja em formato JSON, parse para objeto
+    
+    // Formatar o local de entrega de maneira organizada
+    const enderecoFormatado = `
+        ${localEntrega.logradouro}, ${localEntrega.numeroCliente} ${localEntrega.complementoCliente ? '- ' + localEntrega.complementoCliente : ''}
+        <br>${localEntrega.bairro}, ${localEntrega.cidade} - ${localEntrega.uf}
+        <br>CEP: ${localEntrega.cep}
+    `;
+    
+    // Atualizar o local de entrega
+    document.getElementById('localEntrega').innerHTML = enderecoFormatado;
     
                         // Exibir o formulário
                         document.querySelector('.formNotificar').style.display = 'block';

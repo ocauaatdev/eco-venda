@@ -15,6 +15,7 @@
     padding: 30px;
 }
 .imgContainer{
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -106,6 +107,9 @@
     cursor: pointer;
     /* margin-right: 10px; */
 }
+.buttons .btnEsgotado{
+    width: 200px;
+}
 .buttons .adicionarBtn{
     margin-top: 20px;
     margin-bottom: 5%;
@@ -142,6 +146,20 @@
     font-size: 16px; /* Ajusta o tamanho da fonte */
     white-space: pre-wrap;
 }
+
+.faixa-esgotado {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background-color: rgba(255, 0, 0, 0.8);
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 5px;
+    z-index: 10;
+}
+
 @media(max-width:992px){
     .container{
         display: grid;

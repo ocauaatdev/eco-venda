@@ -173,7 +173,13 @@ ordenarProdutosPorEmpresa: async (criterio, empresaId) => {
     } catch (error) {
         throw error;
     }
-}
+},
+
+updateEstoque: async (idProduto, novaQuantidade) => {
+  const query = 'UPDATE produtos_das_empresas SET qtdeEstoque = ? WHERE idProd = ?';
+  return pool.query(query, [novaQuantidade, idProduto]);
+},
+
 
 };
     

@@ -1,32 +1,34 @@
 <% if (listarProdutos) { 
-   listarProdutos.forEach(item => {
-      let parcelado = parseFloat(item.valorProd) / 6;
-   %>
-   <section class="product" data-categoria="<%= item.categoria %>">
-      <a href="/produto/<%= item.idProd %>"> 
-         <section class="imgProduct">
-            <img src="<%= item.imagemProd %>" alt="<%= item.tituloProd %>" class="images">
-         </section>
-      </a>
-      <section class="infoProduct">
-         <h3 id="nomeProduct"><%= item.tituloProd %></h3>
-         <h1 id="precoParcelado"><small>6 x de R$ </small><strong><%= parcelado.toFixed(2) %></strong></h1>
-         <section class="precoAvista">
-           <h2>à vista </h2>
-           <h2 id="precoReal">R$<%= item.valorProd %></h2>
-         </section>
-
-         <a class="adicionarCarrinho" href="/addItem?id=<%= item.idProd %>&preco=<%= parseFloat(item.valorProd).toFixed(2) %>">
-         <button class="btn-add-carrinho" data-id="<%= item.idProd %>" data-preco="<%= parseFloat(item.valorProd).toFixed(2) %>">Adicionar ao Carrinho</button>
-         </a>
-
-
-
-      </section>
-   </section>
-   <% 
-       }); 
-   } %>
+    listarProdutos.forEach(item => {
+       let parcelado = parseFloat(item.valorProd) / 6;
+    %>
+    <section class="product" data-categoria="<%= item.categoria %>">
+       <a href="/produto/<%= item.idProd %>"> 
+          <section class="imgProduct">
+             <img src="<%= item.imagemProd %>" alt="<%= item.tituloProd %>" class="images">
+             
+             <% if (item.qtdeEstoque === 0) { %>
+                <div class="esgotado-badge">Esgotado</div>
+             <% } %>
+          </section>
+       </a>
+       <section class="infoProduct">
+          <h3 id="nomeProduct"><%= item.tituloProd %></h3>
+          <h1 id="precoParcelado"><small>6 x de R$ </small><strong><%= parcelado.toFixed(2) %></strong></h1>
+          <section class="precoAvista">
+            <h2>à vista </h2>
+            <h2 id="precoReal">R$<%= item.valorProd %></h2>
+          </section>
+ 
+          <a class="adicionarCarrinho" href="/addItem?id=<%= item.idProd %>&preco=<%= parseFloat(item.valorProd).toFixed(2) %>">
+          <button class="btn-add-carrinho" data-id="<%= item.idProd %>" data-preco="<%= parseFloat(item.valorProd).toFixed(2) %>" <% if (item.qtdeEstoque === 0) { %>disabled<% } %>>Adicionar ao Carrinho</button>
+          </a>
+       </section>
+    </section>
+    <% 
+        }); 
+    } %>
+ 
 
    <script>
     // Função para exibir notificações

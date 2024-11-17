@@ -80,10 +80,11 @@
                     
     
                     <!-- Icone Carrinho -->
-<li><a class="menuicon" href="/carrinho"> <!--link para entrar na pagina do carrinho-->
+<li><a id="carrinhoIconContainer" class="menuicon" href="/carrinho"> <!--link para entrar na pagina do carrinho-->
+    <span id="cart-item-count" class="item-count"><%= qtdItensCarrinho %></span>
     <span class="icon"><i class="fa-solid fa-cart-shopping"></i></span>
     <span class="text">Carrinho</span>
-    <span id="cart-item-count" class="item-count"><%= qtdItensCarrinho %></span>
+    
 </a></li> <!-- Fim Icone Carrinho -->   
     
                 <!--Icone Menu Hamburguer-->

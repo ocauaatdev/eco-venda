@@ -90,6 +90,54 @@ const produtosController = {
       res.status(500).render("pages/500", { mensagem: "Erro ao carregar o produto." });
     }
   },
+
+  atualizarEstoqueProduto: async (idProduto, quantidadeComprada) => {
+    try {
+      // Busca o produto pelo ID e verifica a quantidade atual em estoque
+      const [produto] = await produtosModel.findById(idProduto);
+      if (!produto) throw new Error("Produto não encontrado");
+
+      // Calcula a nova quantidade em estoque
+      const novaQuantidadeEstoque = produto.qtdeEstoque - quantidadeComprada;
+
+      // Garante que a quantidade de estoque não fique negativa
+      if (novaQuantidadeEstoque < 0) {
+        throw new Error("Estoque insuficiente para a quantidade comprada");
+      }
+
+      novaQuantidadeEstoque = Math.max(novaQuantidadeEstoque, 0);
+
+      // Atualiza a quantidade em estoque no banco de dados
+      await produtosModel.updateEstoque(idProduto, novaQuantidadeEstoque);
+    } catch (error) {
+      console.error("Erro ao atualizar estoque:", error.message);
+      throw error;
+    }
+  },
+
+  finalizarCompra: async (req, res) => {
+    const carrinho = req.session.carrinho || [];
+  
+    try {
+      // Atualiza o estoque para cada item no carrinho
+      for (const item of carrinho) {
+        await produtosController.atualizarEstoqueProduto(item.codproduto, item.qtde);
+      }
+  
+      // Limpa o carrinho após a compra
+      req.session.carrinho = [];
+    } catch (error) {
+      console.error("Erro ao finalizar compra:", error.message);
+      res.status(500).send("Erro ao processar a compra. Tente novamente.");
+    }
+  },
+
+  verificarEstoque: async (idProduto, quantidadeDesejada) => {
+    const [produto] = await produtosModel.findById(idProduto);
+    return produto && produto.qtdeEstoque >= quantidadeDesejada;
+  },
+  
+
 };
 
 module.exports = produtosController;

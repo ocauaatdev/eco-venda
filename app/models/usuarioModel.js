@@ -70,7 +70,7 @@ const clientesModel = {
     
     update: async (id, dadosForm) => {
         try {
-            const [linhas] = await pool.query('UPDATE clientes SET nomeCliente = ?, emailCliente = ?, celularCliente = ?, cpfCliente = ?, cepCliente = ?, logradouroCliente = ?, bairroCliente = ?, cidadeCliente = ?, ufCliente = ? WHERE idClientes = ?', [
+            const [linhas] = await pool.query('UPDATE clientes SET nomeCliente = ?, emailCliente = ?, celularCliente = ?, cpfCliente = ?, cepCliente = ?, logradouroCliente = ?, bairroCliente = ?, cidadeCliente = ?, ufCliente = ?, numeroCliente = ?, complementoCliente = ? WHERE idClientes = ?', [
                 dadosForm.nomeCliente,
                 dadosForm.emailCliente,
                 dadosForm.celularCliente,
@@ -80,6 +80,8 @@ const clientesModel = {
                 dadosForm.bairroCliente,
                 dadosForm.cidadeCliente,
                 dadosForm.ufCliente,
+                dadosForm.numeroCliente,
+                dadosForm.complementoCliente,
                 id
             ]);
             return linhas;
@@ -121,6 +123,19 @@ const clientesModel = {
             throw error; // Propaga o erro para tratamento posterior
         }
     },
+    
+// No seu modelo de usuário
+buscarPorPlano: async (planoId) => {
+    const query = `
+      SELECT c.* 
+      FROM clientes c
+      JOIN assinatura a ON a.Clientes_idClientes = c.idClientes
+      WHERE a.Plano_idPlano = ?
+    `;
+    
+    const [usuarios] = await pool.query(query, [planoId]);
+    return usuarios;
+},
     
     // Adicionando a função para ativar a conta
     atualizarStatusAtivo: async (id) => {

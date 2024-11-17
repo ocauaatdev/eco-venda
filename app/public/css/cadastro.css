@@ -129,6 +129,16 @@ button{
     color: #6d6d6d;
     font-size: 20px;
 }
+
+/* ========= */
+.infosCep{
+    width: 100%;
+    height: 100%;
+    border: 1px solid;
+    border-radius: 10px;
+    border-color: #16CF8C;
+    padding: 5px;
+}
 @media(max-width:992px){
     body{
         background-image: none;

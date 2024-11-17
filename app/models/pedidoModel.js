@@ -78,8 +78,9 @@ var pool = require("../../config/pool-conexoes");
                 return error;
             }
         },
-        findPedidosByEmpresa: async (empresaId) => {
+        findPedidosByEmpresa: async (empresaId, filtro) => {
             try {
+                const ordem = filtro === 'antigo' ? 'ASC' : 'DESC'; // Define a ordem com base no filtro
                 const [resultados] = await pool.query(
                     `SELECT 
                         p.idPedidos, 
@@ -101,7 +102,8 @@ var pool = require("../../config/pool-conexoes");
                                   ON ip.produtos_das_empresas_idProd = prod.idProd 
                                   WHERE ip.pedidos_idPedidos = p.idPedidos 
                                   AND prod.empresas_idEmpresas = ?)
-                    GROUP BY p.idPedidos, c.nomeCliente`,
+                    GROUP BY p.idPedidos, c.nomeCliente
+                    ORDER BY p.data_pedido ${ordem}`, // Ordena conforme a ordem definida
                     [empresaId, empresaId, empresaId]
                 );
                 return resultados;
@@ -131,8 +133,10 @@ var pool = require("../../config/pool-conexoes");
             return [];
         }
     },
-    findPedidosByCliente: async (clienteId) => {
+    findPedidosByCliente: async (clienteId, filtro) => {
         try {
+            const ordem = filtro === 'antigo' ? 'ASC' : 'DESC';
+            
             const [resultados] = await pool.query(`
                 SELECT 
                     p.idPedidos, 
@@ -145,11 +149,12 @@ var pool = require("../../config/pool-conexoes");
                 LEFT JOIN ocorrencias_rastreio o ON r.ocorrencias_rastreio_idocorrencias_rastreio = o.idocorrencias_rastreio
                 WHERE p.clientes_idClientes = ?
                 GROUP BY p.idPedidos
+                ORDER BY p.data_pedido ${ordem}
             `, [clienteId]);
-
+    
             return resultados;
         } catch (error) {
-            console.error("Erro ao buscar pedidos do cliente:", error);
+            console.error("Erro ao buscar pedidos por cliente:", error);
             return [];
         }
     },
@@ -177,7 +182,19 @@ GROUP BY p.idPedidos, e.idEmpresas
             console.error("Erro ao buscar pedidos com rastreios e ocorrências:", error);
             return [];
         }
-    }
+    },
+
+    atualizarEstoque: async(idProduto, quantidadeComprada) => {
+        const query = `
+            UPDATE produtos_das_empresas 
+            SET qtdeEstoque = qtdeEstoque - ? 
+            WHERE idProd = ? AND qtdeEstoque >= ?`; // Verifica se tem estoque suficiente
+    
+        const [result] = await pool.query(query, [quantidadeComprada, idProduto, quantidadeComprada]);
+    
+        // Retorna verdadeiro se o estoque foi atualizado, caso contrário, retorna falso
+        return result.affectedRows > 0;
+    },
      
     };
     

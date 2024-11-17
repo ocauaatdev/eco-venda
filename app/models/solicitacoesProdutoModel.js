@@ -68,6 +68,8 @@ aprovar: async (req, res) => {
   if (!idSolicitacao) {
       return res.status(400).send('ID da solicitação não fornecido.');
   }
+
+  console.log('IDs recebidos ', req.params.idSolicitacao)
   
   try {
     

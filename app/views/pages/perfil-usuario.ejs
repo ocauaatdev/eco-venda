@@ -106,9 +106,21 @@
                             </div>
     
                             <div>
-                                <label for="uf">Uf:</label>
+                                <label for="uf">UF:</label>
                                 <span id="ufTexto"><%= user.ufCliente %></span>
                                 <input type="text" id="uf" name="ufCliente" value="<%= user.ufCliente %>" style="display: none; border: none;" readonly>
+                            </div>
+
+                            <div>
+                                <label for="numeroResid">Número da residência:</label>
+                                <span id="numeroResidTxt"><%= user.numeroCliente %></span>
+                                <input type="text" id="uf" name="numeroCliente" value="<%= user.numeroCliente %>" style="display: none; border: none;">
+                            </div>
+
+                            <div>
+                                <label for="complemento">Complemento:</label>
+                                <span id="complementoTxt"><%= user.complementoCliente %></span>
+                                <input type="text" id="uf" name="complementoCliente" value="<%= user.complementoCliente %>" style="display: none; border: none;">
                             </div>
 
                         </section>
@@ -139,7 +151,7 @@
                                     <i class="fa-solid fa-bell icone-notificacao" style="color: <% if (!notificacao.lida) { %>#FC7F2D<% } else { %>#CCCCCC<% } %>;"></i>
                                     <span class="mensagem-notificacao truncate"><%= notificacao.mensagem %></span>
                                     <span class="data-notificacao">
-                                        <%= new Date(notificacao.dataNotificacao).toLocaleString('pt-BR', { 
+                                        <%= new Date(new Date(notificacao.dataNotificacao).setHours(new Date(notificacao.dataNotificacao).getHours() - 3)).toLocaleString('pt-BR', { 
                                             day: '2-digit', month: '2-digit', year: 'numeric', 
                                             hour: '2-digit', minute: '2-digit' 
                                         }) %>
@@ -164,28 +176,38 @@
                 <!-- ACOMPANHAR PEDIDOS -->
                 <section id="acompanhamento" class="secaoPerfil">
                     <h2>Acompanhar pedidos</h2>
+
+                    <!-- Filtro de Ordenação -->
+    <div>
+        <label for="filtroOrdenacaoUsuario">Ordenar por:</label>
+        <select id="filtroOrdenacaoUsuario" onchange="filtrarPedidosUsuario()">
+            <option value="" selected disabled>Selecione</option>
+            <option value="recente">Mais Recentes</option>
+            <option value="antigo">Mais Antigos</option>
+        </select>
+    </div>
                     
-                    <% if (pedidos.length > 0) { %>
-                    <div class="cards-container">
-                        <% pedidos.forEach(pedido => { %>
-                        <div class="pedido-card">
-                            <div class="card-header">
-                                <h3>Pedido ID: <%= pedido.idPedidos %></h3>
-                            </div>
-                            <div class="card-body">
-                                <p><strong>Data do Pedido:</strong> <%= moment(pedido.data_pedido).format("DD/MM/YYYY") %></p>
-                                <p><strong>Total:</strong> R$ <%= pedido.total_pedido %></p>
-                                <p><strong>Empresa:</strong> <%= pedido.razaoSocial || "Empresa ainda não enviou ocorrências" %></p>
-                                <p><strong>Códigos de Rastreamento:</strong> <%= pedido.codigos_rastreio || "Código de rastreio indisponível no momento" %></p>
-                                <p><strong>Ocorrências:</strong> <%= pedido.ocorrencias || "Aguardando ocorrências" %></p>
-                            </div>
-                        </div>
-                        <% }); %>
-                    </div>
-                    <% } else { %>
-                    <p>Você ainda não fez nenhum pedido.</p>
-                    <% } %>
-                </section>
+    <% if (pedidos.length > 0) { %>
+        <div class="cards-container" id="usuarioPedidoCardsContainer">
+            <% pedidos.forEach(pedido => { %>
+            <div class="pedido-card" data-data-pedido="<%= pedido.data_pedido %>">
+                <div class="card-header">
+                    <h3>Pedido ID: <%= pedido.idPedidos %></h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Data do Pedido:</strong> <%= moment(pedido.data_pedido).format("DD/MM/YYYY") %></p>
+                    <p><strong>Total:</strong> R$ <%= pedido.total_pedido %></p>
+                    <p><strong>Empresa:</strong> <%= pedido.razaoSocial || "Empresa ainda não enviou ocorrências" %></p>
+                    <p><strong>Códigos de Rastreamento:</strong> <%= pedido.codigos_rastreio || "Código de rastreio indisponível no momento" %></p>
+                    <p><strong>Ocorrências:</strong> <%= pedido.ocorrencias || "Aguardando ocorrências" %></p>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+        <% } else { %>
+        <p>Você ainda não fez nenhum pedido.</p>
+        <% } %>
+    </section>
                 
                 
                 <section id="assinatura" class="secaoPerfil">
@@ -214,7 +236,36 @@
     <%- include('../partial/scripts-essenciais'); %>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
-     
+    
+    <script>
+        notificacoes.forEach(notificacao => {
+            const data = new Date(notificacao.dataNotificacao);
+            data.setHours(data.getHours() - 3);
+            notificacao.dataNotificacao = data;
+        });
+    </script>
+
+    <script>
+        function filtrarPedidosUsuario() {
+            const filtro = document.getElementById('filtroOrdenacaoUsuario').value;
+            const container = document.getElementById('usuarioPedidoCardsContainer');
+    
+            if (!container) return;
+    
+            const pedidos = Array.from(container.getElementsByClassName('pedido-card'));
+            
+            pedidos.sort((a, b) => {
+                const dataA = new Date(a.getAttribute('data-data-pedido'));
+                const dataB = new Date(b.getAttribute('data-data-pedido'));
+                return filtro === 'recente' ? dataB - dataA : dataA - dataB;
+            });
+    
+            // Atualize o conteúdo do container com os elementos pedidos ordenados
+            container.innerHTML = '';
+            pedidos.forEach(pedido => container.appendChild(pedido));
+        }
+    </script>
+
     <script>
         document.getElementById('cancelarAssinaturaBtn').addEventListener('click', function(e) {
             e.preventDefault(); // Impede o envio imediato do formulário

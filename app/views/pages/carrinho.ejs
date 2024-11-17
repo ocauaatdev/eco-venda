@@ -30,26 +30,33 @@
                             </section>
                             
                             <select class="tamanhos" id="tamanho-select-<%= item.codproduto %>" onchange="updateTamanhoCarrinho('<%= item.codproduto %>')">
-                                <option value="" disabled selected>Selecione um tamanho</option>
-                                <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
-                                    <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
-                                <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
-                                    <option value="Pequeno">Pequeno</option>
-                                    <option value="Médio">Médio</option>
-                                    <option value="Grande">Grande</option>
-                                <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
-                                    <option value="P">P</option>
-                                    <option value="M">M</option>
-                                    <option value="G">G</option>
-                                    <option value="GG">GG</option>
-                                <% } else { %>
-                                    <option value="Sem tamanho específico">Sem tamanho específico</option>
-                                <% } %>
-                            </select>
+    <option value="" disabled selected>Selecione um tamanho</option>
+    
+    <% if (item.tamanhoProd === "Pequeno" || item.tamanhoProd === "Médio" || item.tamanhoProd === "Grande") { %>
+        <option value="<%= item.tamanhoProd %>"><%= item.tamanhoProd %></option>
+    <% } else if (item.tamanhoProd === "Pequeno, Médio e Grande") { %>
+        <option value="Pequeno">Pequeno</option>
+        <option value="Médio">Médio</option>
+        <option value="Grande">Grande</option>
+    <% } else if (item.tamanhoProd === "P,M,G,GG") { %>
+        <option value="P">P</option>
+        <option value="M">M</option>
+        <option value="G">G</option>
+        <option value="GG">GG</option>
+    <% } else if (/^\d+x\d+(,\s*\d+x\d+)*$/.test(item.tamanhoProd)) { %> <!-- Verifica se o item contém dimensões -->
+        <% let dimensoes = item.tamanhoProd.split(','); %> <!-- Divide as dimensões por vírgulas -->
+        <% dimensoes.forEach(function(dimensao) { %>
+            <option value="<%= dimensao.trim() %>"><%= dimensao.trim() %></option> <!-- Exibe cada dimensão como uma opção -->
+        <% }); %>
+    <% } else { %>
+        <option value="Sem tamanho específico">Sem tamanho específico</option>
+    <% } %>
+</select>
 
                             <section class="quantidade">
-                                <a href="/addItem?id=<%= item.codproduto %>&preco=<%= item.preco %>">
-                                <i class="fa-solid fa-plus aumentar"></i></a>
+                                <a href="#" onclick="aumentarQuantidade('<%= item.codproduto %>', <%= item.qtde + 1 %>)">
+                                    <i class="fa-solid fa-plus aumentar"></i>
+                                </a>
                                 <span class="qtde-cart"><%= item.qtde %></span>
                                 <a href="/removeItem?id=<%= item.codproduto %>&qtde=1">
                                 <i class="fa-solid fa-minus diminuir"></i></a>   
@@ -73,24 +80,39 @@
                 </section>
                 <section class="txtCarrinho">
                     
-                    
+                    <h1>Local de Envio:</h1>
+                    <section class="infoEndereco">
+                    <% if (autenticado && endereco) { %>
+                        <p>CEP: <%= endereco.cep %></p>
+                        <p><%= endereco.logradouro %>, <%= endereco.numeroCliente %> - <%= endereco.complementoCliente %></p>
+                        <p><%= endereco.bairro %>, <%= endereco.cidade %> - <%= endereco.uf %></p>
+                        
+                    <% } else { %>
+                        <p>Você precisa estar logado para ver as informações de endereço.</p>
+                    <% } %>
+                    </section>
+
                     <h1>Cupons:</h1>
+                    <!-- Adicione um campo oculto para armazenar o valor total com desconto -->
+                    
                     <form action="/aplicar-cupom" method="POST">
                         <input type="text" name="cupom" id="cupons" placeholder="Digite o código do cupom">
                         <button type="submit">Aplicar Cupom</button>
                     </form>
                     
                     <!-- Mostre o total com desconto, se aplicável -->
-                    <% if (typeof totalComDesconto !== 'undefined') { %>
-                        <h2 class="totalTxt">Total com Desconto:</h2>
-                        <h2 class="precoTotal">R$ <%= totalComDesconto %> </h2>
-                    <% } else { %>
-                        <h2 class="totalTxt">Total:</h2>
-                        <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
-                    <% } %>
+                    <% if (typeof carrinho.totalComDesconto !== 'undefined' && carrinho.totalComDesconto != 0) { %>
+        <h2 class="totalTxt">Total com Desconto:</h2>
+        <h2 class="precoTotal">R$ <%= carrinho.totalComDesconto.toFixed(2) %> </h2>
+    <% } else { %>
+        <h2 class="totalTxt">Total:</h2>
+        <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
+    <% } %> 
                     
-                    <% if(autenticado && autenticado.autenticado){%>
-                        <button class="btn btn-primary btn-lg btn-block" id="checkout-btn">Finalizar Compra</button>
+                <% if(autenticado && autenticado.autenticado){%>
+                        <form action="/finalizar-compra" method="POST" onsubmit="return validarSelecaoTamanho()">
+                            <button type="submit" class="btn btn-primary btn-lg btn-block" id="checkout-btn">Finalizar Compra</button>
+                        </form>
                     <% } else { %>
                         <p class="btn btn-warning btn-lg btn-block"><a href="/login">Para comprar faça Login</a></p>
                     <% } %>
@@ -102,32 +124,38 @@
             <div class="form-payment">
                 <div class="products">
                     <h2 class="title">Resumo do pedido</h2>
-                    <% carrinho.forEach(function(item){ %>
+                    <% 
+                     
+                    carrinho.forEach(function(item){ %>
                         <div class="item">
-                            <% 
-                                // Calcula o subtotal do item
-                                const subtotal = item.qtde * item.preco;
-                                const descontoAplicado = (typeof totalComDesconto !== 'undefined') 
-                                                         ? subtotal * (totalComDesconto / totalCarrinho)
-                                                         : subtotal;
-                            %>
-                            <span class="price hidden" id="summary-price">R$ <%= descontoAplicado.toFixed(2) %> </span>
-                            <span class="price" id="subtot-price">R$ <%= descontoAplicado.toFixed(2) %> </span>
+                            
+                                <span class="price hidden" id="summary-price"><%= item.preco.toFixed(2) %></span>
+                                <input type="hidden" id="totalComDesconto" value="<%= carrinho.totalComDesconto || carrinho.total %>">
+                                
+                                <span class="price" id="subtot-price"><%=  (item.qtde * item.preco).toFixed(2) %></span>
+
+                            
                             <p class="item-name"><%= item.nome_produto %> 
                                 (<span id="summary-quantity"><%= item.qtde %></span>x R$ <%= item.preco.toFixed(2) %>) 
                             </p>
+
+                            <% if (item.desconto && item.desconto > 0) { %>
+                                <p class="discount">
+                                    Desconto: <span id="summary-discount"><%= item.desconto %> %</span>
+                                </p>
+                            <% } %>
                         </div>
                     <% }) %>
 
                     
 
-                    <% if (typeof totalComDesconto !== 'undefined') { %>
-                        <h2 class="totalTxt">Total com Desconto:</h2>
-                        <h2 class="precoTotal">R$ <%= totalComDesconto %> </h2>
-                    <% } else { %>
-                        <h2 class="totalTxt">Total:</h2>
-                        <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
-                    <% } %>
+                    <% if (typeof carrinho.totalComDesconto !== 'undefined' && carrinho.totalComDesconto != 0) { %>
+        <h2 class="totalTxt">Total com Desconto:</h2>
+        <h2 class="precoTotal">R$ <%= carrinho.totalComDesconto.toFixed(2) %> </h2>
+    <% } else { %>
+        <h2 class="totalTxt">Total:</h2>
+        <h2 class="precoTotal">R$ <%= typeof total === 'number' ? total.toFixed(2) : '0.00' %> </h2>
+    <% } %> 
                 </div>
                 <div class="payment-details">
                     <div class="form-group col-sm-12">
@@ -150,6 +178,64 @@
     <%- include('../partial/scripts-essenciais'); %>
 
     <script>
+        function validarSelecaoTamanho() {
+            const tamanhos = document.querySelectorAll('.tamanhos');
+            for (let select of tamanhos) {
+                if (!select.value) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    </script>
+    
+    <script> 
+        let maxReached = false;
+
+        function aumentarQuantidade(produtoId, novaQtde) {
+            if (maxReached) return; // Impede incremento se o limite foi atingido
+
+            fetch(`/addItem?id=${produtoId}&qtde=${novaQtde}`)
+                .then(response => {
+                    if (!response.ok) {
+                        return response.json().then(data => {
+                            maxReached = true; // Define a variável como true ao atingir o limite
+
+                            // Exibe o SweetAlert com a mensagem de erro
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: data.error || 'Erro ao adicionar ao carrinho!',
+                            });
+                        });
+                    } else {
+                        maxReached = false; // Reseta caso a quantidade seja válida
+                        location.reload(); // ou outra lógica para atualizar o carrinho
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao aumentar a quantidade:', error);
+                });
+        }
+
+
+        function diminuirQuantidade(produtoId, novaQtde) {
+    maxReached = false; // Reseta a variável para permitir novos incrementos
+
+    fetch(`/removeItem?id=${produtoId}&qtde=${novaQtde}`)
+        .then(response => {
+            if (response.ok) {
+                location.reload(); // Atualiza o carrinho após remover
+            } else {
+                console.error('Erro ao remover do carrinho');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao diminuir a quantidade:', error);
+        });
+}
+    </script>
+    <script>
     function updateTamanhoCarrinho(produtoId) {
         const selectElement = document.getElementById(`tamanho-select-${produtoId}`);
         const tamanhoSelecionado = selectElement.value;
@@ -169,5 +255,50 @@
         .catch(error => console.error('Erro ao atualizar tamanho no carrinho:', error));
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/simple-notify@1.0.4/dist/simple-notify.min.js"></script>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if(urlParams.get('cupom') === 'categoria'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro',
+              text: 'Não há produtos da mesma categoria do cupom.',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          if(urlParams.get('cupom') === 'invalido'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro',
+              text: 'Cupom inválido ou expirado.',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
+          </script>
 </body>
 </html>

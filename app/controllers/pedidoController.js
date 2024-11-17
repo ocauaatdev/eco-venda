@@ -9,67 +9,101 @@ const pedidoController = {
 
     gravarPedido: async (req, res) => {
         try {
+            // Verifica o status do pagamento
+        const statusPagamento = req.query.status;
+        const userId = req.session.autenticado ? req.session.autenticado.id : null;
+
+        // Apenas continua se o status do pagamento for aprovado
+        if (statusPagamento !== 'approved') {
+            return res.redirect("/"); // Redireciona para a página inicial ou outra página apropriada para falha/pendência
+        }
+        
             const carrinhoSession = req.session.carrinho;
-            console.log('Sessão do carrinho:', carrinhoSession);
     
-            // Verifica se o carrinho está vazio
             if (!carrinhoSession || carrinhoSession.length === 0) {
-                return res.redirect("/carrinho"); // Redireciona o usuário para o carrinho se não houver itens
+                return res.redirect("/carrinho");
             }
     
-            // Verifica se há um cupom aplicado na sessão
             const cupomAplicado = req.session.cupomAplicado;
             let desconto = 0;
-    
-            // Se houver um cupom, define o valor do desconto
+            
+            console.log("Código do cupom: ", cupomAplicado.codigo);
+
+            if (cupomAplicado) {
+                await cuponsModel.marcarCupomComoUsado(userId, cupomAplicado.codigo);
+            }
+
             if (cupomAplicado && typeof cupomAplicado.desconto === 'number') {
                 desconto = cupomAplicado.desconto;
-                console.log(`Desconto aplicado: ${desconto}`);
             }
     
-            // Calcula o total do pedido somando os produtos no carrinho
+            // Calcula o total sem desconto
             const totalSemDesconto = carrinhoSession.reduce((acc, item) => acc + (item.preco * item.qtde), 0);
-            console.log(`Total sem desconto: ${totalSemDesconto}`);
     
-            // Calcula o total com desconto (se houver)
-            const totalComDesconto = Math.max(totalSemDesconto - desconto, 0);
-            console.log(`Total com desconto: ${totalComDesconto}`);
+            // Calcula o total dos produtos elegíveis ao desconto
+            const totalProdutosDesconto = carrinhoSession.reduce((acc, item) => {
+                if (item.categoriaProd === cupomAplicado?.categoria) {
+                    return acc + (item.preco * item.qtde);
+                }
+                return acc;
+            }, 0);
     
-            // Prepara os dados do pedido
+            // Define os dados do pedido para salvar no banco de dados
             const camposJsonPedido = {
                 data_pedido: moment().format("YYYY-MM-DD"),
                 clientes_idClientes: req.session.autenticado.id,
-                statusPedido: 1, // Status inicial do pedido
-                total_pedido: totalComDesconto.toFixed(2), // Total com desconto aplicado
+                statusPedido: 1,
+                total_pedido: Math.max(totalSemDesconto - desconto, 0).toFixed(2),
                 status_pagamento: req.query.status,
                 id_pagamento: req.query.payment_id,
-                local_entrega: req.session.endereco ? req.session.endereco.cep : null // Verifica se o endereço foi inserido
+                local_entrega: req.session.endereco ? JSON.stringify({
+                    cep: req.session.endereco.cep || req.session.autenticado.cepCliente,
+                    logradouro: req.session.endereco.logradouro || req.session.autenticado.logradouroCliente,
+                    bairro: req.session.endereco.bairro || req.session.autenticado.bairroCliente,
+                    cidade: req.session.endereco.cidade || req.session.autenticado.cidadeCliente,
+                    uf: req.session.endereco.uf || req.session.autenticado.ufCliente,
+                    numeroCliente: req.session.endereco.numeroCliente || req.session.autenticado.numeroCliente,
+                    complementoCliente: req.session.endereco.complementoCliente || req.session.autenticado.complementoCliente
+                }) : null
             };
     
-            // Cria o pedido no banco de dados
             const create = await pedidoModel.createPedido(camposJsonPedido);
-            console.log('Pedido salvo no banco de dados:', create);
     
-            // Salva os itens do pedido
-            carrinhoSession.forEach(async element => {
+            // Salva cada item do pedido com o desconto proporcional, se aplicável
+            for (const element of carrinhoSession) {
+                let subtotalComDesconto = element.preco * element.qtde;
+    
+                // Aplica o desconto proporcional ao subtotal dos produtos elegíveis
+                if (cupomAplicado && element.categoriaProd === cupomAplicado.categoria && totalProdutosDesconto > 0) {
+                    const proporcaoDesconto = (element.preco * element.qtde) / totalProdutosDesconto;
+                    subtotalComDesconto -= desconto * proporcaoDesconto;
+                }
+    
                 const camposJsonItemPedido = {
                     pedidos_idPedidos: create.insertId,
                     produtos_das_empresas_idProd: element.codproduto,
                     qtde: element.qtde,
-                    subtotal: (element.preco * element.qtde).toFixed(2),
-                    tamanho_itemPedido: element.tamanho || 'Sem tamanho específico' // Pegando o tamanho da sessão
+                    subtotal: subtotalComDesconto.toFixed(2),
+                    tamanho_itemPedido: element.tamanho || 'Sem tamanho específico'
                 };
     
-                console.log('Salvando item do pedido:', camposJsonItemPedido);
                 await pedidoModel.createItemPedido(camposJsonItemPedido);
-            });
-
-            // Adicionar notificação ao banco de dados
-            const mensagemNotificacao = "Sua compra foi realizada com sucesso! Aguarde que a empresa responsável pelo produto irá enviar as ocorrências e informações de rastreio.";
-            const clienteId = req.session.autenticado.id;
-            await notificacaoModel.criarNotificacaoCompra(clienteId, mensagemNotificacao);
     
-            // Redirecionar após o sucesso
+                // Atualiza o estoque do produto
+                const estoqueAtualizado = await pedidoModel.atualizarEstoque(element.codproduto, element.qtde);
+                if (!estoqueAtualizado) {
+                    console.log(`Estoque insuficiente para o produto com ID ${element.codproduto}`);
+                }
+            }
+    
+            await notificacaoModel.criarNotificacaoCompra(req.session.autenticado.id, "Sua compra foi realizada com sucesso!");
+    
+            // Limpa o cupom aplicado e o desconto após a conclusão do pedido
+            delete req.session.cupomAplicado;
+            delete req.session.carrinho.totalComDesconto;
+
+            //Limpa o carrinho
+            carrinho.limparCarrinho(req);
             res.redirect("/");
         } catch (e) {
             console.log(e);
@@ -144,12 +178,14 @@ atualizarPedido: async (req, res) => {
         res.status(500).send("Erro ao atualizar o pedido");
     }
 },
-// Método para listar pedidos do usuário
+// Método para listar pedidos do usuário com filtro de data
 listarPedidosUsuario: async (req, res) => {
     try {
-        const clienteId = req.session.autenticado.id;  // Pegando o ID do cliente logado
-        const pedidos = await pedidoModel.findPedidosWithRastreiosAndOcorrencias(clienteId);
-
+        const clienteId = req.session.autenticado.id;
+        const filtro = req.query.filtro || 'recente'; // Padrão para "recente" se não houver filtro
+        
+        const pedidos = await pedidoModel.findPedidosByCliente(clienteId, filtro);
+        
         res.render('perfil-usuario', {
             pedidos,
             moment
@@ -159,6 +195,24 @@ listarPedidosUsuario: async (req, res) => {
         res.status(500).send("Erro ao buscar pedidos.");
     }
 },
+// Método para listar pedidos do usuário com filtro de data
+listarPedidosEmpresa: async (req, res) => {
+    try {
+        const empresaId = req.session.autenticado.id;
+        const filtro = req.query.filtro || 'recente'; // Padrão para "recente" se não houver filtro
+        
+        // Chame a função do modelo, passando o filtro de ordenação
+        const pedidos = await pedidoModel.findPedidosByEmpresa(empresaId, filtro);
+        
+        res.render('perfil-empresa', {
+            pedidos,
+            moment
+        });
+    } catch (error) {
+        console.error("Erro ao buscar pedidos da empresa:", error);
+        res.status(500).send("Erro ao buscar pedidos.");
+    }
+}
     
     
 }

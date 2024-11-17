@@ -32,8 +32,14 @@
     top: 0; /* Fica fixo no topo da viewport */
     z-index: 1; /* Garante que a barra lateral fique sobre outros elementos, se necessário */
 }
+.infoCarrinho h1{
+    margin-top: 10px;
+}
 .infoCarrinho button{
     width: 100%;
+}
+.infoCarrinho .infoEndereco{
+    margin-bottom: 10px;
 }
 .head{
     display: flex;
@@ -302,7 +308,16 @@
     text-decoration: underline;
     cursor: pointer;
 }
-
+.cupomContainer button{
+    border: none;
+    border-radius: 5px;
+    background-color: #f0fffc;
+    cursor: pointer;
+    color: #0A242A;
+    /* padding: 10px 15px 10px 15px; */
+    font-size: 16px;
+    font-weight: 600;
+}
 
   @media(max-width:992px){
     .carrinho{

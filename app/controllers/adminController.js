@@ -7,7 +7,8 @@ const usuarioModel = require("../models/usuarioModel");
 const solicitacoesProdutoModel = require('../models/solicitacoesProdutoModel');
 const moment = require('moment');
 const { regrasValidacaoFormCad } = require("./usuarioController");
-const cuponsModel = require("../models/cuponsModel")
+const cuponsModel = require("../models/cuponsModel");
+const notificacaoModel = require("../models/notificacaoModel");
 
 const saltRounds = 12;
 const salt = bcrypt.genSaltSync(saltRounds);
@@ -61,6 +62,7 @@ const adminController = {
   try {
     // Lógica para rejeitar o pedido (e.g., delete na tabela)
     await solicitacoesProdutoModel.aprovar(idSolicitacao);
+    console.log('Produto aprovado e adicionado à tabela produtos_das_empresas');
     
     // Redirecionar após rejeição
 
@@ -98,7 +100,6 @@ excluirUsuario: async (req, res) => {
 },
 cadastrarCupom: async (req, res) => {
     const erros = validationResult(req);
-    
 
     var dadosForm = {
       nomeCupom: req.body.nomeCupom,
@@ -108,7 +109,6 @@ cadastrarCupom: async (req, res) => {
       planoCupom: req.body.planoCupom,
       tipoCupom: req.body.tipoCupom,
     };
-    console.log('Dados recebidos:', req.body);  // Adicione este log
 
     if (!erros.isEmpty()) {
       return res.render("pages/cadastro-cupom", { listaErros: erros.array(), values: req.body });
@@ -117,13 +117,51 @@ cadastrarCupom: async (req, res) => {
     try {
       let create = await cuponsModel.create(dadosForm);
       console.log('Cupom cadastrado com sucesso:', create);
+
+      // Mapeamento dos valores para os nomes
+      const planos = {
+        1: "Básico",
+        2: "Médio",
+        3: "Pro"
+      };
+
+      const categorias = {
+        1: "Moda",
+        2: "Bags",
+        3: "Cosméticos",
+        4: "Higiene"
+      };
+
+      // Obtendo os nomes dos planos e categorias
+      const nomePlano = planos[dadosForm.planoCupom];
+      const nomeCategoria = categorias[dadosForm.categoriaCupom];
+
+      // Definindo o símbolo do desconto baseado no tipo de cupom
+      let simboloDesconto = '';
+      if (dadosForm.tipoCupom === '1') {
+        simboloDesconto = '%'; // Porcentagem
+      } else if (dadosForm.tipoCupom === '2') {
+        simboloDesconto = '$'; // Valor Bruto
+      }
+
+      // Buscar todos os usuários com o plano do cupom
+      const usuarios = await usuarioModel.buscarPorPlano(dadosForm.planoCupom);
+
+      // Enviar notificação para cada usuário
+      
+        const mensagem = `Novo cupom disponível para o plano ${nomePlano}, para compras de produtos da categoria ${nomeCategoria}. Aproveite! Cupom: ${dadosForm.nomeCupom} com ${dadosForm.descontoCupons}${simboloDesconto} de desconto.`;
+        
+        // Criar a notificação
+        await notificacaoModel.criarNotificacaoCupom(usuarios.id, dadosForm.planoCupom, mensagem);
+
+
       res.redirect("/");
+
     } catch (e) {
       console.log('Erro no cadastro do cupom:', e.message);
       res.render("pages/cadastro-cupom", { listaErros: [{ msg: e.message }], valores: req.body });
     }
-}
-,
+},
 
 
 excluirEmpresa: async (req, res) => {

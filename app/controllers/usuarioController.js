@@ -156,6 +156,8 @@ const usuarioController = {
         cidadeCliente: cepValido.localidade,  // Acessa corretamente a cidade
         ufCliente: cepValido.uf,  // Acessa corretamente o estado (UF)
         data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
+        numeroCliente: req.body.numeroResid,
+        complementoCliente: req.body.complemento
     };
             // Verifica se o nome de usuário, e-mail ou CPF já existem
             const existingUser = await usuario.findUser(req.body.usuario);
@@ -348,7 +350,7 @@ const usuarioController = {
         }
     
         try {
-            const { nomeCliente, emailCliente, celularCliente, cpfCliente, cepCliente} = req.body;
+            const { nomeCliente, emailCliente, celularCliente, cpfCliente, cepCliente, numeroCliente, complementoCliente} = req.body;
     
             // Verifica se o novo nome já está em uso
             const existingUser = await Usuario.findUser(nomeCliente);
@@ -373,6 +375,8 @@ const usuarioController = {
                 bairroCliente: endereco.bairro,
                 cidadeCliente: endereco.localidade,
                 ufCliente: endereco.uf,
+                numeroCliente,
+                complementoCliente
             });
     
             res.redirect('/perfil-usuario?update=sucesso');

@@ -81,19 +81,24 @@
     cursor: pointer;
     display: none;
 }
-
+#carrinhoIconContainer{
+    display: flex;
+    align-items: center;
+}
 /* Contador de itens no carrinho */
 .item-count{
-    position: absolute;
+    /* position: absolute; */
     z-index: 1;
-    background-color: red;
+    background-color: #FC7F2D;
+    /* border: 1px solid; */
+    /* border-color: #fff; */
     color: #fff;
     text-align: center;
-    width: 1.5em; /* Ajuste o tamanho do círculo conforme necessário */
-    height: 1.5em; /* Ajuste o tamanho do círculo conforme necessário */
+    width: 1.5em; 
+    height: 1.5em; 
     border-radius: 50%;
-    margin-top: -1.5%;
-    left: 91%;
+    /* margin-top: -1.5%;
+    left: 91%; */
     display: flex;
     align-items: center;
     justify-content: center; 
@@ -319,32 +324,6 @@ footer{
     max-height: 180px; /* Define uma altura máxima para padronizar o tamanho da imagem */
 }
 
-/*EMPRESAS CARDS*/
-/* .empresas{
-    margin-top: 5%;
-}
-.empresas h1{
-    text-align: center;
-    color: #28B67E;
-}
-.emprecard{
-    position: relative;
-    width: 228px;
-    height: 210px;
-    border-radius: 20px;
-    overflow: hidden;
-    display: inline-block;
-    background-color: #29535C;
-    box-shadow: 0px 10px 40px #00000056;
-    align-items: center;
-    
-} 
-.logos{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-} */
-
 /* RESULTADO DE PESQUISA (APARECE PERTO DO MENU) */
 .resultado-pesquisa {
     position: absolute;
@@ -381,28 +360,19 @@ footer{
 /* ===============RESPONSIVIDADE============ */
 /* ============= Tamanho 1440px =============== */
 @media(max-width:1440px){
-    .item-count{
+    /* .item-count{
         margin-top: -2%;
         left: 88.5%;
-    }
+    } */
 
 }
 
 /* ============= Tamanho 1200px =============== */
 
 @media(max-width:1200px){
-    /* .quemsomos{
-        width: 275px; 
-        font-size: 17px;
-    } */
-    /* .suporte{
-        width: 275px;
-        font-size: 17px;
-    } */
-    /* .contato{
-        width: 275px;
-        font-size: 17px;
-    } */
+    .opcoesMenu{
+        font-size: 18px;
+    }
     .text{ /*Span que fica do lado dos icones*/
         display: none;
     }
@@ -412,9 +382,9 @@ footer{
     .dropdownPerfil{
         width: auto;
     }
-    .item-count{
+    /* .item-count{
         left: 92%;
-    }
+    } */
 }
 
 /* ============= Tamanho 992px =============== */
@@ -428,25 +398,11 @@ footer{
     .opcoesMenu{
         font-size: 16px;
     }
-    /* .emprecard{
-        width: 200px;
-        height: 195px;
+    .iconesMenu i{
+        font-size: 26px;
     }
-    .quemsomos{
-        width: 230px;
-        font-size: 15px;
-    } */
-    /* .suporte{
-        width: 230px;
-        font-size: 15px;
-    } */
-    /* .contato{
-        width: 230px;
-        font-size: 15px;
-    } */
     .item-count{
-        left: 90.5%;
-        margin-top: -2.5%;
+        font-size: 16px;
     }
     .info-rodape{
         flex-direction: column;
@@ -484,10 +440,10 @@ footer{
         height: 175px;
         margin-bottom: 5%;
     }
-    .item-count{
+    /* .item-count{
         left: 85%;
         margin-top: -3%;
-    }
+    } */
 }
 
 /* ============= Tamanho 576px =============== */
@@ -498,6 +454,7 @@ footer{
     .logoPequena{
         display: block;
         width: 65px;
+        padding: 5px;
     }
     .iconesMenu{
         gap: 0.5rem;
@@ -525,8 +482,8 @@ footer{
     .menuicon{
         font-size: 20px;
     }
-    .item-count{
+    /* .item-count{
         left: 81%;
         margin-top: -4%;
-    }
+    } */
 }
