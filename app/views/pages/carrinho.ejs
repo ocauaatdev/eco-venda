@@ -299,6 +299,27 @@
               position: 'right top'
             })
           }
+
+          if(urlParams.get('cupom') === 'usado'){
+            
+            new Notify({
+              status: 'error',
+              title: 'Erro',
+              text: 'Parece que você já usou este cupom. Tente outro!',
+              effect: 'fade',
+              speed: 300,
+              customClass: null,
+              customIcon: null,
+              showIcon: true,
+              showCloseButton: true,
+              autoclose: true,
+              autotimeout: 3000,
+              gap: 20,
+              distance: 20,
+              type: 'outline',
+              position: 'right top'
+            })
+          }
           </script>
 </body>
 </html>

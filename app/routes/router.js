@@ -58,6 +58,8 @@ router.get('/aplicar-cupom', (req, res) => {
     return res.redirect('/carrinho?cupom=invalido'); // Exemplo: Cupom não encontrado
   } else if (erro === 'categoria') {
     return res.redirect('/carrinho?cupom=categoria'); // Exemplo: Cupom inválido
+  } else if (erro === 'usado'){
+    return res.redirect('/carrinho?cupom=usado');
   } else {
     // Caso não seja nenhum erro específico, redirecione para o carrinho normalmente
     return res.redirect('/carrinho');

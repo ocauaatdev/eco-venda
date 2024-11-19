@@ -49,13 +49,7 @@ const carrinhoController = {
 
             const cupomUsado = await cuponsModel.verificarCupomUsado(userId, codigoCupom);
             if (cupomUsado) {
-                return res.render("pages/carrinho", {
-                    autenticado: req.session.autenticado,
-                    endereco: req.session.endereco,
-                    carrinho: req.session.carrinho,
-                    listaErros: ["Cupom já utilizado anteriormente"],
-                    qtdItensCarrinho: carrinho.length
-                });
+                return res.redirect('/aplicar-cupom?erro=usado')
             }
             
 

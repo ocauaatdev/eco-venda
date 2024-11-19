@@ -27,15 +27,15 @@ const pedidoController = {
             const cupomAplicado = req.session.cupomAplicado;
             let desconto = 0;
             
+             // Verifica se há um cupom aplicado antes de tentar acessá-lo
+        if (cupomAplicado) {
             console.log("Código do cupom: ", cupomAplicado.codigo);
+            await cuponsModel.marcarCupomComoUsado(userId, cupomAplicado.codigo);
 
-            if (cupomAplicado) {
-                await cuponsModel.marcarCupomComoUsado(userId, cupomAplicado.codigo);
-            }
-
-            if (cupomAplicado && typeof cupomAplicado.desconto === 'number') {
+            if (typeof cupomAplicado.desconto === 'number') {
                 desconto = cupomAplicado.desconto;
             }
+        }
     
             // Calcula o total sem desconto
             const totalSemDesconto = carrinhoSession.reduce((acc, item) => acc + (item.preco * item.qtde), 0);

@@ -328,7 +328,12 @@
             li.innerHTML = `
                 <i class="fa-solid fa-bell icone-notificacao" style="color: ${!notificacao.lida ? '#FC7F2D' : '#CCCCCC'};"></i>
                 <span class="mensagem-notificacao truncate">${notificacao.mensagem}</span>
-                <span class="data-notificacao">${new Date(notificacao.dataNotificacao).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                <span class="data-notificacao">
+                                        ${new Date(new Date(notificacao.dataNotificacao).setHours(new Date(notificacao.dataNotificacao).getHours() - 3)).toLocaleString('pt-BR', { 
+                                            day: '2-digit', month: '2-digit', year: 'numeric', 
+                                            hour: '2-digit', minute: '2-digit' 
+                                        })}
+                                    </span>
             `;
             listaNotificacoes.appendChild(li);
         });
