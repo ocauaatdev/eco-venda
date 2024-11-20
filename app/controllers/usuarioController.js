@@ -112,106 +112,89 @@ const usuarioController = {
         }
     },
     cadastrar: async (req, res) => {
-        // Primeiro, valida o formulário
         const erros = validationResult(req);
-
+    
+        // Verifica se há erros de validação e redireciona com mensagens apropriadas
         if (!erros.isEmpty()) {
+            const primeiroErro = erros.array()[0];
+            const erroCampo = primeiroErro.param; // Nome do campo com erro
+            const erroMensagem = primeiroErro.msg; // Mensagem de erro específica
+    
             req.session.dadosForm = req.body;
-            console.log('Erros na validação do formulário:', erros.array());
-            // return res.render('pages/cadastro', { listaErros: erros.array(), valores: req.body });
+            return res.redirect(`/cadastro?cadastro=${erroCampo}&mensagem=${encodeURIComponent(erroMensagem)}`);
         }
-
-        // Se houver erros, renderiza a página de cadastro com todos os erros
-        // Prepara os dados para o cadastr
     
         try {
-            const dataValida = validarNascimento(req.body.nascimento)
-            if(!dataValida){
+            // Validação extra para data de nascimento
+            const dataValida = validarNascimento(req.body.nascimento);
+            if (!dataValida) {
                 req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=dataInvalida')
+                return res.redirect('/cadastro?cadastro=dataInvalida&mensagem=Data de nascimento inválida. O usuário deve ter mais de 18 anos.');
             }
+    
+            // Validação extra para CPF
             const cpfValido = verificaCPF(req.body.cpf);
-    if (!cpfValido) {
-        req.session.dadosForm = req.body;
-        return res.redirect('/cadastro?cadastro=cpfInvalido');
-    }
-
-    // Validação do CEP
-    const cepValido = await validarCEP(req.body.cep.replace('-', ''));
-    if (!cepValido) {
-        req.session.dadosForm = req.body;
-        console.log('Redirecionando por CEP inválido');
-        return res.redirect('/cadastro?cadastro=cep');
-    }
-
-    // Dados do formulário com CEP válido
-    const dadosForm = {
-        nomeCliente: req.body.usuario,
-        senhaCliente: bcrypt.hashSync(req.body.senha, salt),
-        emailCliente: req.body.e_mail,
-        celularCliente: req.body.telefone,
-        cpfCliente: req.body.cpf,
-        cepCliente: req.body.cep,
-        logradouroCliente: cepValido.logradouro,  // Acessa corretamente o logradouro
-        cidadeCliente: cepValido.localidade,  // Acessa corretamente a cidade
-        ufCliente: cepValido.uf,  // Acessa corretamente o estado (UF)
-        data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
-        numeroCliente: req.body.numeroResid,
-        complementoCliente: req.body.complemento
-    };
-            // Verifica se o nome de usuário, e-mail ou CPF já existem
+            if (!cpfValido) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=cpfInvalido&mensagem=CPF inválido.');
+            }
+    
+            // Validação de CEP (exemplo usando API)
+            const cepValido = await validarCEP(req.body.cep.replace('-', ''));
+            if (!cepValido) {
+                req.session.dadosForm = req.body;
+                return res.redirect('/cadastro?cadastro=cep&mensagem=CEP inválido.');
+            }
+    
+            // Verifica se usuário, e-mail ou CPF já existem
             const existingUser = await usuario.findUser(req.body.usuario);
             const existingEmail = await usuario.findByEmail(req.body.e_mail);
             const existingCpf = await usuario.findByCpf(req.body.cpf);
     
-            if (existingUser.length > 0 && existingEmail.length > 0 && existingCpf.length > 0) {
+            if (existingUser.length > 0) {
                 req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuarioemailcpf');
-            } else if (existingUser.length > 0 && existingEmail.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuarioemail');
-            } else if (existingUser.length > 0 && existingCpf.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuariocpf');
-            } else if (existingEmail.length > 0 && existingCpf.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=emailcpf');
-            } else if (existingUser.length > 0) {
-                req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=usuario');
+                return res.redirect('/cadastro?cadastro=usuario&mensagem=Este nome de usuário já está cadastrado.');
             } else if (existingEmail.length > 0) {
                 req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=email');
+                return res.redirect('/cadastro?cadastro=email&mensagem=Este e-mail já está cadastrado.');
             } else if (existingCpf.length > 0) {
                 req.session.dadosForm = req.body;
-                return res.redirect('/cadastro?cadastro=cpf');
+                return res.redirect('/cadastro?cadastro=cpf&mensagem=Este CPF já está cadastrado.');
             }
     
-            // Cria o novo usuário se não houver conflitosconst cpfValido = verificaCPF(req.body.cpf);
-            let create = await Usuario.create(dadosForm);
-       
-        // Gerar token JWT
-        const token = jwt.sign(
-            { userId: create.insertId },
-            process.env.SECRET_KEY,
-            { expiresIn: '1h' } // Defina o tempo de expiração conforme necessário
-        );
-        console.log(token);
- 
-        const url = `${process.env.URL_BASE}/ativar-conta?token=${token}`;  //`localhost:3000/ativar-conta?token=${token}`
-        console.log(url)
-        // Gerar HTML para o e-mail
-        const html = require('../util/email-ativar-conta')(url, token);
- 
-        // Enviar e-mail
-        enviarEmail(dadosForm.emailCliente, "Cadastro no site exemplo", null, html, () => {
-            return res.redirect('/cadastro?cadastro=sucesso');
-        });
-       
+            // Criar novo usuário
+            const dadosForm = {
+                nomeCliente: req.body.usuario,
+                senhaCliente: bcrypt.hashSync(req.body.senha, salt),
+                emailCliente: req.body.e_mail,
+                celularCliente: req.body.telefone,
+                cpfCliente: req.body.cpf,
+                cepCliente: req.body.cep,
+                logradouroCliente: cepValido.logradouro,
+                cidadeCliente: cepValido.localidade,
+                ufCliente: cepValido.uf,
+                bairroCliente: cepValido.bairro,
+                data_nascCliente: moment(req.body.nascimento, "YYYY-MM-DD").format("YYYY-MM-DD"),
+                numeroCliente: req.body.numeroResid,
+                complementoCliente: req.body.complemento
+            };
+    
+            const create = await Usuario.create(dadosForm);
+    
+            // Enviar e-mail de ativação
+            const token = jwt.sign({ userId: create.insertId }, process.env.SECRET_KEY, { expiresIn: '1h' });
+            const url = `${process.env.URL_BASE}/ativar-conta?token=${token}`;
+            const html = require('../util/email-ativar-conta')(url, token);
+    
+            enviarEmail(dadosForm.emailCliente, "Cadastro no site exemplo", null, html, () => {
+                return res.redirect('/cadastro?cadastro=sucesso');
+            });
         } catch (e) {
-            console.log(e);
+            console.error(e);
+            return res.redirect('/cadastro?cadastro=erroInesperado&mensagem=Ocorreu um erro inesperado. Tente novamente.');
         }
-    },
+    }    
+    ,
     recuperarSenha:async(req,res) =>{
         const erros = validationResult(req);
  

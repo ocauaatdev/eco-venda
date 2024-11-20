@@ -308,7 +308,7 @@
     text-decoration: underline;
     cursor: pointer;
 }
-.cupomContainer button{
+.botaoCupom{
     border: none;
     border-radius: 5px;
     background-color: #f0fffc;

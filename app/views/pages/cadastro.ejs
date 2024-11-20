@@ -68,7 +68,7 @@
             <input type="text" name="numeroResid" id="numeroResid"  value="<%= valores.numeroResid || '' %>" required>
 
             <!-- ============ COMPLEMENTO =========== -->
-            <h3 id="complemento">Complemento:</h3>
+            <h3 id="complemento">Complemento (opcional):</h3>
             <input type="text" name="complemento" id="complemento"  value="<%= valores.complemento || '' %>">
 
             <!-- ============ Senha =========== -->
@@ -96,231 +96,48 @@
     
     <script>
         const urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.get('cadastro') === 'sucesso'){
-            
+    
+        const tipoErro = urlParams.get('cadastro');
+        const mensagemErro = urlParams.get('mensagem');
+    
+        if (tipoErro && mensagemErro) {
             new Notify({
-              status: 'success',
-              title: 'Cadastro realizado',
-              text: 'Novo usuário criado com sucesso!<br>'+
-              'Enviamos um e-mail paara a ativação de sua conta',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-
-        if(urlParams.get('cadastro') === 'usuario'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'Este usuario já está cadastrado',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          
-        if(urlParams.get('cadastro') === 'email'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'Este e-mail já está cadastrado',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
+                status: 'error',
+                title: 'Erro no cadastro',
+                text: decodeURIComponent(mensagemErro),
+                effect: 'fade',
+                speed: 300,
+                showIcon: true,
+                showCloseButton: true,
+                autoclose: true,
+                autotimeout: 3000,
+                gap: 20,
+                distance: 20,
+                type: 'outline',
+                position: 'right top'
+            });
         }
-            if(urlParams.get('cadastro') === 'usuarioemail'){
-            
+    
+        if (tipoErro === 'sucesso') {
             new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'E-mail e Usuário já cadastrados',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'cpfInvalido'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'CPF digitado é invalido!',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-
-          if(urlParams.get('cadastro') === 'cep'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'CEP inválido!',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'cpf'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'CPF já cadastrado!',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'senha_invalida'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'Suas senhas não coincidem',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'usuarioemailcpf'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'Usuário, Email e CPF já cadastrados',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'usuariocpf'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'Usuário e CPF já cadastrados',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          if(urlParams.get('cadastro') === 'emailcpf'){
-            
-            new Notify({
-              status: 'error',
-              title: 'Erro no cadastro',
-              text: 'Email e CPF já cadastrados',
-              effect: 'fade',
-              speed: 300,
-              customClass: null,
-              customIcon: null,
-              showIcon: true,
-              showCloseButton: true,
-              autoclose: true,
-              autotimeout: 3000,
-              gap: 20,
-              distance: 20,
-              type: 'outline',
-              position: 'right top'
-            })
-          }
-          </script>   
+                status: 'success',
+                title: 'Cadastro realizado',
+                text: 'Novo usuário criado com sucesso!<br>Enviamos um e-mail para a ativação de sua conta.',
+                effect: 'fade',
+                speed: 300,
+                showIcon: true,
+                showCloseButton: true,
+                autoclose: true,
+                autotimeout: 3000,
+                gap: 20,
+                distance: 20,
+                type: 'outline',
+                position: 'right top'
+            });
+        }
+    </script>
+    
+  
     <script src="/js/senha.js"></script>
     <script src="/js/cadastro.js"></script>
     <script src="/js/mostrarsenha.js"></script>
